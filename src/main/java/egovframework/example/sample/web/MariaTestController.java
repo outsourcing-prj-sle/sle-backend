@@ -12,7 +12,6 @@ import egovframework.example.sample.service.EgovSampleService;
 import egovframework.example.sample.service.MariaTestVO;
 
 @RestController
-@RequestMapping("/api")
 public class MariaTestController {
 	
 	@Autowired
@@ -21,10 +20,15 @@ public class MariaTestController {
 	/**
 	 * MariaDB 연결 테스트
 	 */
-	@GetMapping("/")
+	@GetMapping("/api")
 	public ResponseEntity<?> apiMethodTest() {
 		List<MariaTestVO> list = egovSampleService.selectMariaTest();
 		
 		return ResponseEntity.ok(list);
+	}
+	
+	@GetMapping("/api/test")
+	public String test() {
+		return "test";
 	}
 }
