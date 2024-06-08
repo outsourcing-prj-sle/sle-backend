@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.user.service.impl.UserManageMapper">
+	
+	<resultMap id="userManage" type="egovframework.example.user.service.UserManageVO" />
+	
+	<select id="selectUserInfo" resultMap="userManage">
+		SELECT
+			'test001' as id,
+			'홍길동' as name,
+			'남자' as user_type,
+			'이작초등학교' as user_space_info,
+			'1학년 2반' as user_space_org_info,
+			'학생' as relation_info,
+			True as is_first_invite
+	</select>
+
+</mapper>
