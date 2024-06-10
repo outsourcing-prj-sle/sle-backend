@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.login.service.LoginManageService;
 
 @RestController
@@ -54,10 +55,15 @@ public class LoginManageController {
 	}
 	
 	/**
-	 * 
+	 * 최초 회원 가입 시 필수 제공 정보 동의
 	 */
 	@PutMapping("/required-agree-info")
 	public ResponseEntity<?> insertRequiredAgreeInfo(){
+		
+		LoginVO loginVO = new LoginVO();
+		loginVO.setUniqId("USRCNFRM_00000000004");
+		
+		loginManageService.updateRequiredAgreeInfo(loginVO);
 		
 		return ResponseEntity.ok().build();
 	}

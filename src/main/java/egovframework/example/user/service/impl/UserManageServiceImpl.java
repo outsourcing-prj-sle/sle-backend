@@ -1,13 +1,11 @@
 package egovframework.example.user.service.impl;
 
-import java.util.HashMap;
-
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.user.service.UserManageService;
-import egovframework.example.user.service.UserManageVO;
 
 @Service("userManageService")
 public class UserManageServiceImpl implements UserManageService {
@@ -17,12 +15,30 @@ public class UserManageServiceImpl implements UserManageService {
 	
 	/**
 	 * 회원정보 조회
-	 * @return UserManageVO 
+	 * @return LoginVO 
 	 */
 	@Override
-	public UserManageVO selectUserInfo() {
+	public LoginVO selectUserInfo(LoginVO loginVO) {
 		
-		return mapper.selectUserInfo();
+		return mapper.selectUserInfo(loginVO);
+	}
+
+	
+	/**
+	 * 회원정보 등록
+	 */
+	@Override
+	public void insertUserInfo(LoginVO loginVO) {
+		mapper.insertUserInfo(loginVO);
+		mapper.insertUserScrtyEstbs(loginVO);
+	}
+
+	/**
+	 * 회원정보 수정
+	 */
+	@Override
+	public void updateUserInfo(LoginVO loginVO) {
+		mapper.updateUserInfo(loginVO);
 	}
 
 }

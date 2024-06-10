@@ -1,11 +1,11 @@
-package egovframework.example.user.service;
+package egovframework.example.cmmn.service;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class UserManageVO {
+public class LoginVO {
 
 	/**
 	 * 사용자 id
@@ -52,4 +52,28 @@ public class UserManageVO {
 	 */
 	private Boolean isFirstInvite;
 	
+	/**
+	 * 사용자 성별
+	 */
+	private String sex;
+	
+	/**
+	 * 사용자 이메일
+	 */
+	private String userEmail;
+	
+	/**
+	 * 학년
+	 */
+	private String gradeNm;
+	
+	/**
+	 * 반
+	 */
+	private String classNm;
+	
+	/**
+	 * 역할
+	 */
+	private String role;
 }

@@ -8,8 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.user.service.UserManageService;
-import egovframework.example.user.service.UserManageVO;
 
 @RestController
 public class UserManageController {
@@ -22,8 +22,10 @@ public class UserManageController {
 	 */
 	@GetMapping("/users")
 	ResponseEntity<?> selectUserInfo() {
+		LoginVO loginVO = new LoginVO();
+		loginVO.setUniqId("USRCNFRM_00000000004");
 		
-		 UserManageVO userInfo = userManageService.selectUserInfo();
+		 LoginVO userInfo = userManageService.selectUserInfo(loginVO);
 		 
 		 ResponseEntity.ok(userInfo.getId());
 		
@@ -49,10 +51,27 @@ public class UserManageController {
 	}
 	
 	/**
+	 * 회원정보 등록
+	 */
+	@PutMapping("/users/insert")
+	ResponseEntity<?> insertUserInfo() {
+		LoginVO loginVO = new LoginVO();
+		loginVO.setUniqId("USRCNFRM_00000000004");
+		
+		userManageService.insertUserInfo(loginVO);
+		
+		return ResponseEntity.ok().build();
+	}
+	
+	/**
 	 * 회원정보 수정
 	 */
-	@PutMapping("/usres/update")
-	ResponseEntity<?> selectUserInfoUpdate() {
+	@PutMapping("/users/update")
+	ResponseEntity<?> updateUserInfo() {
+		LoginVO loginVO = new LoginVO();
+		loginVO.setUniqId("USRCNFRM_00000000004");
+		
+		userManageService.updateUserInfo(loginVO);
 		
 		return ResponseEntity.ok().build();
 	}
