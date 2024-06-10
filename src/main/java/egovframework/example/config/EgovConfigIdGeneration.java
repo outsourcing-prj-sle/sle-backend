@@ -27,7 +27,26 @@ public class EgovConfigIdGeneration {
 		egovTableIdGnrServiceImpl.setBlockSize(10);
 		egovTableIdGnrServiceImpl.setTable("IDS");
 		egovTableIdGnrServiceImpl.setTableName("SAMPLE");
-		return egovTableIdGnrServiceImpl;	
+		return egovTableIdGnrServiceImpl;
+	}
+	
+	@Bean
+	public EgovIdGnrStrategyImpl userIdPrefix() {
+		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
+		egovIdGnrStrategyImpl.setPrefix("USRCNFRM_");
+		egovIdGnrStrategyImpl.setCipers(10);
+		egovIdGnrStrategyImpl.setFillChar('0');
+		return egovIdGnrStrategyImpl;
 	}
 
+	@Bean(destroyMethod = "destroy")
+	public EgovTableIdGnrServiceImpl userIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
+		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
+		egovTableIdGnrServiceImpl.setDataSource(dataSource);
+		egovTableIdGnrServiceImpl.setStrategy(userIdPrefix());
+		egovTableIdGnrServiceImpl.setBlockSize(10);
+		egovTableIdGnrServiceImpl.setTable("IDS");
+		egovTableIdGnrServiceImpl.setTableName("USER");
+		return egovTableIdGnrServiceImpl;
+	}
 }

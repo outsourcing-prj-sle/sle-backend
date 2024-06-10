@@ -21,7 +21,7 @@
 	<insert id="insertUserInfo" parameterType="hashmap">
 		insert into survey.comtnmber(
 			USER_ID, 
-			USER_SE_CODE, 
+			USER_SE_CODE,
 			PASSWORD, 
 			USER_NM, 
 			PHOTO_STRE_FILE_NM
@@ -66,7 +66,7 @@
 			SCHUL_CODE = #{userSpaceInfo}, 
 			ST_GRADE = #{gradeNm},
 			ST_CLASS = #{classNm},
-		where USER_ID = #{uniqNm};
+		where USER_ID = #{uniqId};
 	</update>
 
 </mapper>

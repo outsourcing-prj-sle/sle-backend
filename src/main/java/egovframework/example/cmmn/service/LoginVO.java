@@ -76,4 +76,17 @@ public class LoginVO {
 	 * 역할
 	 */
 	private String role;
+	
+	/**
+	 * 역할 배정
+	 */
+	public void isRole() {
+		if(this.userType.equals("Y")) {
+			this.setRole("ROLE_TEACHER");
+		}
+		
+		if(this.userType.equals("N")) {
+			this.setRole("ROLE_STUDENT");
+		}
+	}
 }
