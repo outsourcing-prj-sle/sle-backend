@@ -6,11 +6,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class LoginVO {
-
+	
 	/**
 	 * 사용자 id
 	 */
 	private String id;
+	
+	
+	/**
+	 * 사용자 비밀번호
+	 */
+	private String password;
 	
 	/**
 	 * 사용자명
@@ -75,18 +81,18 @@ public class LoginVO {
 	/**
 	 * 역할
 	 */
-	private String role;
+	private String userRole;
 	
 	/**
 	 * 역할 배정
 	 */
 	public void isRole() {
 		if(this.userType.equals("Y")) {
-			this.setRole("ROLE_TEACHER");
+			this.setUserRole("ROLE_TEACHER");
 		}
 		
 		if(this.userType.equals("N")) {
-			this.setRole("ROLE_STUDENT");
+			this.setUserRole("ROLE_STUDENT");
 		}
 	}
 }

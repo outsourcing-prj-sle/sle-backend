@@ -24,14 +24,15 @@
 			USER_SE_CODE,
 			PASSWORD, 
 			USER_NM, 
-			PHOTO_STRE_FILE_NM
+			PHOTO_STRE_FILE_NM,
 			EMAIL_ADRES, 
 			SEXDSTN, 
 			CONFM_AT, 
 			ST_GRADE, 
 			ST_CLASS, 
 			TEACHER_SE_CODE, 
-			SCHUL_CODE
+			SCHUL_CODE,
+			FRST_REGIST_PNTTM
 		)
 		values (
 			#{uniqId},
@@ -45,13 +46,14 @@
 			#{gradeNm},
 			#{classNm},
 			#{userType},
-			#{userSpaceInfo}
+			#{userSpaceInfo},
+			now()
 		)
 	</insert>
 	
 	<insert id="insertUserScrtyEstbs" parameterType="hashmap">
 		insert into survey.comtnemplyrscrtyestbs(SCRTY_DTRMN_TRGET_ID, AUTHOR_CODE)
-		values (#{uniqId}, #{role})
+		values (#{uniqId}, #{userRole})
 	</insert>
 	
 	<update id="updateUserInfo" parameterType="hashmap">
@@ -66,7 +68,9 @@
 			SCHUL_CODE = #{userSpaceInfo}, 
 			ST_GRADE = #{gradeNm},
 			ST_CLASS = #{classNm},
-		where USER_ID = #{uniqId};
+			LAST_UPDUSR_PNTTM = now(),
+			LAST_UPDUSR_ID = #{uniqId}
+		where USER_ID = #{uniqId}
 	</update>
 
 </mapper>

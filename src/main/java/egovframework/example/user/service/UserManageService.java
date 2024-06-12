@@ -6,7 +6,6 @@ public interface UserManageService {
 	
 	/**
 	 * 회원정보 조회
-	 * @return LoginVO 
 	 */
 	LoginVO selectUserInfo(LoginVO loginVO);
 	
