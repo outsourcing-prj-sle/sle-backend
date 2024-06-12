@@ -4,9 +4,11 @@ package egovframework.example.user.web;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.tomcat.util.json.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.user.service.UserManageService;
+import egovframework.example.user.service.Users;
 
 @RestController
 public class UserManageController {
@@ -31,37 +34,18 @@ public class UserManageController {
 		LoginVO loginVO = new LoginVO();
 		loginVO.setUniqId("USRCNFRM_00000000004");
 		
-		 LoginVO userInfo = userManageService.selectUserInfo(loginVO);
-		 
-		 ResponseEntity.ok(userInfo.getId());
+		LoginVO userInfo = userManageService.selectUserInfo(loginVO);
 		
-		return ResponseEntity.ok(userInfo);
-	}
-	
-	/**
-	 * 마음알기 설문 목록 조회
-	 */
-	@GetMapping("/users/report-status")
-	ResponseEntity<?> selectUserReportStatus() {
+		Users res = new Users(userInfo);
 		
-		return ResponseEntity.ok(null);
-	}
-	
-	/**
-	 * 마음알기 설문 상세 조회
-	 */
-	@GetMapping("/users/report-status/{id}")
-	ResponseEntity<?> selectUserReportStatusDtl(@PathVariable("id") String id) {
-		
-		return ResponseEntity.ok(id);
+		return ResponseEntity.ok(res);
 	}
 	
 	/**
 	 * 회원정보 등록
 	 */
 	@PutMapping("/users/insert")
-	ResponseEntity<?> insertUserInfo(@RequestBody Map<String, String> req) {
-		LoginVO loginVO = new LoginVO();
+	ResponseEntity<?> insertUserInfo(@RequestBody LoginVO loginVO) {
 		loginVO.setUniqId("USRCNFRM_00000000004");
 		
 		userManageService.insertUserInfo(loginVO);
@@ -73,8 +57,7 @@ public class UserManageController {
 	 * 회원정보 수정
 	 */
 	@PutMapping("/users/update")
-	ResponseEntity<?> updateUserInfo() {
-		LoginVO loginVO = new LoginVO();
+	ResponseEntity<?> updateUserInfo(@RequestBody LoginVO loginVO) {
 		loginVO.setUniqId("USRCNFRM_00000000004");
 		
 		userManageService.updateUserInfo(loginVO);

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.pool.service.impl.PoolManageMapper">
+	
+	<select id="selectReports" parameterType="poolManageVO" resultType="poolManageVO">
+		with sub as (
+			select
+				mstr.POLL_ID,
+				GROUP_CONCAT(mstr.QESITM_SN order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
+				sub.POLL_STATUS
+			from survey.comtnbbspoolatdrn mstr
+			left join survey.comtnbbspoolmanage sub
+			on mstr.POLL_ID = sub.POLL_ID
+			and mstr.USER_ID = sub.USER_ID
+			where mstr.USER_ID = #{uniqId}
+			group by mstr.POLL_ID
+		)
+		select
+			mstr.POLL_ID,
+		 	case when sub.QESITM_SN is NULL then false else true end as status,
+			mstr.POLL_BGNDE as startDate,
+			mstr.POLL_ENDDE as endDate,
+			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
+			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<]]> now() then true else false end expired
+		from survey.comtnbbspoll mstr
+		left join sub
+		on mstr.POLL_ID = sub.POLL_ID
+		where mstr.USE_AT = 'Y'
+		order by mstr.POLL_ID
+	</select>
+	
+	<select id="selectReportsDtl" parameterType="poolManageVO" resultType="poolManageVO">
+		with sub as (
+			select
+				mstr.POLL_ID,
+				GROUP_CONCAT(mstr.QESITM_SN order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
+				GROUP_CONCAT(mstr.QESITM_ANSWER order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_ANSWER,
+				sub.QESITM_SN_LIST,
+				sub.POLL_STATUS
+			from survey.comtnbbspoolatdrn mstr
+			left join survey.comtnbbspoolmanage sub
+			on mstr.POLL_ID = sub.POLL_ID
+			and mstr.USER_ID = sub.USER_ID
+			where mstr.USER_ID = #{uniqId}
+			and mstr.POLL_ID = #{pollId}
+			group by mstr.POLL_ID
+		)
+		select
+			mstr.POLL_ID,
+			mstr.POLL_NM,
+			mstr.TEMP_SAVE as isSave,
+			mstr.VOICE_SUP as isVoice, 
+		 	case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
+		 	sub.QESITM_SN,
+		 	sub.QESITM_SN_LIST,
+		 	sub.QESITM_ANSWER
+		from survey.comtnbbspoll mstr
+		left join sub
+		on mstr.POLL_ID = sub.POLL_ID
+		where mstr.USE_AT = 'Y'
+		and mstr.POLL_ID = #{pollId}
+	</select>
+	
+	<select id="selectReportsQnA" parameterType="poolManageVO" resultType="poolManageVO">
+		select
+			QESITM_SN,
+			QESITM_SJ
+		from survey.comtnbbspoolqesitm
+		where POLL_ID = #{pollId}
+	</select>
+	
+	<insert id="insertReports" parameterType="poolManageVO">
+		insert into survey.comtnbbspoolatdrn
+		values (
+			#{pollId},
+			#{qesitmSn},
+			#{uniqId},
+			now()
+		)
+	</insert>
+	
+	<insert id="insertReportsStatus" parameterType="poolManageVO">
+		insert into survey.comtnbbspoolmanage
+		values (
+			#{uniqId},
+			#{pollId},
+			#{qesitmSnList},
+			'progress'
+		)
+	</insert>
+	
+	<update id="updateReportsStatus" parameterType="poolManageVO">
+		update  survey.comtnbbspoolmanage
+		set POLL_STATUS = 'done'
+		where USER_ID = #{uniqId}
+		and POLL_ID = #{pollId}
+	</update>
+	
+	<select id="selectReportsCount" parameterType="poolManageVO" resultType="int">
+		select
+			count(*)
+		from survey.comtnbbspoolqesitm mstr
+		where mstr.POLL_ID = #{pollId}
+	</select>
+</mapper>

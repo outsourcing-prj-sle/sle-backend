@@ -34,7 +34,7 @@ public class EgovConfigIdGeneration {
 	public EgovIdGnrStrategyImpl userIdPrefix() {
 		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
 		egovIdGnrStrategyImpl.setPrefix("USRCNFRM_");
-		egovIdGnrStrategyImpl.setCipers(10);
+		egovIdGnrStrategyImpl.setCipers(11);
 		egovIdGnrStrategyImpl.setFillChar('0');
 		return egovIdGnrStrategyImpl;
 	}
