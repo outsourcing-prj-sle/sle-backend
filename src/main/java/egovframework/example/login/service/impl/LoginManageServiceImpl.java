@@ -4,6 +4,7 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import egovframework.example.cmmn.service.AccountDTO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.login.service.LoginManageService;
 
@@ -19,6 +20,15 @@ public class LoginManageServiceImpl implements LoginManageService {
 	@Override
 	public void updateRequiredAgreeInfo(LoginVO loginVO) {
 		loginManageMapper.updateRequiredAgreeInfo(loginVO);
+	}
+	
+	/**
+	 * 로그인시 ID로 유저 찾기
+	 * @return LoginVO
+	 */	
+	@Override
+	public LoginVO selectUserById(AccountDTO accountVO){
+		return loginManageMapper.selectUserById(accountVO);
 	}
 	
 }

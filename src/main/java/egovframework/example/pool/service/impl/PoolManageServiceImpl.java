@@ -19,9 +19,6 @@ public class PoolManageServiceImpl implements PoolManageService {
 	
 	@Resource(name = "poolManageMapper")
 	private PoolManageMapper mapper;
-	
-	@Resource(name = "pollIdGnrService")
-	private EgovIdGnrService pollIdGnrService;
 
 	/**
 	 * 회원 마음알기 설문 목록 조회

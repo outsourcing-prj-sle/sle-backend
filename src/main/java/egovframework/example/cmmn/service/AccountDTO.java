@@ -1,11 +1,17 @@
 package egovframework.example.cmmn.service;
 
-public class AccountVO {
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
+public class AccountDTO {
 	
 	/**
 	 * 사용자 id
 	 */
 	private String id;
+	
 	/**
 	 * 사용자 password
 	 */

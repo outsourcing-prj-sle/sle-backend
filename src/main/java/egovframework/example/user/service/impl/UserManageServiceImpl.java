@@ -15,6 +15,9 @@ public class UserManageServiceImpl implements UserManageService {
 	@Resource(name = "userManageMapper")
 	private UserManageMapper mapper;
 	
+	@Resource(name = "poolManageMapper")
+	private UserManageMapper poolMapper;
+	
 	@Resource(name = "userIdGnrService")
 	private EgovIdGnrService userIdGnrService;
 

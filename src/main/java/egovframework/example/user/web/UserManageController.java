@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.cmmn.service.ResultVO;
 import egovframework.example.user.service.UserManageService;
 import egovframework.example.user.service.Users;
 
@@ -38,7 +39,7 @@ public class UserManageController {
 		
 		Users res = new Users(userInfo);
 		
-		return ResponseEntity.ok(res);
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),res));
 	}
 	
 	/**
@@ -46,11 +47,14 @@ public class UserManageController {
 	 */
 	@PutMapping("/users/insert")
 	ResponseEntity<?> insertUserInfo(@RequestBody LoginVO loginVO) {
+		try {
 		loginVO.setUniqId("USRCNFRM_00000000004");
-		
 		userManageService.insertUserInfo(loginVO);
+		}catch(Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.NOT_FOUND,HttpStatus.NOT_FOUND.toString(),"Data Not Found"));
+		}
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),"Sign In Success"));
 	}
 	
 	/**
@@ -62,7 +66,10 @@ public class UserManageController {
 		
 		userManageService.updateUserInfo(loginVO);
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),"User update Success"));
 	}
-	
+	/**
+	 * 회원 SEL 알기 목록 조회
+	 * @return 
+	 */
 }
