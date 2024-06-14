@@ -1,8 +1,14 @@
 package egovframework.example.pool.web;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
 import javax.annotation.Resource;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -10,11 +16,13 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.example.pool.service.Pool;
+import egovframework.example.pool.service.PoolDtl;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/api/reports")
 public class PoolManageController {
 	@Resource(name = "poolManageService")
 	private PoolManageService poolManageService;
@@ -27,9 +35,26 @@ public class PoolManageController {
 		PoolManageVO poolManageVO = new PoolManageVO();
 		poolManageVO.setUniqId("USRCNFRM_00000000004");
 		
-		poolManageService.selectReports(poolManageVO);
+		List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
 		
-		return ResponseEntity.ok(poolManageService.selectReports(poolManageVO));
+		HashMap<String, List<Pool>> map = new HashMap<>();
+		List<Pool> todos = new ArrayList<>(); 
+		List<Pool> dones = new ArrayList<>();
+		
+		for(PoolManageVO vo : list) {
+			Pool pool = new Pool(vo);
+			
+			if(pool.getStatus().equals("done")) {
+				dones.add(pool);
+			} else {
+				todos.add(pool);
+			}
+		}
+		
+		map.put("todo", todos);
+		map.put("done", dones);
+		
+		return ResponseEntity.ok(map);
 	}
 	
 	/**
@@ -43,24 +68,69 @@ public class PoolManageController {
 		 poolManageVO.setUniqId("USRCNFRM_00000000004");
 		 poolManageVO.setPollId(pollId);
 		 
-		 poolManageService.selectReportsDtl(poolManageVO);
-		 
-		return ResponseEntity.ok(poolManageService.selectReportsDtl(poolManageVO));
+		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 	}
-
+	
 	
 	/**
-	 * 마음알기 설문 문제 및 선지 조회
-	 * @param pollId
+	 * 회원 마음알기 설문 상세 함수
 	 * @param poolManageVO
+	 * @return
 	 */
-	@GetMapping("/questions/{pollId}")
-	public ResponseEntity<?> selectReportsQnA(@PathVariable String pollId) {
-		PoolManageVO poolManageVO = new PoolManageVO();
-	 	poolManageVO.setPollId(pollId);
+	public PoolDtl selectReportsDtl(PoolManageVO poolManageVO) {
+		if(StringUtils.isEmpty(poolManageVO.getUniqId()) || StringUtils.isEmpty(poolManageVO.getPollId())) {
+			return PoolDtl.builder().build();
+		}
 		
-		return ResponseEntity.ok(null);
+		PoolManageVO vo = poolManageService.selectReportsDtl(poolManageVO);
+		 List<PoolManageVO> qnaList = poolManageService.selectReportsQnA(poolManageVO);
+		 
+		 ArrayList<String> stepList = new ArrayList<String>();
+		 
+		 ArrayList<HashMap<String, Object>> metaList = new ArrayList<HashMap<String,Object>>();
+		 HashMap<String, Object> metaMap = new HashMap<String, Object>();
+		 
+		 if(vo.getStatus().equals("progress") || vo.getStatus().equals("done")) {
+			 String[] randSnList = vo.getQesitmSnList().split(",");
+			 String[] snList = vo.getQesitmSn().split(",");
+			 
+			 for(int i=0; i<randSnList.length; i++) {
+				 int sn = Integer.parseInt(randSnList[i]);
+				 
+				 stepList.add(snList[sn]);
+			 }
+		 }
+		 
+		for(PoolManageVO qna : qnaList) {
+			ArrayList<String> answerText = new ArrayList<String>();
+			ArrayList<String> answerImage = new ArrayList<String>();
+			
+			metaMap.put("Q", qna.getQesitmSj());
+			
+			for(String at : qna.getQesitmAnswerText().split(",")) {
+				answerText.add(at);
+			}
+			metaMap.put("AT", answerText);
+			
+			for(String ai : qna.getQesitmAnswerImage().split(",")) {
+				answerImage.add(ai);
+			}
+			metaMap.put("AI", answerImage);
+			
+			metaList.add(metaMap);
+		}
+		 
+		PoolDtl poolDtl = PoolDtl.builder()
+				 .status(vo.getStatus())
+				 .step(stepList)
+				 .metadata(metaList)
+				 .isSave(vo.getIsSave())
+				 .isVoice(vo.getIsVoice())
+				 .build();
+		
+		return poolDtl;
 	}
+
 	
 	/**
 	 * 회원 마음알기 설문 저장
@@ -71,9 +141,13 @@ public class PoolManageController {
 	public ResponseEntity<?> insertReports(@RequestBody PoolManageVO poolManageVO) {
 		poolManageVO.setUniqId("USRCNFRM_00000000004");
 		
-		poolManageService.insertReports(poolManageVO);
+		if(poolManageService.selectIsDone(poolManageVO) > 0) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} else {
+			poolManageService.insertReports(poolManageVO);
+		}
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 	}
 	
 	
@@ -87,7 +161,7 @@ public class PoolManageController {
 		
 		poolManageService.insertReportsStatus(poolManageVO);
 		
-		return ResponseEntity.ok(null);
+		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 	}
 	
 	/**

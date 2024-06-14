@@ -27,7 +27,7 @@ public interface PoolManageMapper {
 	 * @param poolManageVO
 	 * @return
 	 */
-	PoolManageVO selectReportsQnA(PoolManageVO poolManageVO);
+	List<PoolManageVO> selectReportsQnA(PoolManageVO poolManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 등록
@@ -53,4 +53,10 @@ public interface PoolManageMapper {
 	 * @return
 	 */
 	int selectReportsCount(PoolManageVO poolManageVO);
+	
+	/**
+	 * 마음알기 설문 완료 상태 조회
+	 * @return
+	 */
+	int selectIsDone(PoolManageVO poolManageVO);
 }

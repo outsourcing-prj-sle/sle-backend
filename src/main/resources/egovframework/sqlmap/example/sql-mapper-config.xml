@@ -9,5 +9,6 @@
 		<typeAlias alias="egovMap" type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
 		<typeAlias alias="loginVO" type="egovframework.example.cmmn.service.LoginVO"/>
 		<typeAlias alias="poolManageVO" type="egovframework.example.pool.service.PoolManageVO"/>
+		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
     </typeAliases>
 </configuration>

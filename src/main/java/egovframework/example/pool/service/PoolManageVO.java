@@ -1,10 +1,16 @@
 package egovframework.example.pool.service;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class PoolManageVO {
 	
 	/**
@@ -48,9 +54,14 @@ public class PoolManageVO {
 	private String qesitmSnList;
 	
 	/**
-	 * 문항답변
+	 * 문항답변문자
 	 */
-	private String qesitmAnswer; 
+	private String qesitmAnswerText;
+	
+	/**
+	 * 문항답변이미지
+	 */
+	private String qesitmAnswerImage;
 	
 	/**
 	 * 설문시작일자
@@ -71,5 +82,4 @@ public class PoolManageVO {
 	 * 문항 질문
 	 */
 	private String qesitmSj;
-	
 }

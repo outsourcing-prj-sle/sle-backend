@@ -3,9 +3,9 @@
 <mapper namespace="egovframework.example.login.service.impl.LoginManageMapper">
 
 	<update id="updateRequiredAgreeInfo" parameterType="hashmap">
-		update survey.comtnmber
-		set CONFM_AT = 'Y'
-		where USER_ID = #{uniqId};
+		UPDATE COMTNMBER
+		SET CONFM_AT = 'Y'
+		WHERE USER_ID = #{uniqId};
 	</update>
 	
 </mapper>

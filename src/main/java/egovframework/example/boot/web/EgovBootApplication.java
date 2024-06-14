@@ -9,7 +9,7 @@ import org.springframework.context.annotation.ComponentScan;
 
 @SpringBootApplication
 @ComponentScan(basePackages="egovframework")
-public class EgovBootApplication {
+public class EgovBootApplication extends SpringBootServletInitializer {
 	public static void main(String[] args) {
 		SpringApplication springApplication = new SpringApplication(EgovBootApplication.class);
 		springApplication.setBannerMode(Banner.Mode.OFF);
@@ -17,4 +17,8 @@ public class EgovBootApplication {
 		springApplication.run(args);
 	}
 
+	@Override
+	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
+		return application.sources(EgovBootApplication.class);
+	}
 }

@@ -4,7 +4,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>egov</groupId>
 	<artifactId>boot-example</artifactId>
-	<packaging>jar</packaging>
+	<packaging>war</packaging>
 	<version>1.0.0</version>
 	<name>boot-example</name>
 	<url>http://www.egovframe.go.kr</url>
@@ -64,6 +64,7 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tomcat.embed</groupId>
@@ -145,6 +146,7 @@
 	</dependencies>
 
     <build>
+		<finalName>sle-backend</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>

@@ -11,7 +11,7 @@ import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.login.service.LoginManageService;
 
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class LoginManageController {
 	
 	@Autowired

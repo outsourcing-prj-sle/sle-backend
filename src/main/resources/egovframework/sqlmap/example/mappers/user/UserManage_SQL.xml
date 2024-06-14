@@ -9,25 +9,25 @@
 			PHOTO_STRE_FILE_NM as profileImageId,
 			TEACHER_SE_CODE as userType,
 			SCHUL_CODE as userSpaceInfo,
-			concat(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo,
+			CONCAT(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo,
 			USER_ID as uniqId,
 			CONFM_AT as isFirstInvite,
 			SEXDSTN as sex,
 			EMAIL_ADRES as userEmail
-		from survey.comtnmber
+		from COMTNMBER
 		where USER_ID = #{uniqId}
 	</select>
 	
 	<insert id="insertUserInfo" parameterType="hashmap">
-		insert into survey.comtnmber(
+		insert into COMTNMBER(
 			USER_ID, 
 			USER_SE_CODE,
 			PASSWORD, 
 			USER_NM, 
 			PHOTO_STRE_FILE_NM,
 			EMAIL_ADRES, 
-			SEXDSTN, 
-			CONFM_AT, 
+			SEXDSTN,
+			CONFM_AT,
 			ST_GRADE, 
 			ST_CLASS, 
 			TEACHER_SE_CODE, 
@@ -52,13 +52,13 @@
 	</insert>
 	
 	<insert id="insertUserScrtyEstbs" parameterType="hashmap">
-		insert into survey.comtnemplyrscrtyestbs(SCRTY_DTRMN_TRGET_ID, AUTHOR_CODE)
+		insert into COMTNEMPLYRSCRTYESTBS(SCRTY_DTRMN_TRGET_ID, AUTHOR_CODE)
 		values (#{uniqId}, #{userRole})
 	</insert>
 	
 	<update id="updateUserInfo" parameterType="hashmap">
-		update survey.comtnmber
-		set
+		UPDATE COMTNMBER
+		SET
 			USER_NM = #{name}, 
 			PASSWORD = #{password}, 
 			PHOTO_STRE_FILE_NM = #{profileImageId}, 
@@ -70,7 +70,58 @@
 			ST_CLASS = #{classNm},
 			LAST_UPDUSR_PNTTM = now(),
 			LAST_UPDUSR_ID = #{uniqId}
-		where USER_ID = #{uniqId}
+		WHERE USER_ID = #{uniqId}
 	</update>
 
+	<select id="selectStudentSelList" parameterType="hashmap" resultType="selVO">
+		with sub as (
+			SELECT
+				a.POLL_ID,
+				a.POLL_STATUS
+			FROM COMTNBBSPOOLMANAGE a
+			WHERE a.USER_ID = #{uniqId}
+		)
+		SELECT 
+			mstr.POLL_NM as pollNm,
+			mstr.POLL_BGNDE as startDate,
+			mstr.POLL_ENDDE as endDate,
+			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
+			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<=]]> cast(now() as date) then false else true end as expired
+		FROM COMTNBBSPOLL mstr
+		left join sub
+		on mstr.POLL_ID = sub.POLL_ID
+	</select>
+	
+	<select id="selectTeacherSelList" parameterType="hashmap" resultType="selVO">
+		with mstr as (
+			select
+				a.POLL_ID,
+				a.POLL_NM,
+				b.USER_ID
+			from COMTNBBSPOLL a, COMTNMBER b
+			group by a.POLL_ID, b.USER_ID
+		)
+		select
+			group_concat(mstr.POLL_ID order by mstr.POLL_ID separator ",") as pollId,
+			group_concat(mstr.POLL_NM order by mstr.POLL_ID separator ",") as pollNm,
+			mstr.USER_ID as userId,
+			sub.USER_NM as name,
+			sub.EMAIL_ADRES as email,
+			concat(sub.ST_GRADE, '학년 ', sub.ST_CLASS, '반') as classInfo,
+			sub.SEXDSTN as sex,
+			group_concat(case when sub2.POLL_STATUS = 'done' then true else false end order by mstr.POLL_ID separator ",") as isParticipate
+		from mstr
+		left join COMTNMBER sub
+		on mstr.USER_ID = sub.USER_ID
+		left join COMTNBBSPOOLMANAGE sub2
+		on mstr.USER_ID = sub2.USER_ID
+		and mstr.POLL_ID = sub2.POLL_ID
+		where sub.SCHUL_CODE = '이작초등학교'
+		and sub.ST_GRADE = '1'
+		and sub.ST_CLASS = '3'
+		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
+		where sub.SCHUL_CODE = #{userSpaceInfo}
+		and sub.ST_GRADE = #{gradeNm}
+		and sub.ST_CLASS = #{classNm}
+	</select>
 </mapper>
