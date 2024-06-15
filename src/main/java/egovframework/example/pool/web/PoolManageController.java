@@ -22,7 +22,7 @@ import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
 
 @RestController
-@RequestMapping("/api/reports")
+@RequestMapping("/reports")
 public class PoolManageController {
 	@Resource(name = "poolManageService")
 	private PoolManageService poolManageService;
