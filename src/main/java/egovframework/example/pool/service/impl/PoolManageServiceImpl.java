@@ -16,10 +16,9 @@ import egovframework.example.pool.service.PoolManageVO;
 @Service("poolManageService")
 public class PoolManageServiceImpl implements PoolManageService {
 	
-	
 	@Resource(name = "poolManageMapper")
 	private PoolManageMapper mapper;
-
+	
 	/**
 	 * 회원 마음알기 설문 목록 조회
 	 * @param poolManageVO
@@ -46,7 +45,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @return
 	 */
 	@Override
-	public PoolManageVO selectReportsQnA(PoolManageVO poolManageVO) {
+	public List<PoolManageVO> selectReportsQnA(PoolManageVO poolManageVO) {
 		return mapper.selectReportsQnA(poolManageVO);
 	}
 
@@ -106,6 +105,16 @@ public class PoolManageServiceImpl implements PoolManageService {
 	@Override
 	public void updateReportsStatus(PoolManageVO poolManageVO) {
 		mapper.updateReportsStatus(poolManageVO);
+	}
+
+	/**
+	 * 마음알기 설문 완료 상태 조회
+	 * @return
+	 */
+	@Override
+	public int selectIsDone(PoolManageVO poolManageVO) {
+		
+		return mapper.selectIsDone(poolManageVO);
 	} 
 	
 	

@@ -4,41 +4,42 @@
 	
 	<select id="selectReports" parameterType="poolManageVO" resultType="poolManageVO">
 		with sub as (
-			select
+			SELECT
 				mstr.POLL_ID,
 				GROUP_CONCAT(mstr.QESITM_SN order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
 				sub.POLL_STATUS
-			from survey.comtnbbspoolatdrn mstr
-			left join survey.comtnbbspoolmanage sub
-			on mstr.POLL_ID = sub.POLL_ID
-			and mstr.USER_ID = sub.USER_ID
-			where mstr.USER_ID = #{uniqId}
-			group by mstr.POLL_ID
+			FROM COMTNBBSPOOLATDRN mstr
+			LEFT JOIN COMTNBBSPOOLMANAGE sub
+			ON mstr.POLL_ID = sub.POLL_ID
+			AND mstr.USER_ID = sub.USER_ID
+			WHERE mstr.USER_ID = #{uniqId}
+			GROUP BY mstr.POLL_ID
 		)
-		select
+		SELECT
 			mstr.POLL_ID,
-		 	case when sub.QESITM_SN is NULL then false else true end as status,
+			sub2.POLL_NM,
 			mstr.POLL_BGNDE as startDate,
 			mstr.POLL_ENDDE as endDate,
 			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
 			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<]]> now() then true else false end expired
-		from survey.comtnbbspoll mstr
-		left join sub
-		on mstr.POLL_ID = sub.POLL_ID
-		where mstr.USE_AT = 'Y'
-		order by mstr.POLL_ID
+		FROM COMTNBBSPOLL mstr
+		LEFT JOIN sub
+		ON mstr.POLL_ID = sub.POLL_ID
+		LEFT JOIN COMTNBBSPOLL sub2
+		ON mstr.POLL_ID = sub2.POLL_ID
+		WHERE mstr.USE_AT = 'Y'
+		ORDER BY mstr.POLL_ID
 	</select>
 	
 	<select id="selectReportsDtl" parameterType="poolManageVO" resultType="poolManageVO">
 		with sub as (
 			select
 				mstr.POLL_ID,
-				GROUP_CONCAT(mstr.QESITM_SN order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
-				GROUP_CONCAT(mstr.QESITM_ANSWER order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_ANSWER,
+				GROUP_CONCAT(concat(mstr.QESITM_SN, ':', mstr.QESITM_ANSWER) order by FRST_REGISTER_PNTTM desc separator ",") as QESITM_SN,
 				sub.QESITM_SN_LIST,
 				sub.POLL_STATUS
-			from survey.comtnbbspoolatdrn mstr
-			left join survey.comtnbbspoolmanage sub
+			from COMTNBBSPOOLATDRN mstr
+			left join COMTNBBSPOOLMANAGE sub
 			on mstr.POLL_ID = sub.POLL_ID
 			and mstr.USER_ID = sub.USER_ID
 			where mstr.USER_ID = #{uniqId}
@@ -52,9 +53,8 @@
 			mstr.VOICE_SUP as isVoice, 
 		 	case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
 		 	sub.QESITM_SN,
-		 	sub.QESITM_SN_LIST,
-		 	sub.QESITM_ANSWER
-		from survey.comtnbbspoll mstr
+		 	sub.QESITM_SN_LIST
+		from COMTNBBSPOLL mstr
 		left join sub
 		on mstr.POLL_ID = sub.POLL_ID
 		where mstr.USE_AT = 'Y'
@@ -63,14 +63,17 @@
 	
 	<select id="selectReportsQnA" parameterType="poolManageVO" resultType="poolManageVO">
 		select
-			QESITM_SN,
-			QESITM_SJ
-		from survey.comtnbbspoolqesitm
+			a.POLL_ID as pollId,
+			a.QESITM_SN as qesitmSn,
+			a.QESITM_SJ as qesitmSj,
+			a.QESITM_ANSWER_TEXT as qesitmAnswerText,
+			a.QESITM_ANSWER_IMAGE as qesitmAnswerImage
+		from COMTNBBSPOOLQESITM a
 		where POLL_ID = #{pollId}
 	</select>
 	
 	<insert id="insertReports" parameterType="poolManageVO">
-		insert into survey.comtnbbspoolatdrn
+		insert into COMTNBBSPOOLATDRN
 		values (
 			#{pollId},
 			#{qesitmSn},
@@ -80,7 +83,7 @@
 	</insert>
 	
 	<insert id="insertReportsStatus" parameterType="poolManageVO">
-		insert into survey.comtnbbspoolmanage
+		insert into COMTNBBSPOOLMANAGE
 		values (
 			#{uniqId},
 			#{pollId},
@@ -90,7 +93,7 @@
 	</insert>
 	
 	<update id="updateReportsStatus" parameterType="poolManageVO">
-		update  survey.comtnbbspoolmanage
+		update  COMTNBBSPOOLMANAGE
 		set POLL_STATUS = 'done'
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
@@ -99,7 +102,16 @@
 	<select id="selectReportsCount" parameterType="poolManageVO" resultType="int">
 		select
 			count(*)
-		from survey.comtnbbspoolqesitm mstr
+		from COMTNBBSPOOLQESITM mstr
 		where mstr.POLL_ID = #{pollId}
 	</select>
+	
+	<select id="selectIsDoneCount" parameterType="poolManageVO" resultType="int">
+		select
+			count(*)
+		from COMTNBBSPOOLMANAGE a
+		where a.USER_ID = #{uniqId}
+		and a.POLL_ID = #{pollId}
+		and a.POLL_STATUS = 'done'
+	</select>	
 </mapper>

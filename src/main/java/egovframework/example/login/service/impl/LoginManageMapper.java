@@ -16,5 +16,5 @@ public interface LoginManageMapper {
 	 * 로그인시 ID로 유저 찾기
 	 * @return LoginVO
 	 */
-	LoginVO selectUserById(AccountDTO accountVO);
+	LoginVO selectUserById(AccountDTO accountDTO);
 }

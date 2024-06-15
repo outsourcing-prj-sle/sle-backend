@@ -18,7 +18,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/login")
+@RequestMapping("/api/login")
 public class LoginManageController {
 	
 	@Autowired
@@ -31,16 +31,21 @@ public class LoginManageController {
 	@PostMapping("/")
 	public ResponseEntity<?> selLogin(@RequestBody AccountDTO account){
 		LoginVO user = new LoginVO();
+		log.info("로그인 User : {} , {} ",account.getId(),account.getPassword());
 		try {
 			user = loginManageService.selectUserById(account);
-			if(user.getPassword()==account.getPassword()) {
-				log.info("로그인 User : ",account.getId());
+			System.out.println(user.getPassword().length());
+			System.out.println(account.getPassword().length());
+			if(!user.getPassword().equals(account.getPassword())) {
+				log.error("로그인 에러");
+				return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed(Wrong Password)"));
 			}
 
 		}catch(Exception e) {
-			log.error("로그인 에러",e);
-			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed",user));
+			log.error("로그인 에러");
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed(User Not Found)"));
 		}
+		log.info("로그인 User : ",account.getId());
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),user));
 	}
 	
@@ -94,7 +99,7 @@ public class LoginManageController {
 			log.error("로그인 에러",e);
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Whale Login Failed"));
 		}
-		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
+		return ResponseEntity.ok().build();
 	}
 	
 	/**

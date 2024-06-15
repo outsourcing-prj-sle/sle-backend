@@ -21,23 +21,12 @@ public class LoginManageServiceImpl implements LoginManageService {
 	public void updateRequiredAgreeInfo(LoginVO loginVO) {
 		loginManageMapper.updateRequiredAgreeInfo(loginVO);
 	}
-	
 	/**
 	 * 로그인시 ID로 유저 찾기
 	 * @return LoginVO
 	 */	
 	@Override
-	public LoginVO selectUserById(AccountDTO accountVO){
-		return loginManageMapper.selectUserById(accountVO);
-	}
-	
-	/**
-	 * 헤더 토큰으로 유저 정보 호출
-	 * @return LoginVO
-	 */		
-	@Override
-	public LoginVO authorizationUser(String authorization) {
-		// TODO Auto-generated method stub
-		return loginManageMapper.selectUserById(authorization);;
+	public LoginVO selectUserById(AccountDTO accountDTO){
+		return loginManageMapper.selectUserById(accountDTO);
 	}
 }
