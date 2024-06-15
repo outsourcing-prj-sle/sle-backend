@@ -39,7 +39,7 @@ public class LoginManageController {
 
 		}catch(Exception e) {
 			log.error("로그인 에러",e);
-			return null;
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed",user));
 		}
 		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),user));
 	}
@@ -49,8 +49,12 @@ public class LoginManageController {
 	 */
 	@GetMapping("/naver")
 	public ResponseEntity<?> naverLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Naver Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	
@@ -59,8 +63,12 @@ public class LoginManageController {
 	 */
 	@GetMapping("/kakao")
 	public ResponseEntity<?> kakaoLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Kakao Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	/**
@@ -68,8 +76,12 @@ public class LoginManageController {
 	 */
 	@GetMapping("/google")
 	public ResponseEntity<?> googleLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Google Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	/**
@@ -77,8 +89,12 @@ public class LoginManageController {
 	 */
 	@GetMapping("/gne")
 	public ResponseEntity<?> gneLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Whale Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	/**
@@ -86,13 +102,16 @@ public class LoginManageController {
 	 */
 	@PutMapping("/required-agree-info")
 	public ResponseEntity<?> insertRequiredAgreeInfo(){
-		
-		LoginVO loginVO = new LoginVO();
-		loginVO.setUniqId("USRCNFRM_00000000004");
-		
-		loginManageService.updateRequiredAgreeInfo(loginVO);
-		
-		return ResponseEntity.ok().build();
+		try {
+			LoginVO loginVO = new LoginVO();
+			loginVO.setUniqId("USRCNFRM_00000000004");
+			
+			loginManageService.updateRequiredAgreeInfo(loginVO);
+		}catch(Exception e) {
+			log.error("API 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Required Agree Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 }

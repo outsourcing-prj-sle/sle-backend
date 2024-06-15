@@ -15,4 +15,10 @@ public interface LoginManageService {
 	 */	
 	LoginVO selectUserById(AccountDTO accountVO);
 	
+	/**
+	 * 헤더 토큰으로 유저 정보 호출
+	 * @return LoginVO
+	 */		
+	LoginVO authorizationUser(String authorization);
+	
 }

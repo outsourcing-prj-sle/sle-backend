@@ -31,4 +31,13 @@ public class LoginManageServiceImpl implements LoginManageService {
 		return loginManageMapper.selectUserById(accountVO);
 	}
 	
+	/**
+	 * 헤더 토큰으로 유저 정보 호출
+	 * @return LoginVO
+	 */		
+	@Override
+	public LoginVO authorizationUser(String authorization) {
+		// TODO Auto-generated method stub
+		return loginManageMapper.selectUserById(authorization);;
+	}
 }
