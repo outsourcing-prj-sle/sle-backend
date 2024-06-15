@@ -7,6 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
+@Builder
 public class Users {
 	private String id;
 	private String name;
@@ -19,7 +20,7 @@ public class Users {
 	private Boolean isFirstInvite;
 	private String sex;
 	private String userEmail;
-	
+/*	
 	public Users(LoginVO loginVO) {
 		this.setId(loginVO.getId());
 		this.setName(loginVO.getName());
@@ -33,4 +34,5 @@ public class Users {
 		this.setSex(loginVO.getSex());
 		this.setUserEmail(loginVO.getUserEmail());
 	}
+	*/
 }

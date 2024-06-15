@@ -25,7 +25,7 @@ import egovframework.example.user.service.Users;
 @RequestMapping("/api")
 public class UserManageController {
 	
-	@Resource(name = "UserManageService")
+	@Resource(name = "userManageService")
 	private UserManageService userManageService;
 	
 	/**

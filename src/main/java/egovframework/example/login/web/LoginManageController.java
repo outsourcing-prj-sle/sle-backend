@@ -1,15 +1,22 @@
 package egovframework.example.login.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.example.cmmn.service.AccountDTO;
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.cmmn.service.ResultVO;
 import egovframework.example.login.service.LoginManageService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/login")
 public class LoginManageController {
@@ -18,12 +25,41 @@ public class LoginManageController {
 	private LoginManageService loginManageService;
 	
 	/**
+	 * 기본 로그인
+	 * @param AccountDTO
+	 */
+	@PostMapping("/")
+	public ResponseEntity<?> selLogin(@RequestBody AccountDTO account){
+		LoginVO user = new LoginVO();
+		log.info("로그인 User : {} , {} ",account.getId(),account.getPassword());
+		try {
+			user = loginManageService.selectUserById(account);
+			System.out.println(user.getPassword().length());
+			System.out.println(account.getPassword().length());
+			if(!user.getPassword().equals(account.getPassword())) {
+				log.error("로그인 에러");
+				return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed(Wrong Password)"));
+			}
+
+		}catch(Exception e) {
+			log.error("로그인 에러");
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed(User Not Found)"));
+		}
+		log.info("로그인 User : ",account.getId());
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),user));
+	}
+	
+	/**
 	 * 네이버 로그인
 	 */
 	@GetMapping("/naver")
 	public ResponseEntity<?> naverLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Naver Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	
@@ -32,8 +68,12 @@ public class LoginManageController {
 	 */
 	@GetMapping("/kakao")
 	public ResponseEntity<?> kakaoLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Kakao Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	/**
@@ -41,8 +81,12 @@ public class LoginManageController {
 	 */
 	@GetMapping("/google")
 	public ResponseEntity<?> googleLogin() {
-		
-		return ResponseEntity.ok().build();
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Google Login Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 	/**
@@ -50,7 +94,11 @@ public class LoginManageController {
 	 */
 	@GetMapping("/gne")
 	public ResponseEntity<?> gneLogin() {
-		
+		try {
+		}catch(Exception e) {
+			log.error("로그인 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Whale Login Failed"));
+		}
 		return ResponseEntity.ok().build();
 	}
 	
@@ -59,13 +107,16 @@ public class LoginManageController {
 	 */
 	@PutMapping("/required-agree-info")
 	public ResponseEntity<?> insertRequiredAgreeInfo(){
-		
-		LoginVO loginVO = new LoginVO();
-		loginVO.setUniqId("USRCNFRM_00000000004");
-		
-		loginManageService.updateRequiredAgreeInfo(loginVO);
-		
-		return ResponseEntity.ok().build();
+		try {
+			LoginVO loginVO = new LoginVO();
+			loginVO.setUniqId("USRCNFRM_00000000004");
+			
+			loginManageService.updateRequiredAgreeInfo(loginVO);
+		}catch(Exception e) {
+			log.error("API 에러",e);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Required Agree Failed"));
+		}
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString()));
 	}
 	
 }

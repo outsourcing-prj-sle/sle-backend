@@ -8,4 +8,21 @@
 		WHERE USER_ID = #{uniqId};
 	</update>
 	
+	<select id="selectUserById" parameterType="accountDTO" resultType="loginVO">
+		select
+			USER_SE_CODE as id,
+			USER_NM as name,
+			PASSWORD as password,
+			PHOTO_STRE_FILE_NM as profileImageId,
+			TEACHER_SE_CODE as userType,
+			SCHUL_CODE as userSpaceInfo,
+			concat(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo,
+			USER_ID as uniqId,
+			CONFM_AT as isFirstInvite,
+			SEXDSTN as sex,
+			EMAIL_ADRES as userEmail
+		from COMTNMBER
+		where USER_SE_CODE = #{id}
+	</select>
+	
 </mapper>
