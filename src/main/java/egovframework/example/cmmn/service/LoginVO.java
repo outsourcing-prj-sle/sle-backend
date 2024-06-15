@@ -12,7 +12,6 @@ public class LoginVO {
 	 */
 	private String id;
 	
-	
 	/**
 	 * 사용자 비밀번호
 	 */
