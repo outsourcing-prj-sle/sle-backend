@@ -107,19 +107,4 @@ public class LoginVO {
 			this.setUserRole("ROLE_STUDENT");
 		}
 	}
-	
-	/**
-	 * 소속 정보 코드 변환
-	 */
-	public void changeUserSpace() {
-		String spaceInfo = this.getUserSpaceInfo();
-		
-		switch (spaceInfo) {
-		case "COM1":
-				spaceInfo = "이작초등학교";
-				break;
-		}
-		
-		this.setUserSpaceInfo(spaceInfo);
-	}
 }

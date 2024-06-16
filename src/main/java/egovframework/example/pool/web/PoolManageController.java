@@ -1,7 +1,6 @@
 package egovframework.example.pool.web;
 
 import java.util.ArrayList;
-
 import java.util.HashMap;
 import java.util.List;
 
@@ -24,12 +23,16 @@ import egovframework.example.pool.service.Pool;
 import egovframework.example.pool.service.PoolDtl;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
+import egovframework.example.user.service.UserManageService;
 
 @RestController
 @RequestMapping("/reports")
 public class PoolManageController {
 	@Resource(name = "poolManageService")
 	private PoolManageService poolManageService;
+	
+	@Resource(name = "userManageService")
+	private UserManageService userManageService;
 	
 	/**
 	 * 회원 마음알기 설문 목록 조회
@@ -39,33 +42,53 @@ public class PoolManageController {
 		PoolManageVO poolManageVO = new PoolManageVO();
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.userSpaceOrgInfo(header.get("grade").get(0)+header.get("class").get(0))
 				.build();
+		
 		if(!poolManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
+		
 		poolManageVO.setUniqId(auth.getUniqId());
-		
-		List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
-		
 		HashMap<String, List<Pool>> map = new HashMap<>();
-		List<Pool> todos = new ArrayList<>(); 
-		List<Pool> dones = new ArrayList<>();
 		
-		for(PoolManageVO vo : list) {
-			Pool pool = new Pool(vo);
+		if(userManageService.isReallyTeacher(poolManageVO.getUniqId())) {
+			List<PoolManageVO> list = poolManageService.selectReportsTeacher(poolManageVO);
 			
-			if(pool.getStatus().equals("done")) {
-				dones.add(pool);
-			} else {
-				todos.add(pool);
+			List<Pool> progress = new ArrayList<>(); 
+			List<Pool> expired = new ArrayList<>();
+			
+			for(PoolManageVO vo : list) {
+				Pool pool = new Pool(vo);
+				
+				if(pool.getExpired()) {
+					expired.add(pool);
+				} else {
+					progress.add(pool);
+				}
 			}
+			
+			map.put("todo", progress);
+			map.put("done", expired);
+			
+		} else {
+			List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
+			
+			List<Pool> todos = new ArrayList<>(); 
+			List<Pool> dones = new ArrayList<>();
+			
+			for(PoolManageVO vo : list) {
+				Pool pool = new Pool(vo);
+				
+				if(pool.getStatus().equals("done")) {
+					dones.add(pool);
+				} else {
+					todos.add(pool);
+				}
+			}
+			
+			map.put("todo", todos);
+			map.put("done", dones);
 		}
-		
-		map.put("todo", todos);
-		map.put("done", dones);
 		
 		return ResponseEntity.ok(map);
 	}
@@ -83,14 +106,12 @@ public class PoolManageController {
 		PoolManageVO poolManageVO = new PoolManageVO();
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
+		
 		if(!poolManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
+		
 		poolManageVO.setUniqId(auth.getUniqId());
 		poolManageVO.setPollId(pollId);
 		 
@@ -123,7 +144,11 @@ public class PoolManageController {
 			 for(int i=0; i<randSnList.length; i++) {
 				 int sn = Integer.parseInt(randSnList[i]);
 				 
-				 stepList.add(snList[sn]);
+				 if(sn > snList.length) {
+					 stepList.add(randSnList[i] + ":");
+				 } else {
+					 stepList.add(snList[sn-1]);
+				 }
 			 }
 		 }
 		 
