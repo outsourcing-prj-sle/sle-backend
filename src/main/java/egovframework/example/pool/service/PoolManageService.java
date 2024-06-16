@@ -2,6 +2,8 @@ package egovframework.example.pool.service;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
+
 import egovframework.example.cmmn.service.LoginVO;
 
 public interface PoolManageService {
@@ -62,4 +64,10 @@ public interface PoolManageService {
 	 * @return boolean
 	 */
 	boolean authorizationUser(LoginVO loginVO);
+	
+	/**
+	 * 마음알기 설문 안내 사항 조회(기본데이터)
+	 * @return PoolNoticeDTO
+	 */
+	PoolNoticeDTO selectReportsNotice(String pollId);
 }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
+import egovframework.example.pool.service.PoolNoticeDTO;
 
 @Service("poolManageService")
 public class PoolManageServiceImpl implements PoolManageService {
@@ -134,5 +135,13 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 */
 	public boolean authorizationUser(LoginVO loginVO) {
 		return mapper.authorizationUser(loginVO);
+	}
+	
+	/**
+	 * 마음알기 설문 안내 사항 조회(기본데이터)
+	 * @return PoolNoticeDTL
+	 */
+	public PoolNoticeDTO selectReportsNotice(String pollId) {
+		return mapper.selectReportsNotice(pollId);
 	}
 }

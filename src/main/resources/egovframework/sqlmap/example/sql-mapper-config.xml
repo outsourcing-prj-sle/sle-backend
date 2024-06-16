@@ -10,6 +10,7 @@
 		<typeAlias alias="loginVO" type="egovframework.example.cmmn.service.LoginVO"/>
 		<typeAlias alias="accountDTO" type="egovframework.example.cmmn.service.AccountDTO"/>
 		<typeAlias alias="poolManageVO" type="egovframework.example.pool.service.PoolManageVO"/>
+		<typeAlias alias="poolNoticeDTO" type="egovframework.example.pool.service.PoolNoticeDTO"/>
 		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
     </typeAliases>
 </configuration>

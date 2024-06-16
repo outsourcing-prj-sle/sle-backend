@@ -134,4 +134,15 @@
 	    from COMTNMBER
 	    where USER_ID = #{uniqId}
 	</select>
+	
+	<select id="selectReportsNotice" parameterType="String" resultType="poolNoticeDTO">
+	    select
+			a.POLL_ID as pollId,
+			a.POLL_NM as pollNm,
+			a.POLL_BGNDE as startDate,
+			a.POLL_ENDDE as endDate,
+			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
+	    from COMTNBBSPOOLATDRN
+	    where POLL_ID = #{pollId}
+	</select>
 </mapper>

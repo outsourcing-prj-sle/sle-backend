@@ -2,10 +2,12 @@ package egovframework.example.pool.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.PoolManageVO;
+import egovframework.example.pool.service.PoolNoticeDTO;
 
 @Mapper("poolManageMapper")
 public interface PoolManageMapper {
@@ -73,4 +75,11 @@ public interface PoolManageMapper {
 	 * @return boolean
 	 */
 	boolean authorizationUser(LoginVO loginVO);
+	
+	/**
+	 * 마음알기 설문 안내 사항 조회(기본데이터)
+	 * @return PoolNoticeDTL
+	 */
+	PoolNoticeDTO selectReportsNotice(@Param("pollId") String pollId);
+	
 }

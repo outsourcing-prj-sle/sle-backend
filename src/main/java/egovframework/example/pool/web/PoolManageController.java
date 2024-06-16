@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
@@ -23,6 +24,7 @@ import egovframework.example.pool.service.Pool;
 import egovframework.example.pool.service.PoolDtl;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
+import egovframework.example.pool.service.PoolNoticeDTO;
 import egovframework.example.user.service.UserManageService;
 
 @RestController
@@ -263,5 +265,21 @@ public class PoolManageController {
 		poolManageService.updateReportsStatus(poolManageVO);
 		
 		return ResponseEntity.ok().build();
+	}
+	
+	@GetMapping("/notice")
+	public ResponseEntity<?> selectReportsNotice(@RequestHeader HttpHeaders header,	@RequestParam String pollId){
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		if(!poolManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		PoolNoticeDTO poolNoticeDTO = poolManageService.selectReportsNotice(pollId);
+		return ResponseEntity.ok(poolNoticeDTO);
 	}
 }
