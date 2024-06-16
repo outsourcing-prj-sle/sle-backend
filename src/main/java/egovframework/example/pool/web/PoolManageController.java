@@ -134,7 +134,7 @@ public class PoolManageController {
 		PoolManageVO vo = poolManageService.selectReportsDtl(poolManageVO);
 		 List<PoolManageVO> qnaList = poolManageService.selectReportsQnA(poolManageVO);
 		 
-		 ArrayList<String> stepList = new ArrayList<String>();
+		 StringBuilder stepList = new StringBuilder();
 		 
 		 ArrayList<HashMap<String, Object>> metaList = new ArrayList<HashMap<String,Object>>();
 		 
@@ -146,9 +146,13 @@ public class PoolManageController {
 				 int sn = Integer.parseInt(randSnList[i]);
 				 
 				 if(sn > snList.length) {
-					 stepList.add(randSnList[i] + ":");
+					 stepList.append(randSnList[i] + ":");
 				 } else {
-					 stepList.add(snList[sn-1]);
+					 stepList.append(snList[sn-1]);
+				 }
+				 
+				 if(i != randSnList.length -1) {
+					 stepList.append(",");
 				 }
 			 }
 		 }
@@ -178,7 +182,7 @@ public class PoolManageController {
 				 .pollNm(vo.getPollNm())
 				 .startDate(vo.getStartDate())
 				 .endDate(vo.getEndDate())
-				 .step(stepList)
+				 .step(stepList.toString())
 				 .metadata(metaList)
 				 .isSave(vo.getIsSave())
 				 .isVoice(vo.getIsVoice())
@@ -208,7 +212,7 @@ public class PoolManageController {
 		
 		poolManageVO.setUniqId(auth.getUniqId());
 		
-		if(poolManageService.selectIsDone(poolManageVO)) {
+		if(poolManageService.selectIsDone(poolManageVO) == 1) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
 			poolManageService.insertReports(poolManageVO);
@@ -235,8 +239,8 @@ public class PoolManageController {
 		}
 		poolManageVO.setUniqId(auth.getUniqId());
 		
-		if(poolManageService.selectIsDone(poolManageVO)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		if(poolManageService.selectIsDone(poolManageVO) == 1) {
+			return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 		} else {
 			poolManageService.insertReportsStatus(poolManageVO);
 		}
@@ -261,7 +265,7 @@ public class PoolManageController {
 		}
 		poolManageVO.setUniqId(auth.getUniqId());
 		
-		if(poolManageService.selectIsDone(poolManageVO)) {
+		if(poolManageService.selectIsDone(poolManageVO) == 1) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
 			poolManageService.updateReportsStatus(poolManageVO);
@@ -274,15 +278,15 @@ public class PoolManageController {
 	public ResponseEntity<?> selectReportsNotice(@RequestHeader HttpHeaders header,	@RequestParam String pollId){
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
+		
 		if(!poolManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
+		
 		PoolNoticeDTO poolNoticeDTO = poolManageService.selectReportsNotice(pollId);
+		poolNoticeDTO.setUniqId(auth.getUniqId());
+		
 		return ResponseEntity.ok(poolNoticeDTO);
 	}
 }

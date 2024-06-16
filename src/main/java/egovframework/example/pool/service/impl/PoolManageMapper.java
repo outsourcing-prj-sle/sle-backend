@@ -71,6 +71,12 @@ public interface PoolManageMapper {
 	int selectIsDone(PoolManageVO poolManageVO);
 	
 	/**
+	 * 회원 마음알기 설문 수정
+	 * @param poolManageVO
+	 */
+	void updateReports(PoolManageVO poolManageVO);
+	
+	/**
 	 * 토큰으로 회원 인증
 	 * @return boolean
 	 */
@@ -80,6 +86,17 @@ public interface PoolManageMapper {
 	 * 마음알기 설문 안내 사항 조회(기본데이터)
 	 * @return PoolNoticeDTL
 	 */
-	PoolNoticeDTO selectReportsNotice(@Param("pollId") String pollId);
+	PoolNoticeDTO selectReportsNotice(String pollId);
+
+	/**설문조사 기록 확인
+	 * @return boolean
+	 */
+	int selectHistoryIsExist(PoolManageVO poolManageVO);
+	
+	/**
+	 * 설문 관리 목록 기록 확인
+	 * @return boolean
+	 */
+	int selectReportsMngIsExist(PoolManageVO poolManageVO);
 	
 }

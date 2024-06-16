@@ -59,6 +59,8 @@
 		select
 			mstr.POLL_ID,
 			mstr.POLL_NM,
+			mstr.POLL_BGNDE as startDate,
+			mstr.POLL_ENDDE as endDate,
 			mstr.TEMP_SAVE as isSave,
 			mstr.VOICE_SUP as isVoice, 
 		 	case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
@@ -102,6 +104,13 @@
 		)
 	</insert>
 	
+	<update id="updateReports" parameterType="poolManageVO">
+		update  COMTNBBSPOOLATDRN
+		set QESITM_ANSWER = #{qesitmAnswer}
+		where USER_ID = #{uniqId}
+		and POLL_ID = #{pollId}
+	</update>
+	
 	<update id="updateReportsStatus" parameterType="poolManageVO">
 		update  COMTNBBSPOOLMANAGE
 		set POLL_STATUS = 'done'
@@ -116,9 +125,9 @@
 		where mstr.POLL_ID = #{pollId}
 	</select>
 	
-	<select id="selectIsDoneCount" parameterType="poolManageVO" resultType="int">
+	<select id="selectIsDone" parameterType="poolManageVO" resultType="int">
 		select
-			count(*)
+			case when count(*) > 0 then 1 else 0 end as isExist
 		from COMTNBBSPOOLMANAGE a
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
@@ -128,8 +137,8 @@
 	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
 	    select
 	        CASE 
-	            WHEN count(*) > 0 THEN true
-	            ELSE false
+	            WHEN count(*) > 0 THEN 1
+	            ELSE 0
 	        END as userExists
 	    from COMTNMBER
 	    where USER_ID = #{uniqId}
@@ -141,8 +150,25 @@
 			a.POLL_NM as pollNm,
 			a.POLL_BGNDE as startDate,
 			a.POLL_ENDDE as endDate,
-			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
-	    from COMTNBBSPOOLATDRN
-	    where POLL_ID = #{pollId}
+			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then 1 else 0 end as expired
+		from COMTNBBSPOLL a
+	    where a.POLL_ID = #{pollId}
+	</select>
+	
+	<select id="selectHistoryIsExist" parameterType="hashmap" resultType="int">
+		select
+			case when count(*) > 0 then 1 else 0 end as isExist
+		from COMTNBBSPOOLATDRN a
+		where a.USER_ID = #{uniqId}
+		and a.POLL_ID = #{pollId}
+		and QESITM_SN = #{qesitmSn}
+	</select>
+	
+	<select id="selectReportsMngIsExist" parameterType="hashmap" resultType="int">
+		select
+			case when count(*) > 0 then 1 else 0 end as isExist
+		from COMTNBBSPOOLMANAGE a
+		where a.USER_ID = #{uniqId}
+		and a.POLL_ID = #{pollId}
 	</select>
 </mapper>

@@ -120,23 +120,31 @@ public class UserManageController {
 			HashMap<String, Object> resultMap = new HashMap<String, Object>();
 			
 			ArrayList<HashMap<String, String>> reportList = new ArrayList<>();
-			HashMap<String, String> map = new HashMap<String, String>();
 			
 			ArrayList<Teachers> infoArr = new ArrayList<>();
-			HashMap<String, Boolean> map2 = new HashMap<String, Boolean>();
+			
 			
 			for(int i=0; i<voList.size(); i++) {
 				String[] pollIdList = voList.get(i).getPollIdList().split(",");
 				String[] pollNmList = voList.get(i).getPollNmList().split(",");
 				String[] isParticipate = voList.get(i).getIsParticipateList().split(",");
+				String[] startDate = voList.get(i).getStartDate().split(",");
+				String[] endDate = voList.get(i).getEndDate().split(",");
+				String[] expired = voList.get(i).getExpiredList().split(",");
+				HashMap<String, Integer> map2 = new HashMap<String, Integer>();
 				
 				for(int j=0; j<pollIdList.length; j++) {
 					if(i==0) {
-						map.put(pollIdList[j], pollNmList[j]);
+						HashMap<String, String> map = new HashMap<String, String>();
+						
+						map.put("pollNm", pollNmList[j]);
+						map.put("startDate", startDate[j]);
+						map.put("endDate", endDate[j]);
+						map.put("expired", expired[j]);
 						reportList.add(map);
 					}
 					
-					map2.put(pollIdList[j], Boolean.parseBoolean(isParticipate[j]));
+					map2.put(pollNmList[j], Integer.parseInt(isParticipate[j]));
 				}
 				
 				Teachers teacher = Teachers.builder()
