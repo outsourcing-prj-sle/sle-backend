@@ -29,6 +29,16 @@ public class PoolManageServiceImpl implements PoolManageService {
 	public List<PoolManageVO> selectReports(PoolManageVO poolManageVO) {
 		return mapper.selectReports(poolManageVO);
 	}
+	
+	/**
+	 * 회원 마음알기 설문 선생님 목록 조회
+	 * @param poolManageVO
+	 * @return
+	 */
+	@Override
+	public List<PoolManageVO> selectReportsTeacher(PoolManageVO poolManageVO) {
+		return mapper.selectReportsTeacher(poolManageVO);
+	}
 
 	/**
 	 * 회원 마음알기 설문 상세 조회

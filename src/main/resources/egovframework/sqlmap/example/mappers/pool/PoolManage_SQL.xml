@@ -31,6 +31,16 @@
 		ORDER BY mstr.POLL_ID
 	</select>
 	
+	<select id="selectReportsTeacher" parameterType="poolManageVO" resultType="poolManageVO">
+		select
+			POLL_ID,
+			POLL_NM,
+			POLL_BGNDE as startDate,
+			POLL_ENDDE as endDate,
+			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
+		from COMTNBBSPOLL
+	</select>
+	
 	<select id="selectReportsDtl" parameterType="poolManageVO" resultType="poolManageVO">
 		with sub as (
 			select

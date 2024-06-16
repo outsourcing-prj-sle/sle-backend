@@ -10,7 +10,6 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -95,13 +94,7 @@ public class UserManageController {
 				.gradeNm(header.get("grade").get(0))
 				.classNm(header.get("class").get(0))
 				.build();
-		/*
-		String uniqId = header.get("authorization").get(0);
-		String userRole = header.get("role").get(0);
-		String userSpaceInfo = header.get("spaceInfo").get(0);
-		String gradeNm = header.get("grade").get(0);
-		String classNm = header.get("class").get(0);
-		*/
+		
 		if(!userManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
@@ -117,56 +110,16 @@ public class UserManageController {
 	ResponseEntity<?> selectMySelList(@RequestHeader HttpHeaders header, @RequestBody LoginVO loginVO) {
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
+		
 		if(!userManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
-		}
-		
-		if(StringUtils.isEmpty(auth.getUniqId()) || StringUtils.isEmpty(auth.getUserRole())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("기본 정보가 없습니다.");
 		}
 		
 		loginVO.setUniqId(auth.getUniqId());
 		loginVO.setUserRole(auth.getUserRole());
 		
-		if(loginVO.getUserRole().equals("ROLE_STUDENT")) {
-			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
-			ArrayList<Students> resultList = new ArrayList<Students>();
-			
-			for(MySelVO vo : voList) {
-				Students result = Students.builder()
-						.pollNm(vo.getPollNm())
-						.startDate(vo.getStartDate())
-						.endDate(vo.getEndDate())
-						.status(vo.getStatus())
-						.expired(vo.getExpired())
-						.build();
-				
-				resultList.add(result);
-			}
-			
-			return ResponseEntity.ok(resultList);
-		}
-		
-		if(loginVO.getUserRole().equals("ROLE_TEACHER")) {
-			
-//			if(!userManageService.isReallyTeacher(uniqId)) {
-//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님이 아닙니다.");
-//			}
-			
-			if(StringUtils.isEmpty(auth.getUserSpaceInfo()) || StringUtils.isEmpty(auth.getGradeNm()) || StringUtils.isEmpty(auth.getClassNm())) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님 정보가 없습니다.");
-			}
-			
-			loginVO.setUserSpaceInfo(auth.getUserSpaceInfo());
-			loginVO.changeUserSpace();
-			loginVO.setGradeNm(auth.getGradeNm());
-			loginVO.setClassNm(auth.getClassNm());
-			
+		if(userManageService.isReallyTeacher(loginVO.getUniqId())) {
 			List<MySelVO> voList = userManageService.selectTeacherSelList(loginVO);
 			HashMap<String, Object> resultMap = new HashMap<String, Object>();
 			
@@ -206,9 +159,25 @@ public class UserManageController {
 			resultMap.put("infoArr", infoArr);
 			
 			return ResponseEntity.ok(resultMap); 
+		} else {
+			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
+			ArrayList<Students> resultList = new ArrayList<Students>();
+			
+			for(MySelVO vo : voList) {
+				Students result = Students.builder()
+						.pollNm(vo.getPollNm())
+						.startDate(vo.getStartDate())
+						.endDate(vo.getEndDate())
+						.status(vo.getStatus())
+						.expired(vo.getExpired())
+						.build();
+				
+				resultList.add(result);
+			}
+			
+			return ResponseEntity.ok(resultList);
 		}
 		
-		return ResponseEntity.notFound().build();
 	}
 	
 }
