@@ -32,7 +32,8 @@
 			ST_CLASS, 
 			TEACHER_SE_CODE, 
 			SCHUL_CODE,
-			FRST_REGIST_PNTTM
+			FRST_REGIST_PNTTM,
+			DN
 		)
 		values (
 			#{uniqId},
@@ -47,7 +48,8 @@
 			#{classNm},
 			#{userType},
 			#{userSpaceInfo},
-			now()
+			now(),
+			#{relationInfo}
 		)
 	</insert>
 	
