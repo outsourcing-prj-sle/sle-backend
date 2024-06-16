@@ -54,7 +54,7 @@ public class LoginManageController {
 		obj.put("grade", "1");
 		obj.put("class", "3");
 		
-		result.put("token", "token");
+		result.put("token", user.getUniqId());
 		result.put("id", account.getId());
 		result.put("type", "student");
 		result.put("school", "test");
