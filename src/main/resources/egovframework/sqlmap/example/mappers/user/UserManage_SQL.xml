@@ -17,6 +17,16 @@
 		from COMTNMBER
 		where USER_ID = #{uniqId}
 	</select>
+		
+	<select id="checkUserById" parameterType="String" resultType="boolean">
+	    select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from COMTNMBER
+	    where USER_SE_CODE = #{id}
+	</select>
 	
 	<insert id="insertUserInfo" parameterType="hashmap">
 		insert into COMTNMBER(

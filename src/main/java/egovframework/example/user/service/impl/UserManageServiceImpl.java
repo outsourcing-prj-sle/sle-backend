@@ -31,7 +31,15 @@ public class UserManageServiceImpl implements UserManageService {
 
 		return mapper.selectUserInfo(loginVO);
 	}
-
+	
+	/**
+	 * ID로 회원 정보 조회
+	 * @return LoginVO
+	 */
+	public boolean checkUserById(String id) {
+		return mapper.checkUserById(id);
+	}
+	
 	/**
 	 * 회원정보 등록
 	 */
@@ -40,7 +48,6 @@ public class UserManageServiceImpl implements UserManageService {
 		try {
 			loginVO.setUniqId(userIdGnrService.getNextStringId());
 			loginVO.isRole();
-			
 			mapper.insertUserInfo(loginVO);
 			mapper.insertUserScrtyEstbs(loginVO);
 		} catch (FdlException e) {

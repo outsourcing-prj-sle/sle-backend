@@ -2,6 +2,7 @@ package egovframework.example.user.service.impl;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.example.cmmn.service.LoginVO;
@@ -12,9 +13,15 @@ public interface UserManageMapper {
 	
 	/**
 	 * 회원정보 조회
-	 * @return UserManageVO 
+	 * @return LoginVO 
 	 */
 	LoginVO selectUserInfo(LoginVO loginVO);
+	
+	/**
+	 * ID로 회원 정보 조회
+	 * @return boolean
+	 */
+	boolean checkUserById(@Param("id") String id);
 	
 	/**
 	 * 회원정보 등록
