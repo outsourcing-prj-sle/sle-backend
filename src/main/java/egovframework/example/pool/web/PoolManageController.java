@@ -23,6 +23,7 @@ import egovframework.example.pool.service.Pool;
 import egovframework.example.pool.service.PoolDtl;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
+import egovframework.example.user.service.UserManageService;
 
 @RestController
 @RequestMapping("/reports")
@@ -30,32 +31,59 @@ public class PoolManageController {
 	@Resource(name = "poolManageService")
 	private PoolManageService poolManageService;
 	
+	@Resource(name = "userManageService")
+	private UserManageService userManageService;
+	
 	/**
 	 * 회원 마음알기 설문 목록 조회
 	 */
 	@GetMapping("/status")
 	public ResponseEntity<?> selectReports(@RequestHeader HttpHeaders header) {
-		PoolManageVO poolManageVO = new PoolManageVO();
-		poolManageVO.setUniqId("USRCNFRM_00000000004");
+		String uniqId = header.get("authorization").get(0);
 		
-		List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
+		PoolManageVO poolManageVO = new PoolManageVO();
+		poolManageVO.setUniqId(uniqId);
 		
 		HashMap<String, List<Pool>> map = new HashMap<>();
-		List<Pool> todos = new ArrayList<>(); 
-		List<Pool> dones = new ArrayList<>();
 		
-		for(PoolManageVO vo : list) {
-			Pool pool = new Pool(vo);
+		if(userManageService.isReallyTeacher(uniqId)) {
+			List<PoolManageVO> list = poolManageService.selectReportsTeacher(poolManageVO);
 			
-			if(pool.getStatus().equals("done")) {
-				dones.add(pool);
-			} else {
-				todos.add(pool);
+			List<Pool> progress = new ArrayList<>(); 
+			List<Pool> expired = new ArrayList<>();
+			
+			for(PoolManageVO vo : list) {
+				Pool pool = new Pool(vo);
+				
+				if(pool.getExpired()) {
+					expired.add(pool);
+				} else {
+					progress.add(pool);
+				}
 			}
+			
+			map.put("todo", progress);
+			map.put("done", expired);
+		} else {
+			List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
+			
+			List<Pool> todos = new ArrayList<>(); 
+			List<Pool> dones = new ArrayList<>();
+			
+			for(PoolManageVO vo : list) {
+				Pool pool = new Pool(vo);
+				
+				if(pool.getStatus().equals("done")) {
+					dones.add(pool);
+				} else {
+					todos.add(pool);
+				}
+			}
+			
+			map.put("todo", todos);
+			map.put("done", dones);
 		}
 		
-		map.put("todo", todos);
-		map.put("done", dones);
 		
 		return ResponseEntity.ok(map);
 	}
@@ -66,10 +94,12 @@ public class PoolManageController {
 	 * @param poolManageVO
 	 */
 	@GetMapping("/status/{pollId}")
-	public ResponseEntity<?> selectReportsDtl(@PathVariable String pollId) {
-		 PoolManageVO poolManageVO = new PoolManageVO();
-		 poolManageVO.setUniqId("USRCNFRM_00000000004");
-		 poolManageVO.setPollId(pollId);
+	public ResponseEntity<?> selectReportsDtl(@RequestHeader HttpHeaders header, @PathVariable String pollId) {
+		String uniqId = header.get("authorization").get(0);
+		
+		PoolManageVO poolManageVO = new PoolManageVO();
+		poolManageVO.setUniqId(uniqId);
+		poolManageVO.setPollId(pollId);
 		 
 		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 	}
@@ -100,7 +130,13 @@ public class PoolManageController {
 			 for(int i=0; i<randSnList.length; i++) {
 				 int sn = Integer.parseInt(randSnList[i]);
 				 
-				 stepList.add(snList[sn]);
+				 if(sn > snList.length) {
+					 StringBuilder sb = new StringBuilder();
+					 sb.append(randSnList[i]).append(":");
+					 stepList.add(sb.toString());
+				 } else {
+					 stepList.add(snList[sn - 1]);
+				 }
 			 }
 		 }
 		 

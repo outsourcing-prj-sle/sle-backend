@@ -98,52 +98,14 @@ public class UserManageController {
 	@GetMapping("/users/mysel")
 	ResponseEntity<?> selectMySelList(@RequestHeader HttpHeaders header, @RequestBody LoginVO loginVO) {
 		String uniqId = header.get("authorization").get(0);
-		String userRole = header.get("role").get(0);
-		String userSpaceInfo = header.get("spaceInfo").get(0);
-		String gradeNm = header.get("grade").get(0);
-		String classNm = header.get("class").get(0);
 		
-		if(StringUtils.isEmpty(uniqId) || StringUtils.isEmpty(userRole)) {
+		if(StringUtils.isEmpty(uniqId)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("기본 정보가 없습니다.");
 		}
 		
 		loginVO.setUniqId(uniqId);
-		loginVO.setUserRole(userRole);
 		
-		if(loginVO.getUserRole().equals("ROLE_STUDENT")) {
-			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
-			ArrayList<Students> resultList = new ArrayList<Students>();
-			
-			for(MySelVO vo : voList) {
-				Students result = Students.builder()
-						.pollNm(vo.getPollNm())
-						.startDate(vo.getStartDate())
-						.endDate(vo.getEndDate())
-						.status(vo.getStatus())
-						.expired(vo.getExpired())
-						.build();
-				
-				resultList.add(result);
-			}
-			
-			return ResponseEntity.ok(resultList);
-		}
-		
-		if(loginVO.getUserRole().equals("ROLE_TEACHER")) {
-			
-//			if(!userManageService.isReallyTeacher(uniqId)) {
-//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님이 아닙니다.");
-//			}
-			
-			if(StringUtils.isEmpty(userSpaceInfo) || StringUtils.isEmpty(gradeNm) || StringUtils.isEmpty(classNm)) {
-				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님 정보가 없습니다.");
-			}
-			
-			loginVO.setUserSpaceInfo(userSpaceInfo);
-			loginVO.changeUserSpace();
-			loginVO.setGradeNm(gradeNm);
-			loginVO.setClassNm(classNm);
-			
+		if(userManageService.isReallyTeacher(uniqId)) {
 			List<MySelVO> voList = userManageService.selectTeacherSelList(loginVO);
 			HashMap<String, Object> resultMap = new HashMap<String, Object>();
 			
@@ -183,9 +145,24 @@ public class UserManageController {
 			resultMap.put("infoArr", infoArr);
 			
 			return ResponseEntity.ok(resultMap); 
+		} else {
+			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
+			ArrayList<Students> resultList = new ArrayList<Students>();
+			
+			for(MySelVO vo : voList) {
+				Students result = Students.builder()
+						.pollNm(vo.getPollNm())
+						.startDate(vo.getStartDate())
+						.endDate(vo.getEndDate())
+						.status(vo.getStatus())
+						.expired(vo.getExpired())
+						.build();
+				
+				resultList.add(result);
+			}
+			
+			return ResponseEntity.ok(resultList);
 		}
-		
-		return ResponseEntity.notFound().build();
 	}
 	
 }

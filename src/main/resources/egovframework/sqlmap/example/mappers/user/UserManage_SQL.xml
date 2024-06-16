@@ -107,12 +107,28 @@
 	</select>
 	
 	<select id="selectTeacherSelList" parameterType="hashmap" resultType="selVO">
-		with mstr as (
+		with teacher_info as (
+			select
+				SCHUL_CODE,
+				ST_GRADE,
+				ST_CLASS
+			from COMTNMBER
+			where USER_ID = #{uniqId}
+		)
+		, mstr as (
 			select
 				a.POLL_ID,
 				a.POLL_NM,
-				b.USER_ID
+				b.USER_ID,
+				sub.SCHUL_CODE
 			from COMTNBBSPOLL a, COMTNMBER b
+			join teacher_info sub
+			on b.SCHUL_CODE = sub.SCHUL_CODE
+			and b.ST_GRADE = sub.ST_GRADE
+			and b.ST_CLASS = sub.ST_CLASS
+			left join COMTNEMPLYRSCRTYESTBS sub2
+			on b.USER_ID = sub2.SCRTY_DTRMN_TRGET_ID
+			where sub2.AUTHOR_CODE = 'ROLE_STUDENT'
 			group by a.POLL_ID, b.USER_ID
 		)
 		select
@@ -130,9 +146,6 @@
 		left join COMTNBBSPOOLMANAGE sub2
 		on mstr.USER_ID = sub2.USER_ID
 		and mstr.POLL_ID = sub2.POLL_ID
-		where sub.SCHUL_CODE = #{userSpaceInfo}
-		and sub.ST_GRADE = #{gradeNm}
-		and sub.ST_CLASS = #{classNm}
 		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
 	</select>
 	

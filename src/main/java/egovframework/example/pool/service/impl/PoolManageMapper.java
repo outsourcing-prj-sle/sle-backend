@@ -16,6 +16,13 @@ public interface PoolManageMapper {
 	List<PoolManageVO> selectReports(PoolManageVO poolManageVO);
 	
 	/**
+	 * 회원 마음알기 설문 선생님 목록 조회
+	 * @param poolManageVO
+	 * @return
+	 */
+	List<PoolManageVO> selectReportsTeacher(PoolManageVO poolManageVO);
+	
+	/**
 	 * 회원 마음알기 설문 상세 조회
 	 * @param poolManageVO
 	 * @return
