@@ -12,6 +12,12 @@ public interface UserManageService {
 	LoginVO selectUserInfo(LoginVO loginVO);
 	
 	/**
+	 * ID로 회원 정보 조회
+	 * @return LoginVO
+	 */
+	boolean checkUserById(String id);
+	
+	/**
 	 * 회원정보 등록
 	 */
 	void insertUserInfo(LoginVO loginVO);
