@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.Pool;
 import egovframework.example.pool.service.PoolDtl;
 import egovframework.example.pool.service.PoolManageService;
@@ -36,7 +37,16 @@ public class PoolManageController {
 	@GetMapping("/status")
 	public ResponseEntity<?> selectReports(@RequestHeader HttpHeaders header) {
 		PoolManageVO poolManageVO = new PoolManageVO();
-		poolManageVO.setUniqId("USRCNFRM_00000000004");
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.userSpaceOrgInfo(header.get("grade").get(0)+header.get("class").get(0))
+				.build();
+		if(!poolManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		poolManageVO.setUniqId(auth.getUniqId());
 		
 		List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
 		
@@ -66,10 +76,23 @@ public class PoolManageController {
 	 * @param poolManageVO
 	 */
 	@GetMapping("/status/{pollId}")
-	public ResponseEntity<?> selectReportsDtl(@PathVariable String pollId) {
-		 PoolManageVO poolManageVO = new PoolManageVO();
-		 poolManageVO.setUniqId("USRCNFRM_00000000004");
-		 poolManageVO.setPollId(pollId);
+	public ResponseEntity<?> selectReportsDtl(
+			@RequestHeader HttpHeaders header,
+			@PathVariable String pollId) 
+	{
+		PoolManageVO poolManageVO = new PoolManageVO();
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		if(!poolManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		poolManageVO.setUniqId(auth.getUniqId());
+		poolManageVO.setPollId(pollId);
 		 
 		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 	}
@@ -141,8 +164,21 @@ public class PoolManageController {
 	 * @param poolManageVO
 	 */
 	@PutMapping("/save")
-	public ResponseEntity<?> insertReports(@RequestBody PoolManageVO poolManageVO) {
-		poolManageVO.setUniqId("USRCNFRM_00000000004");
+	public ResponseEntity<?> insertReports(
+			@RequestHeader HttpHeaders header,
+			@RequestBody PoolManageVO poolManageVO) 
+	{
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		if(!poolManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		poolManageVO.setUniqId(auth.getUniqId());
 		
 		if(poolManageService.selectIsDone(poolManageVO) > 0) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -159,8 +195,20 @@ public class PoolManageController {
 	 * @param poolManageVO
 	 */
 	@PutMapping("/start")
-	public ResponseEntity<?> insertReportsStatus(@RequestBody PoolManageVO poolManageVO) {
-		poolManageVO.setUniqId("USRCNFRM_00000000003");
+	public ResponseEntity<?> insertReportsStatus(
+			@RequestHeader HttpHeaders header,
+			@RequestBody PoolManageVO poolManageVO) {
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		if(!poolManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		poolManageVO.setUniqId(auth.getUniqId());
 		
 		poolManageService.insertReportsStatus(poolManageVO);
 		
@@ -172,8 +220,20 @@ public class PoolManageController {
 	 * @param poolManageVO
 	 */
 	@PutMapping("/complete")
-	public ResponseEntity<?> updateReportsStatus(@RequestBody PoolManageVO poolManageVO) {
-		poolManageVO.setUniqId("USRCNFRM_00000000004");
+	public ResponseEntity<?> updateReportsStatus(
+			@RequestHeader HttpHeaders header,
+			@RequestBody PoolManageVO poolManageVO) {
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		if(!poolManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		poolManageVO.setUniqId(auth.getUniqId());
 		
 		poolManageService.updateReportsStatus(poolManageVO);
 		

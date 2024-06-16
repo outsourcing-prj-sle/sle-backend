@@ -114,4 +114,14 @@
 		and a.POLL_ID = #{pollId}
 		and a.POLL_STATUS = 'done'
 	</select>	
+	
+	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
+	    select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from COMTNMBER
+	    where USER_ID = #{uniqId}
+	</select>
 </mapper>

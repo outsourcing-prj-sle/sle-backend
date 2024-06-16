@@ -28,6 +28,16 @@
 	    where USER_SE_CODE = #{id}
 	</select>
 	
+	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
+	    select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from COMTNMBER
+	    where USER_ID = #{uniqId}
+	</select>
+	
 	<insert id="insertUserInfo" parameterType="hashmap">
 		insert into COMTNMBER(
 			USER_ID, 

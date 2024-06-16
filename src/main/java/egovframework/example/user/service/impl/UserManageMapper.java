@@ -24,6 +24,12 @@ public interface UserManageMapper {
 	boolean checkUserById(@Param("id") String id);
 	
 	/**
+	 * 토큰으로 회원 인증
+	 * @return boolean
+	 */
+	boolean authorizationUser(LoginVO loginVO);
+	
+	/**
 	 * 회원정보 등록
 	 */
 	void insertUserInfo(LoginVO loginVO);

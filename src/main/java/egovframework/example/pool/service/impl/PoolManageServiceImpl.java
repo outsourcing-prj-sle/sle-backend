@@ -10,6 +10,7 @@ import org.egovframe.rte.fdl.cmmn.exception.FdlException;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
 
@@ -117,5 +118,11 @@ public class PoolManageServiceImpl implements PoolManageService {
 		return mapper.selectIsDone(poolManageVO);
 	} 
 	
-	
+	/**
+	 * 토큰으로 회원 인증
+	 * @return boolean
+	 */
+	public boolean authorizationUser(LoginVO loginVO) {
+		return mapper.authorizationUser(loginVO);
+	}
 }

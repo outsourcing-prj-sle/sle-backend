@@ -84,12 +84,30 @@ public class UserManageController {
 	 * 회원정보 수정
 	 */
 	@PutMapping("/users/update")
-	ResponseEntity<?> updateUserInfo(@RequestBody LoginVO loginVO) {
-		loginVO.setUniqId("USRCNFRM_00000000004");
-		
+	ResponseEntity<?> updateUserInfo(
+			@RequestHeader HttpHeaders header,
+			@RequestBody LoginVO loginVO) 
+	{
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		/*
+		String uniqId = header.get("authorization").get(0);
+		String userRole = header.get("role").get(0);
+		String userSpaceInfo = header.get("spaceInfo").get(0);
+		String gradeNm = header.get("grade").get(0);
+		String classNm = header.get("class").get(0);
+		*/
+		if(!userManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
 		userManageService.updateUserInfo(loginVO);
-		
 		return ResponseEntity.ok().build();
+		
 	}
 	
 	/**
@@ -97,18 +115,23 @@ public class UserManageController {
 	 */
 	@GetMapping("/users/mysel")
 	ResponseEntity<?> selectMySelList(@RequestHeader HttpHeaders header, @RequestBody LoginVO loginVO) {
-		String uniqId = header.get("authorization").get(0);
-		String userRole = header.get("role").get(0);
-		String userSpaceInfo = header.get("spaceInfo").get(0);
-		String gradeNm = header.get("grade").get(0);
-		String classNm = header.get("class").get(0);
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.userRole(header.get("role").get(0))
+				.userSpaceInfo(header.get("spaceInfo").get(0))
+				.gradeNm(header.get("grade").get(0))
+				.classNm(header.get("class").get(0))
+				.build();
+		if(!userManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
 		
-		if(StringUtils.isEmpty(uniqId) || StringUtils.isEmpty(userRole)) {
+		if(StringUtils.isEmpty(auth.getUniqId()) || StringUtils.isEmpty(auth.getUserRole())) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("기본 정보가 없습니다.");
 		}
 		
-		loginVO.setUniqId(uniqId);
-		loginVO.setUserRole(userRole);
+		loginVO.setUniqId(auth.getUniqId());
+		loginVO.setUserRole(auth.getUserRole());
 		
 		if(loginVO.getUserRole().equals("ROLE_STUDENT")) {
 			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
@@ -135,14 +158,14 @@ public class UserManageController {
 //				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님이 아닙니다.");
 //			}
 			
-			if(StringUtils.isEmpty(userSpaceInfo) || StringUtils.isEmpty(gradeNm) || StringUtils.isEmpty(classNm)) {
+			if(StringUtils.isEmpty(auth.getUserSpaceInfo()) || StringUtils.isEmpty(auth.getGradeNm()) || StringUtils.isEmpty(auth.getClassNm())) {
 				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님 정보가 없습니다.");
 			}
 			
-			loginVO.setUserSpaceInfo(userSpaceInfo);
+			loginVO.setUserSpaceInfo(auth.getUserSpaceInfo());
 			loginVO.changeUserSpace();
-			loginVO.setGradeNm(gradeNm);
-			loginVO.setClassNm(classNm);
+			loginVO.setGradeNm(auth.getGradeNm());
+			loginVO.setClassNm(auth.getClassNm());
 			
 			List<MySelVO> voList = userManageService.selectTeacherSelList(loginVO);
 			HashMap<String, Object> resultMap = new HashMap<String, Object>();
