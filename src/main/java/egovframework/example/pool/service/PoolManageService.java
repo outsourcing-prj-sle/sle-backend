@@ -2,6 +2,8 @@ package egovframework.example.pool.service;
 
 import java.util.List;
 
+import egovframework.example.cmmn.service.LoginVO;
+
 public interface PoolManageService {
 	/**
 	 * 회원 마음알기 설문 목록 조회
@@ -54,4 +56,10 @@ public interface PoolManageService {
 	 * @return
 	 */
 	int selectIsDone(PoolManageVO poolManageVO);
+	
+	/**
+	 * 토큰으로 회원 인증
+	 * @return boolean
+	 */
+	boolean authorizationUser(LoginVO loginVO);
 }

@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.PoolManageVO;
 
 @Mapper("poolManageMapper")
@@ -66,4 +67,10 @@ public interface PoolManageMapper {
 	 * @return
 	 */
 	int selectIsDone(PoolManageVO poolManageVO);
+	
+	/**
+	 * 토큰으로 회원 인증
+	 * @return boolean
+	 */
+	boolean authorizationUser(LoginVO loginVO);
 }

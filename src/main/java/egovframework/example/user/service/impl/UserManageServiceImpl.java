@@ -34,10 +34,18 @@ public class UserManageServiceImpl implements UserManageService {
 	
 	/**
 	 * ID로 회원 정보 조회
-	 * @return LoginVO
+	 * @return boolean
 	 */
 	public boolean checkUserById(String id) {
 		return mapper.checkUserById(id);
+	}
+	
+	/**
+	 * 토큰으로 회원 인증
+	 * @return boolean
+	 */
+	public boolean authorizationUser(LoginVO loginVO) {
+		return mapper.authorizationUser(loginVO);
 	}
 	
 	/**
