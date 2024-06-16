@@ -7,14 +7,18 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.cmmn.service.ResultVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.service.Students;
 import egovframework.example.user.service.Teachers;
@@ -22,7 +26,6 @@ import egovframework.example.user.service.UserManageService;
 import egovframework.example.user.service.Users;
 
 @RestController
-@RequestMapping("/api")
 public class UserManageController {
 	
 	@Resource(name = "userManageService")
@@ -59,11 +62,21 @@ public class UserManageController {
 	 */
 	@PutMapping("/users/insert")
 	ResponseEntity<?> insertUserInfo(@RequestBody LoginVO loginVO) {
-		loginVO.setUniqId("USRCNFRM_00000000004");
-		
+		try {
 		userManageService.insertUserInfo(loginVO);
+		}catch(Exception e) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Register Failed"));
+		}
 		
-		return ResponseEntity.ok().build();
+		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),loginVO));
+	}
+	
+	/**
+	 * 회원정보 ID 중복체크 함수
+	 */
+	@GetMapping("/users/checkid/{id}")
+	ResponseEntity<Boolean> idDuplicatedCheck(@PathVariable(name="id") String id) {
+		return ResponseEntity.ok(userManageService.checkUserById(id));
 	}
 	
 	/**
