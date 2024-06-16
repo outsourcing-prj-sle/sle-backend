@@ -45,7 +45,7 @@
 		with sub as (
 			select
 				mstr.POLL_ID,
-				GROUP_CONCAT(concat(mstr.QESITM_SN, ':', mstr.QESITM_ANSWER) order by FRST_REGISTER_PNTTM desc separator ",") as QESITM_SN,
+				GROUP_CONCAT(concat(mstr.QESITM_SN, ':', mstr.QESITM_ANSWER) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
 				sub.QESITM_SN_LIST,
 				sub.POLL_STATUS
 			from COMTNBBSPOOLATDRN mstr
@@ -89,6 +89,7 @@
 		values (
 			#{pollId},
 			#{qesitmSn},
+			#{qesitmAnswer},
 			#{uniqId},
 			now()
 		)
@@ -109,6 +110,7 @@
 		set QESITM_ANSWER = #{qesitmAnswer}
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
+		and QESITM_SN = #{qesitmSn}
 	</update>
 	
 	<update id="updateReportsStatus" parameterType="poolManageVO">

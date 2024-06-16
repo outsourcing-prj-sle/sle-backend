@@ -28,7 +28,7 @@ import egovframework.example.pool.service.PoolNoticeDTO;
 import egovframework.example.user.service.UserManageService;
 
 @RestController
-@RequestMapping("/reports")
+@RequestMapping("/api/reports")
 public class PoolManageController {
 	@Resource(name = "poolManageService")
 	private PoolManageService poolManageService;
@@ -145,14 +145,22 @@ public class PoolManageController {
 			 for(int i=0; i<randSnList.length; i++) {
 				 int sn = Integer.parseInt(randSnList[i]);
 				 
-				 if(sn > snList.length) {
-					 stepList.append(randSnList[i] + ":");
-				 } else {
-					 stepList.append(snList[sn-1]);
+				 for(int j=0; j<snList.length; j++) {
+					 
+					 String[] q = snList[j].split(":");
+					 
+					 if(sn == Integer.parseInt(q[0])) {
+						 stepList.append(snList[j]).append(",");
+						 break;
+					 }
+					
+					 if(j == snList.length-1) {
+						 stepList.append(sn).append(":,");
+					 }
 				 }
 				 
-				 if(i != randSnList.length -1) {
-					 stepList.append(",");
+				 if(i == randSnList.length-1) {
+					 stepList.deleteCharAt(stepList.length()-1);
 				 }
 			 }
 		 }

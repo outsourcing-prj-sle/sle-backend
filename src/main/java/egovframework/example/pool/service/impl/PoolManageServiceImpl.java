@@ -69,7 +69,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	public void insertReports(PoolManageVO poolManageVO) {
 		insertReportsStatus(poolManageVO);
 		
-		if(mapper.selectHistoryIsExist(poolManageVO) == 0) {
+		if(mapper.selectHistoryIsExist(poolManageVO) == 1) {
 			mapper.updateReports(poolManageVO);
 		} else {
 			mapper.insertReports(poolManageVO);

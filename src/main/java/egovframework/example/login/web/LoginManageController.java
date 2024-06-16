@@ -20,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
+@RequestMapping("/api")
 public class LoginManageController {
 	
 	@Autowired
@@ -94,7 +95,7 @@ public class LoginManageController {
 	/**
 	 * 구글 로그인
 	 */
-	@GetMapping("/google")
+	@GetMapping("/login/google")
 	public ResponseEntity<?> googleLogin() {
 		try {
 		}catch(Exception e) {
