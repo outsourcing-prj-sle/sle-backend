@@ -7,13 +7,14 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -95,14 +96,19 @@ public class UserManageController {
 	 * 학생 나의 SEL 알기
 	 */
 	@GetMapping("/users/mysel")
-	ResponseEntity<?> selectMySelList(@RequestBody LoginVO loginVO) {
-		loginVO.setUniqId("USRCNFRM_00000000004");
-		loginVO.setUserRole("ROLE_STUDENT");
+	ResponseEntity<?> selectMySelList(@RequestHeader HttpHeaders header, @RequestBody LoginVO loginVO) {
+		String uniqId = header.get("authorization").get(0);
+		String userRole = header.get("role").get(0);
+		String userSpaceInfo = header.get("spaceInfo").get(0);
+		String gradeNm = header.get("grade").get(0);
+		String classNm = header.get("class").get(0);
 		
-//		loginVO.setUserRole("ROLE_TEACHER");
-//		loginVO.setUserSpaceInfo("이작초등학교");
-//		loginVO.setGradeNm("1");
-//		loginVO.setClassNm("3");
+		if(StringUtils.isEmpty(uniqId) || StringUtils.isEmpty(userRole)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("기본 정보가 없습니다.");
+		}
+		
+		loginVO.setUniqId(uniqId);
+		loginVO.setUserRole(userRole);
 		
 		if(loginVO.getUserRole().equals("ROLE_STUDENT")) {
 			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
@@ -124,6 +130,20 @@ public class UserManageController {
 		}
 		
 		if(loginVO.getUserRole().equals("ROLE_TEACHER")) {
+			
+//			if(!userManageService.isReallyTeacher(uniqId)) {
+//				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님이 아닙니다.");
+//			}
+			
+			if(StringUtils.isEmpty(userSpaceInfo) || StringUtils.isEmpty(gradeNm) || StringUtils.isEmpty(classNm)) {
+				return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님 정보가 없습니다.");
+			}
+			
+			loginVO.setUserSpaceInfo(userSpaceInfo);
+			loginVO.changeUserSpace();
+			loginVO.setGradeNm(gradeNm);
+			loginVO.setClassNm(classNm);
+			
 			List<MySelVO> voList = userManageService.selectTeacherSelList(loginVO);
 			HashMap<String, Object> resultMap = new HashMap<String, Object>();
 			
@@ -167,4 +187,5 @@ public class UserManageController {
 		
 		return ResponseEntity.notFound().build();
 	}
+	
 }

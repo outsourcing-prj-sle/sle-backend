@@ -81,4 +81,12 @@ public class UserManageServiceImpl implements UserManageService {
 		return mapper.selectTeacherSelList(loginVO);
 	}
 
+	/**
+	 * 선생님 권한 사용자 체크
+	 */
+	@Override
+	public Boolean isReallyTeacher(String uniqId) {
+		
+		return mapper.isReallyTeacher(uniqId);
+	}
 }

@@ -36,4 +36,9 @@ public interface UserManageService {
 	 * 선생님 SEL 목록 조회
 	 */
 	List<MySelVO> selectTeacherSelList(LoginVO loginVO);
+	
+	/**
+	 * 선생님 권한 사용자 체크
+	 */
+	Boolean isReallyTeacher(String uniqId);
 }

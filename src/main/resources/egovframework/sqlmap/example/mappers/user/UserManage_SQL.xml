@@ -43,7 +43,8 @@
 			TEACHER_SE_CODE, 
 			SCHUL_CODE,
 			FRST_REGIST_PNTTM,
-			DN
+			DN,
+			BRTHDY
 		)
 		values (
 			#{uniqId},
@@ -59,7 +60,8 @@
 			#{userType},
 			#{userSpaceInfo},
 			now(),
-			#{relationInfo}
+			#{relationInfo},
+			#{brthdy}
 		)
 	</insert>
 	
@@ -114,26 +116,30 @@
 			group by a.POLL_ID, b.USER_ID
 		)
 		select
-			group_concat(mstr.POLL_ID order by mstr.POLL_ID separator ",") as pollId,
-			group_concat(mstr.POLL_NM order by mstr.POLL_ID separator ",") as pollNm,
+			group_concat(mstr.POLL_ID order by mstr.POLL_ID separator ",") as pollIdList,
+			group_concat(mstr.POLL_NM order by mstr.POLL_ID separator ",") as pollNmList,
 			mstr.USER_ID as userId,
 			sub.USER_NM as name,
 			sub.EMAIL_ADRES as email,
 			concat(sub.ST_GRADE, '학년 ', sub.ST_CLASS, '반') as classInfo,
 			sub.SEXDSTN as sex,
-			group_concat(case when sub2.POLL_STATUS = 'done' then true else false end order by mstr.POLL_ID separator ",") as isParticipate
+			group_concat(case when sub2.POLL_STATUS = 'done' then true else false end order by mstr.POLL_ID separator ",") as isParticipateList
 		from mstr
 		left join COMTNMBER sub
 		on mstr.USER_ID = sub.USER_ID
 		left join COMTNBBSPOOLMANAGE sub2
 		on mstr.USER_ID = sub2.USER_ID
 		and mstr.POLL_ID = sub2.POLL_ID
-		where sub.SCHUL_CODE = '이작초등학교'
-		and sub.ST_GRADE = '1'
-		and sub.ST_CLASS = '3'
-		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
 		where sub.SCHUL_CODE = #{userSpaceInfo}
 		and sub.ST_GRADE = #{gradeNm}
 		and sub.ST_CLASS = #{classNm}
+		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
+	</select>
+	
+	<select id="isReallyTeacher" parameterType="String" resultType="Boolean">
+		select
+			case when AUTHOR_CODE='ROLE_TEACHER' then true else false end as isTeacher
+		from COMTNEMPLYRSCRTYESTBS
+		where SCRTY_DTRMN_TRGET_ID = #{uniqId}
 	</select>
 </mapper>

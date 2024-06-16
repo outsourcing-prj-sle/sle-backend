@@ -48,4 +48,8 @@ public interface UserManageMapper {
 	 */
 	List<MySelVO> selectTeacherSelList(LoginVO loginVO);
 	
+	/**
+	 * 선생님 권한 사용자 체크
+	 */
+	Boolean isReallyTeacher(String uniqId);
 }

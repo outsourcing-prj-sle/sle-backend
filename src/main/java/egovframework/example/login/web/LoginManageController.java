@@ -1,5 +1,7 @@
 package egovframework.example.login.web;
 
+import java.util.HashMap;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +20,6 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @RestController
-@RequestMapping("/login")
 public class LoginManageController {
 	
 	@Autowired
@@ -28,7 +29,7 @@ public class LoginManageController {
 	 * 기본 로그인
 	 * @param AccountDTO
 	 */
-	@PostMapping("/")
+	@PostMapping("/login")
 	public ResponseEntity<?> selLogin(@RequestBody AccountDTO account){
 		LoginVO user = new LoginVO();
 		log.info("로그인 User : {} , {} ",account.getId(),account.getPassword());
@@ -46,13 +47,27 @@ public class LoginManageController {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Login Failed(User Not Found)"));
 		}
 		log.info("로그인 User : ",account.getId());
-		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),user));
+		
+		HashMap<String, Object> result = new HashMap<String, Object>();
+		HashMap<String, String> obj = new HashMap<String, String>();
+		obj.put("spaceInfo", "COM1");
+		obj.put("grade", "1");
+		obj.put("class", "3");
+		
+		result.put("token", "token");
+		result.put("id", account.getId());
+		result.put("type", "student");
+		result.put("school", "test");
+		result.put("extra", obj);
+		
+//		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),user));
+		return ResponseEntity.ok(result);
 	}
 	
 	/**
 	 * 네이버 로그인
 	 */
-	@GetMapping("/naver")
+	@GetMapping("/login/naver")
 	public ResponseEntity<?> naverLogin() {
 		try {
 		}catch(Exception e) {
@@ -66,7 +81,7 @@ public class LoginManageController {
 	/**
 	 * 카카오 로그인
 	 */
-	@GetMapping("/kakao")
+	@GetMapping("/login/kakao")
 	public ResponseEntity<?> kakaoLogin() {
 		try {
 		}catch(Exception e) {
@@ -92,7 +107,7 @@ public class LoginManageController {
 	/**
 	 * 경남교육청 로그인
 	 */
-	@GetMapping("/gne")
+	@GetMapping("/login/gne")
 	public ResponseEntity<?> gneLogin() {
 		try {
 		}catch(Exception e) {
@@ -105,7 +120,7 @@ public class LoginManageController {
 	/**
 	 * 최초 회원 가입 시 필수 제공 정보 동의
 	 */
-	@PutMapping("/required-agree-info")
+	@PutMapping("/login/required-agree-info")
 	public ResponseEntity<?> insertRequiredAgreeInfo(){
 		try {
 			LoginVO loginVO = new LoginVO();
