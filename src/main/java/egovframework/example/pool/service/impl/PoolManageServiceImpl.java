@@ -66,7 +66,13 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 */
 	@Override
 	public void insertReports(PoolManageVO poolManageVO) {
-		mapper.insertReports(poolManageVO);		
+		insertReportsStatus(poolManageVO);
+		
+		if(!mapper.selectHistoryIsExist(poolManageVO)) {
+			mapper.updateReports(poolManageVO);
+		} else {
+			mapper.insertReports(poolManageVO);
+		}
 	}
 
 	/**
@@ -74,12 +80,14 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @param poolManageVO
 	 */
 	@Override
-	public void insertReportsStatus(PoolManageVO poolManageVO) {		
-		int size = mapper.selectReportsCount(poolManageVO);
-		
-		poolManageVO.setQesitmSnList(makeRandomString(size));
-		
-		mapper.insertReportsStatus(poolManageVO);
+	public void insertReportsStatus(PoolManageVO poolManageVO) {
+		if(!mapper.selectReportsMngIsExist(poolManageVO)) {
+			int size = mapper.selectReportsCount(poolManageVO);
+			
+			poolManageVO.setQesitmSnList(makeRandomString(size));
+			
+			mapper.insertReportsStatus(poolManageVO);
+		}
 	}
 	
 	/**
@@ -115,6 +123,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 */
 	@Override
 	public void updateReportsStatus(PoolManageVO poolManageVO) {
+		insertReports(poolManageVO);
 		mapper.updateReportsStatus(poolManageVO);
 	}
 
@@ -123,8 +132,8 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @return
 	 */
 	@Override
-	public int selectIsDone(PoolManageVO poolManageVO) {
-		
+	public boolean selectIsDone(PoolManageVO poolManageVO) {
+
 		return mapper.selectIsDone(poolManageVO);
 	} 
 	
@@ -133,6 +142,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @return boolean
 	 */
 	public boolean authorizationUser(LoginVO loginVO) {
+		
 		return mapper.authorizationUser(loginVO);
 	}
 }

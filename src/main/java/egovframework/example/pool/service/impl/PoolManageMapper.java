@@ -50,6 +50,18 @@ public interface PoolManageMapper {
 	void insertReportsStatus(PoolManageVO poolManageVO);
 	
 	/**
+	 * 마음알기 설문 완료 상태 조회
+	 * @return
+	 */
+	boolean selectIsDone(PoolManageVO poolManageVO);
+	
+	/**
+	 * 회원 마음알기 설문 수정
+	 * @param poolManageVO
+	 */
+	void updateReports(PoolManageVO poolManageVO);
+	
+	/**
 	 * 회원 마음알기 설문 상태 변경(DONE)
 	 * @param poolManageVO
 	 */
@@ -63,14 +75,20 @@ public interface PoolManageMapper {
 	int selectReportsCount(PoolManageVO poolManageVO);
 	
 	/**
-	 * 마음알기 설문 완료 상태 조회
-	 * @return
-	 */
-	int selectIsDone(PoolManageVO poolManageVO);
-	
-	/**
 	 * 토큰으로 회원 인증
 	 * @return boolean
 	 */
 	boolean authorizationUser(LoginVO loginVO);
+	
+	/**
+	 * 설문조사 기록 확인
+	 * @return boolean
+	 */
+	boolean selectHistoryIsExist(PoolManageVO poolManageVO);
+	
+	/**
+	 * 설문 관리 목록 기록 확인
+	 * @return boolean
+	 */
+	boolean selectReportsMngIsExist(PoolManageVO poolManageVO);
 }

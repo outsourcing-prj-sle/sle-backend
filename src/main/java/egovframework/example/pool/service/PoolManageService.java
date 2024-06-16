@@ -55,7 +55,7 @@ public interface PoolManageService {
 	 * 마음알기 설문 완료 상태 조회
 	 * @return
 	 */
-	int selectIsDone(PoolManageVO poolManageVO);
+	boolean selectIsDone(PoolManageVO poolManageVO);
 	
 	/**
 	 * 토큰으로 회원 인증

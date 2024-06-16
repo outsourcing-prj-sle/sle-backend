@@ -195,17 +195,15 @@ public class PoolManageController {
 	{
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
+		
 		if(!poolManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
+		
 		poolManageVO.setUniqId(auth.getUniqId());
 		
-		if(poolManageService.selectIsDone(poolManageVO) > 0) {
+		if(poolManageService.selectIsDone(poolManageVO)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
 			poolManageService.insertReports(poolManageVO);
@@ -216,7 +214,7 @@ public class PoolManageController {
 	
 	
 	/**
-	 * 회원 마음알기 설문 시작 
+	 * 회원 마음알기 설문 시작
 	 * @param poolManageVO
 	 */
 	@PutMapping("/start")
@@ -225,17 +223,18 @@ public class PoolManageController {
 			@RequestBody PoolManageVO poolManageVO) {
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
+		
 		if(!poolManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
 		poolManageVO.setUniqId(auth.getUniqId());
 		
-		poolManageService.insertReportsStatus(poolManageVO);
+		if(poolManageService.selectIsDone(poolManageVO)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} else {
+			poolManageService.insertReportsStatus(poolManageVO);
+		}
 		
 		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
 	}
@@ -250,17 +249,18 @@ public class PoolManageController {
 			@RequestBody PoolManageVO poolManageVO) {
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
+		
 		if(!poolManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
 		poolManageVO.setUniqId(auth.getUniqId());
 		
-		poolManageService.updateReportsStatus(poolManageVO);
+		if(poolManageService.selectIsDone(poolManageVO)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+		} else {
+			poolManageService.updateReportsStatus(poolManageVO);
+		}
 		
 		return ResponseEntity.ok().build();
 	}
