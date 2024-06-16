@@ -135,7 +135,6 @@ public class PoolManageController {
 		 ArrayList<String> stepList = new ArrayList<String>();
 		 
 		 ArrayList<HashMap<String, Object>> metaList = new ArrayList<HashMap<String,Object>>();
-		 HashMap<String, Object> metaMap = new HashMap<String, Object>();
 		 
 		 if(vo.getStatus().equals("progress") || vo.getStatus().equals("done")) {
 			 String[] randSnList = vo.getQesitmSnList().split(",");
@@ -153,6 +152,7 @@ public class PoolManageController {
 		 }
 		 
 		for(PoolManageVO qna : qnaList) {
+			HashMap<String, Object> metaMap = new HashMap<String, Object>();
 			ArrayList<String> answerText = new ArrayList<String>();
 			ArrayList<String> answerImage = new ArrayList<String>();
 			
@@ -173,6 +173,9 @@ public class PoolManageController {
 		 
 		PoolDtl poolDtl = PoolDtl.builder()
 				 .status(vo.getStatus())
+				 .pollNm(vo.getPollNm())
+				 .startDate(vo.getStartDate())
+				 .endDate(vo.getEndDate())
 				 .step(stepList)
 				 .metadata(metaList)
 				 .isSave(vo.getIsSave())

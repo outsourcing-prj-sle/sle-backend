@@ -11,6 +11,7 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Students {
 	private String pollNm;
+	private String pollId;
 	private String startDate;
 	private String endDate;
 	private String status;

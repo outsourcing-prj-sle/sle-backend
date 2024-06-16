@@ -162,6 +162,7 @@ public class UserManageController {
 			for(MySelVO vo : voList) {
 				Students result = Students.builder()
 						.pollNm(vo.getPollNm())
+						.pollId(vo.getPollId())
 						.startDate(vo.getStartDate())
 						.endDate(vo.getEndDate())
 						.status(vo.getStatus())

@@ -59,6 +59,8 @@
 		select
 			mstr.POLL_ID,
 			mstr.POLL_NM,
+			mstr.POLL_BGNDE as startDate,
+			mstr.POLL_ENDDE as endDate,
 			mstr.TEMP_SAVE as isSave,
 			mstr.VOICE_SUP as isVoice, 
 		 	case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,

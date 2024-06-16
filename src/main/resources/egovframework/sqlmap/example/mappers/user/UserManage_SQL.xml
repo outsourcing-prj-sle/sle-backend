@@ -107,6 +107,7 @@
 		)
 		SELECT 
 			mstr.POLL_NM as pollNm,
+			mstr.POLL_ID as pollId,
 			mstr.POLL_BGNDE as startDate,
 			mstr.POLL_ENDDE as endDate,
 			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,

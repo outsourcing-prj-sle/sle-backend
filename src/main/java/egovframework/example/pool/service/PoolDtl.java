@@ -14,6 +14,9 @@ import lombok.Setter;
 @AllArgsConstructor
 public class PoolDtl {
 	private String status;
+	private String pollNm;
+	private String startDate;
+	private String endDate;
 	private ArrayList<String> step;
 	private ArrayList<HashMap<String, Object>> metadata;
 	private Boolean isSave;
