@@ -74,8 +74,8 @@ public class UserManageController {
 	/**
 	 * 회원정보 ID 중복체크 함수
 	 */
-	@GetMapping("/users/checkid/{id}")
-	ResponseEntity<Boolean> idDuplicatedCheck(@PathVariable(name="id") String id) {
+	@GetMapping("/users/checkId")
+	ResponseEntity<Boolean> idDuplicatedCheck(@RequestParam(name = "id") String id) {
 		return ResponseEntity.ok(userManageService.checkUserById(id));
 	}
 	
