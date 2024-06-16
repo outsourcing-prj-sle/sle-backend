@@ -35,9 +35,10 @@ public class UserManageController {
 	 * 회원정보 조회
 	 */
 	@GetMapping("/users")
-	ResponseEntity<?> selectUserInfo() {
-		LoginVO loginVO = new LoginVO();
-		loginVO.setUniqId("USRCNFRM_00000000004");
+	ResponseEntity<?> selectUserInfo(@RequestHeader HttpHeaders header) {
+		LoginVO loginVO = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.build();
 		
 		LoginVO userInfo = userManageService.selectUserInfo(loginVO);
 		
@@ -63,7 +64,7 @@ public class UserManageController {
 	@PutMapping("/users/insert")
 	ResponseEntity<?> insertUserInfo(@RequestBody LoginVO loginVO) {
 		try {
-		userManageService.insertUserInfo(loginVO);
+			userManageService.insertUserInfo(loginVO);
 		}catch(Exception e) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Register Failed"));
 		}
@@ -89,16 +90,14 @@ public class UserManageController {
 	{
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
-				.userRole(header.get("role").get(0))
-				.userSpaceInfo(header.get("spaceInfo").get(0))
-				.gradeNm(header.get("grade").get(0))
-				.classNm(header.get("class").get(0))
 				.build();
 		
 		if(!userManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
+		
 		userManageService.updateUserInfo(loginVO);
+		
 		return ResponseEntity.ok().build();
 		
 	}
@@ -107,7 +106,7 @@ public class UserManageController {
 	 * 학생 나의 SEL 알기
 	 */
 	@GetMapping("/users/mysel")
-	ResponseEntity<?> selectMySelList(@RequestHeader HttpHeaders header, @RequestBody LoginVO loginVO) {
+	ResponseEntity<?> selectMySelList(@RequestHeader(required=false) HttpHeaders header) {
 		LoginVO auth = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
 				.build();
@@ -116,11 +115,8 @@ public class UserManageController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
 		
-		loginVO.setUniqId(auth.getUniqId());
-		loginVO.setUserRole(auth.getUserRole());
-		
-		if(userManageService.isReallyTeacher(loginVO.getUniqId())) {
-			List<MySelVO> voList = userManageService.selectTeacherSelList(loginVO);
+		if(userManageService.isReallyTeacher(auth.getUniqId())) {
+			List<MySelVO> voList = userManageService.selectTeacherSelList(auth);
 			HashMap<String, Object> resultMap = new HashMap<String, Object>();
 			
 			ArrayList<HashMap<String, String>> reportList = new ArrayList<>();
@@ -160,7 +156,7 @@ public class UserManageController {
 			
 			return ResponseEntity.ok(resultMap); 
 		} else {
-			List<MySelVO> voList = userManageService.selectStudentSelList(loginVO);
+			List<MySelVO> voList = userManageService.selectStudentSelList(auth);
 			ArrayList<Students> resultList = new ArrayList<Students>();
 			
 			for(MySelVO vo : voList) {
