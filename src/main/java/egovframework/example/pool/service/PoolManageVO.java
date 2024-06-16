@@ -49,6 +49,11 @@ public class PoolManageVO {
 	private String qesitmSn;
 	
 	/**
+	 * 문항답변
+	 */
+	private String qesitmAnswer;
+	
+	/**
 	 * 문항순번배열
 	 */
 	private String qesitmSnList;
