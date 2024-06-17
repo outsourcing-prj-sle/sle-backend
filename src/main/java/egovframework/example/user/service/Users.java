@@ -20,7 +20,12 @@ public class Users {
 	private Boolean isFirstInvite;
 	private String sex;
 	private String userEmail;
+<<<<<<< Updated upstream
 /*	
+=======
+	
+	/*
+>>>>>>> Stashed changes
 	public Users(LoginVO loginVO) {
 		this.setId(loginVO.getId());
 		this.setName(loginVO.getName());

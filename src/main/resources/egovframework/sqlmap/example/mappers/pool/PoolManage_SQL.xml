@@ -59,6 +59,8 @@
 		select
 			mstr.POLL_ID,
 			mstr.POLL_NM,
+			mstr.POLL_BGNDE as startDate,
+			mstr.POLL_ENDDE as endDate,
 			mstr.TEMP_SAVE as isSave,
 			mstr.VOICE_SUP as isVoice, 
 		 	case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
@@ -87,6 +89,7 @@
 		values (
 			#{pollId},
 			#{qesitmSn},
+			#{qesitmAnswer},
 			#{uniqId},
 			now()
 		)
@@ -102,6 +105,13 @@
 		)
 	</insert>
 	
+	<update id="updateReports" parameterType="poolManageVO">
+		update  COMTNBBSPOOLATDRN
+		set QESITM_ANSWER = #{qesitmAnswer}
+		where USER_ID = #{uniqId}
+		and POLL_ID = #{pollId}
+	</update>
+	
 	<update id="updateReportsStatus" parameterType="poolManageVO">
 		update  COMTNBBSPOOLMANAGE
 		set POLL_STATUS = 'done'
@@ -116,9 +126,9 @@
 		where mstr.POLL_ID = #{pollId}
 	</select>
 	
-	<select id="selectIsDoneCount" parameterType="poolManageVO" resultType="int">
+	<select id="selectIsDone" parameterType="poolManageVO" resultType="boolean">
 		select
-			count(*)
+			case when count(*) > 0 then true else false end as isExist
 		from COMTNBBSPOOLMANAGE a
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
@@ -135,6 +145,7 @@
 	    where USER_ID = #{uniqId}
 	</select>
 	
+<<<<<<< HEAD
 	<select id="selectReportsNotice" parameterType="String" resultType="poolNoticeDTO">
 	    select
 			a.POLL_ID as pollId,
@@ -144,5 +155,22 @@
 			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
 	    from COMTNBBSPOOLATDRN
 	    where POLL_ID = #{pollId}
+=======
+	<select id="selectHistoryIsExist" parameterType="hashmap" resultType="boolean">
+		select
+			case when count(*) > 0 then true else false end as isExist
+		from COMTNBBSPOOLATDRN a
+		where a.USER_ID = #{uniqId}
+		and a.POLL_ID = #{pollId}
+		and QESITM_SN = #{qesitmSn}
+	</select>
+	
+	<select id="selectReportsMngIsExist" parameterType="hashmap" resultType="boolean">
+		select
+			case when count(*) > 0 then true else false end as isExist
+		from COMTNBBSPOOLMANAGE a
+		where a.USER_ID = #{uniqId}
+		and a.POLL_ID = #{pollId}
+>>>>>>> 4e51add98f20e28593e059b92489a983eb8d1528
 	</select>
 </mapper>
