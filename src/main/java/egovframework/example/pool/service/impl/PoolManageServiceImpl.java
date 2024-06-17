@@ -69,7 +69,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	public void insertReports(PoolManageVO poolManageVO) {
 		insertReportsStatus(poolManageVO);
 		
-		if(!mapper.selectHistoryIsExist(poolManageVO)) {
+		if(mapper.selectHistoryIsExist(poolManageVO) == 1) {
 			mapper.updateReports(poolManageVO);
 		} else {
 			mapper.insertReports(poolManageVO);
@@ -82,7 +82,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 */
 	@Override
 	public void insertReportsStatus(PoolManageVO poolManageVO) {
-		if(!mapper.selectReportsMngIsExist(poolManageVO)) {
+		if(mapper.selectReportsMngIsExist(poolManageVO) == 0) {
 			int size = mapper.selectReportsCount(poolManageVO);
 			
 			poolManageVO.setQesitmSnList(makeRandomString(size));
@@ -133,7 +133,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @return
 	 */
 	@Override
-	public boolean selectIsDone(PoolManageVO poolManageVO) {
+	public int selectIsDone(PoolManageVO poolManageVO) {
 
 		return mapper.selectIsDone(poolManageVO);
 	} 

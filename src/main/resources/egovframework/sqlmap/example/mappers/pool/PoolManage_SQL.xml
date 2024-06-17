@@ -45,11 +45,11 @@
 		with sub as (
 			select
 				mstr.POLL_ID,
-				GROUP_CONCAT(concat(mstr.QESITM_SN, ':', mstr.QESITM_ANSWER) order by FRST_REGISTER_PNTTM desc separator ",") as QESITM_SN,
-				sub.QESITM_SN_LIST,
-				sub.POLL_STATUS
-			from COMTNBBSPOOLATDRN mstr
-			left join COMTNBBSPOOLMANAGE sub
+				GROUP_CONCAT(concat(sub.QESITM_SN, ':', sub.QESITM_ANSWER, '/', sub.QUESITM_ANSWER_IMAGE) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
+				mstr.QESITM_SN_LIST,
+				mstr.POLL_STATUS
+			from COMTNBBSPOOLMANAGE mstr
+			left join COMTNBBSPOOLATDRN sub
 			on mstr.POLL_ID = sub.POLL_ID
 			and mstr.USER_ID = sub.USER_ID
 			where mstr.USER_ID = #{uniqId}
@@ -91,7 +91,8 @@
 			#{qesitmSn},
 			#{qesitmAnswer},
 			#{uniqId},
-			now()
+			now(),
+			#{quesitmAnswerImage}
 		)
 	</insert>
 	
@@ -107,9 +108,17 @@
 	
 	<update id="updateReports" parameterType="poolManageVO">
 		update  COMTNBBSPOOLATDRN
+<<<<<<< HEAD
 		set QESITM_ANSWER = #{qesitmAnswer}
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
+=======
+		set QESITM_ANSWER = #{qesitmAnswer},
+			QUESITM_ANSWER_IMAGE = #{quesitmAnswerImage}
+		where USER_ID = #{uniqId}
+		and POLL_ID = #{pollId}
+		and QESITM_SN = #{qesitmSn}
+>>>>>>> aa94467fe4287c21531f8b86e748f60faab22b98
 	</update>
 	
 	<update id="updateReportsStatus" parameterType="poolManageVO">
@@ -126,9 +135,15 @@
 		where mstr.POLL_ID = #{pollId}
 	</select>
 	
+<<<<<<< HEAD
 	<select id="selectIsDone" parameterType="poolManageVO" resultType="boolean">
 		select
 			case when count(*) > 0 then true else false end as isExist
+=======
+	<select id="selectIsDone" parameterType="poolManageVO" resultType="int">
+		select
+			case when count(*) > 0 then 1 else 0 end as isExist
+>>>>>>> aa94467fe4287c21531f8b86e748f60faab22b98
 		from COMTNBBSPOOLMANAGE a
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
@@ -138,8 +153,8 @@
 	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
 	    select
 	        CASE 
-	            WHEN count(*) > 0 THEN true
-	            ELSE false
+	            WHEN count(*) > 0 THEN 1
+	            ELSE 0
 	        END as userExists
 	    from COMTNMBER
 	    where USER_ID = #{uniqId}
@@ -152,6 +167,7 @@
 			a.POLL_NM as pollNm,
 			a.POLL_BGNDE as startDate,
 			a.POLL_ENDDE as endDate,
+<<<<<<< HEAD
 			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
 	    from COMTNBBSPOOLATDRN
 	    where POLL_ID = #{pollId}
@@ -159,12 +175,23 @@
 	<select id="selectHistoryIsExist" parameterType="hashmap" resultType="boolean">
 		select
 			case when count(*) > 0 then true else false end as isExist
+=======
+			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then 1 else 0 end as expired
+		from COMTNBBSPOLL a
+	    where a.POLL_ID = #{pollId}
+	</select>
+	
+	<select id="selectHistoryIsExist" parameterType="hashmap" resultType="int">
+		select
+			case when count(*) > 0 then 1 else 0 end as isExist
+>>>>>>> aa94467fe4287c21531f8b86e748f60faab22b98
 		from COMTNBBSPOOLATDRN a
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
 		and QESITM_SN = #{qesitmSn}
 	</select>
 	
+<<<<<<< HEAD
 	<select id="selectReportsMngIsExist" parameterType="hashmap" resultType="boolean">
 		select
 			case when count(*) > 0 then true else false end as isExist
@@ -172,5 +199,13 @@
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
 >>>>>>> 4e51add98f20e28593e059b92489a983eb8d1528
+=======
+	<select id="selectReportsMngIsExist" parameterType="hashmap" resultType="int">
+		select
+			case when count(*) > 0 then 1 else 0 end as isExist
+		from COMTNBBSPOOLMANAGE a
+		where a.USER_ID = #{uniqId}
+		and a.POLL_ID = #{pollId}
+>>>>>>> aa94467fe4287c21531f8b86e748f60faab22b98
 	</select>
 </mapper>

@@ -17,7 +17,7 @@ public class PoolDtl {
 	private String pollNm;
 	private String startDate;
 	private String endDate;
-	private ArrayList<String> step;
+	private String step;
 	private ArrayList<HashMap<String, Object>> metadata;
 	private Boolean isSave;
 	private Boolean isVoice;

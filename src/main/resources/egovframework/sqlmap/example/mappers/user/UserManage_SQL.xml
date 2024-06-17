@@ -130,6 +130,9 @@
 			select
 				a.POLL_ID,
 				a.POLL_NM,
+				a.POLL_BGNDE,
+				a.POLL_ENDDE,
+				case when cast(a.POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then 1 else 0 end as expired,
 				b.USER_ID,
 				sub.SCHUL_CODE
 			from COMTNBBSPOLL a, COMTNMBER b
@@ -145,6 +148,9 @@
 		select
 			group_concat(mstr.POLL_ID order by mstr.POLL_ID separator ",") as pollIdList,
 			group_concat(mstr.POLL_NM order by mstr.POLL_ID separator ",") as pollNmList,
+			group_concat(mstr.POLL_BGNDE order by mstr.POLL_ID separator ",") as startDate,
+			group_concat(mstr.POLL_ENDDE order by mstr.POLL_ID separator ",") as endDate,
+			group_concat(mstr.expired order by mstr.POLL_ID separator ",") as expiredList,
 			mstr.USER_ID as userId,
 			sub.USER_NM as name,
 			sub.EMAIL_ADRES as email,

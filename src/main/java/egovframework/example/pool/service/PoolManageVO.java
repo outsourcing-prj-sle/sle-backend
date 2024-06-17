@@ -54,6 +54,12 @@ public class PoolManageVO {
 	private String qesitmAnswer;
 	
 	/**
+	 * 문항답변이미지
+	 */
+	@Builder.Default
+	private String quesitmAnswerImage = "0";
+	
+	/**
 	 * 문항순번배열
 	 */
 	private String qesitmSnList;

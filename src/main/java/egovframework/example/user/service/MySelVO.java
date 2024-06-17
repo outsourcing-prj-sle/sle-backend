@@ -59,6 +59,11 @@ public class MySelVO {
 	private Boolean expired;
 	
 	/**
+	 * 설문조사_만료_여부_목록
+	 */
+	private String expiredList;
+	
+	/**
 	 * 사용자_명
 	 */
 	private String name;

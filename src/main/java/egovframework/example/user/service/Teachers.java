@@ -17,5 +17,5 @@ public class Teachers {
 	private String email;
 	private String classInfo;
 	private String sex;
-	private HashMap<String, Boolean> stateList;
+	private HashMap<String, Integer> stateList;
 }
