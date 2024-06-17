@@ -45,11 +45,11 @@
 		with sub as (
 			select
 				mstr.POLL_ID,
-				GROUP_CONCAT(concat(mstr.QESITM_SN, ':', mstr.QESITM_ANSWER) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
-				sub.QESITM_SN_LIST,
-				sub.POLL_STATUS
-			from COMTNBBSPOOLATDRN mstr
-			left join COMTNBBSPOOLMANAGE sub
+				GROUP_CONCAT(concat(sub.QESITM_SN, ':', sub.QESITM_ANSWER, '/', sub.QUESITM_ANSWER_IMAGE) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
+				mstr.QESITM_SN_LIST,
+				mstr.POLL_STATUS
+			from COMTNBBSPOOLMANAGE mstr
+			left join COMTNBBSPOOLATDRN sub
 			on mstr.POLL_ID = sub.POLL_ID
 			and mstr.USER_ID = sub.USER_ID
 			where mstr.USER_ID = #{uniqId}
@@ -91,7 +91,8 @@
 			#{qesitmSn},
 			#{qesitmAnswer},
 			#{uniqId},
-			now()
+			now(),
+			#{quesitmAnswerImage}
 		)
 	</insert>
 	
@@ -107,7 +108,8 @@
 	
 	<update id="updateReports" parameterType="poolManageVO">
 		update  COMTNBBSPOOLATDRN
-		set QESITM_ANSWER = #{qesitmAnswer}
+		set QESITM_ANSWER = #{qesitmAnswer},
+			QUESITM_ANSWER_IMAGE = #{quesitmAnswerImage}
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
 		and QESITM_SN = #{qesitmSn}

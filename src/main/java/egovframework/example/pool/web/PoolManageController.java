@@ -96,32 +96,6 @@ public class PoolManageController {
 	}
 	
 	/**
-	 * 회원 마음알기 설문 상세 조회
-	 * @param pollId
-	 * @param poolManageVO
-	 */
-	@GetMapping("/status/{pollId}")
-	public ResponseEntity<?> selectReportsDtl(
-			@RequestHeader HttpHeaders header,
-			@PathVariable String pollId) 
-	{
-		PoolManageVO poolManageVO = new PoolManageVO();
-		LoginVO auth = LoginVO.builder()
-				.uniqId(header.get("authorization").get(0))
-				.build();
-		
-		if(!poolManageService.authorizationUser(auth)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
-		}
-		
-		poolManageVO.setUniqId(auth.getUniqId());
-		poolManageVO.setPollId(pollId);
-		 
-		return ResponseEntity.ok(selectReportsDtl(poolManageVO));
-	}
-	
-	
-	/**
 	 * 회원 마음알기 설문 상세 함수
 	 * @param poolManageVO
 	 * @return
@@ -138,8 +112,19 @@ public class PoolManageController {
 		 
 		 ArrayList<HashMap<String, Object>> metaList = new ArrayList<HashMap<String,Object>>();
 		 
-		 if(vo.getStatus().equals("progress") || vo.getStatus().equals("done")) {
-			 String[] randSnList = vo.getQesitmSnList().split(",");
+		 String[] randSnList = vo.getQesitmSnList().split(",");
+		 
+		 if(vo.getQesitmSn() == null) {
+			 for(int i=0; i<randSnList.length; i++) {
+				 int sn = Integer.parseInt(randSnList[i]);
+				 
+				 stepList.append(sn);
+				 
+				 if(i < randSnList.length-1) {
+					 stepList.append(":/,");
+				 }
+			 }
+		 } else {
 			 String[] snList = vo.getQesitmSn().split(",");
 			 
 			 for(int i=0; i<randSnList.length; i++) {
@@ -155,7 +140,7 @@ public class PoolManageController {
 					 }
 					
 					 if(j == snList.length-1) {
-						 stepList.append(sn).append(":,");
+						 stepList.append(sn).append(":/,");
 					 }
 				 }
 				 

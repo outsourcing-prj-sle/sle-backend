@@ -51,18 +51,17 @@ public class LoginManageController {
 		
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		HashMap<String, String> obj = new HashMap<String, String>();
-		obj.put("spaceInfo", "COM1");
-		obj.put("grade", "1");
-		obj.put("class", "3");
+		obj.put("spaceInfo", user.getUserSpaceInfo());
+		obj.put("grade", user.getGradeNm());
+		obj.put("class", user.getClassNm());
 		
 		result.put("token", user.getUniqId());
 		result.put("id", account.getId());
-		result.put("type", "student");
-		result.put("school", "test");
+		result.put("type", user.getUserRole());
+		result.put("school", user.getUserSpaceInfo());
 		result.put("extra", obj);
 		
-//		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),user));
-		return ResponseEntity.ok(result);
+		return ResponseEntity.ok(user);
 	}
 	
 	/**
