@@ -55,7 +55,7 @@ public interface PoolManageMapper {
 	 * 마음알기 설문 완료 상태 조회
 	 * @return
 	 */
-	boolean selectIsDone(PoolManageVO poolManageVO);
+	int selectIsDone(PoolManageVO poolManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 수정
@@ -77,28 +77,12 @@ public interface PoolManageMapper {
 	int selectReportsCount(PoolManageVO poolManageVO);
 	
 	/**
-<<<<<<< HEAD
-=======
-	 * 마음알기 설문 완료 상태 조회
-	 * @return
-	 */
-	int selectIsDone(PoolManageVO poolManageVO);
-	
-	/**
-	 * 회원 마음알기 설문 수정
-	 * @param poolManageVO
-	 */
-	void updateReports(PoolManageVO poolManageVO);
-	
-	/**
->>>>>>> aa94467fe4287c21531f8b86e748f60faab22b98
 	 * 토큰으로 회원 인증
 	 * @return boolean
 	 */
 	boolean authorizationUser(LoginVO loginVO);
 	
 	/**
-<<<<<<< HEAD
 	 * 마음알기 설문 안내 사항 조회(기본데이터)
 	 * @return PoolNoticeDTL
 	 */
@@ -114,17 +98,4 @@ public interface PoolManageMapper {
 	 * @return boolean
 	 */
 	int selectReportsMngIsExist(PoolManageVO poolManageVO);
-	
-=======
-	 * 설문조사 기록 확인
-	 * @return boolean
-	 */
-	boolean selectHistoryIsExist(PoolManageVO poolManageVO);
-	
-	/**
-	 * 설문 관리 목록 기록 확인
-	 * @return boolean
-	 */
-	boolean selectReportsMngIsExist(PoolManageVO poolManageVO);
->>>>>>> 4e51add98f20e28593e059b92489a983eb8d1528
 }

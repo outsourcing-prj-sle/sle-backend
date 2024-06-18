@@ -1,13 +1,17 @@
 package egovframework.example.user.service;
 
 import egovframework.example.cmmn.service.LoginVO;
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class Users {
 	private String id;
 	private String name;
@@ -20,12 +24,7 @@ public class Users {
 	private Boolean isFirstInvite;
 	private String sex;
 	private String userEmail;
-<<<<<<< Updated upstream
-/*	
-=======
 	
-	/*
->>>>>>> Stashed changes
 	public Users(LoginVO loginVO) {
 		this.setId(loginVO.getId());
 		this.setName(loginVO.getName());
@@ -39,5 +38,4 @@ public class Users {
 		this.setSex(loginVO.getSex());
 		this.setUserEmail(loginVO.getUserEmail());
 	}
-	*/
 }
