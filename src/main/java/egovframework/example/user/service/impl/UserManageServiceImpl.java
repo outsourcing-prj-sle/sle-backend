@@ -9,6 +9,7 @@ import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
 
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.service.UserManageService;
 
@@ -96,5 +97,21 @@ public class UserManageServiceImpl implements UserManageService {
 	public Boolean isReallyTeacher(String uniqId) {
 		
 		return mapper.isReallyTeacher(uniqId);
+	}
+
+	/**
+	 * 선생님 권한 사용자 체크 상세
+	 */
+	@Override
+	public LoginVO isReallyTeacherDtl(String uniqId) {
+		return mapper.isReallyTeacherDtl(uniqId);
+	}
+	
+	/**
+	 * 아이디 톡톡 선생님 조회
+	 */
+	@Override
+	public List<IdTokTokVO> selectIdTokTokTeacher(LoginVO loginVO) {
+		return mapper.selectIdTokTokTeacher(loginVO);
 	}
 }

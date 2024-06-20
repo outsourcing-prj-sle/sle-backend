@@ -52,6 +52,24 @@ public interface PoolManageMapper {
 	void insertReportsStatus(PoolManageVO poolManageVO);
 	
 	/**
+	 * 회원 마음알기 설문 점수 등록(GM)
+	 * @param poolManageVO
+	 */
+	void insertReportsScore1(PoolManageVO poolManageVO);
+	
+	/**
+	 * 회원 마음알기 설문 점수 등록(IBP, EBP)
+	 * @param poolManageVO
+	 */
+	void insertReportsScore2(PoolManageVO poolManageVO);
+	
+	/**
+	 * 회원 마음알기 설문 점수 등록(EK)
+	 * @param poolManageVO
+	 */
+	void insertReportsScore3(PoolManageVO poolManageVO);
+	
+	/**
 	 * 마음알기 설문 완료 상태 조회
 	 * @return
 	 */

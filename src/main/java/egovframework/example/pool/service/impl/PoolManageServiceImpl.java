@@ -126,6 +126,27 @@ public class PoolManageServiceImpl implements PoolManageService {
 	public void updateReportsStatus(PoolManageVO poolManageVO) {
 		insertReports(poolManageVO);
 		mapper.updateReportsStatus(poolManageVO);
+		insertReportsScore(poolManageVO);
+	}
+	
+	/**
+	 * 회원 마음알기 점수 등록 함수
+	 * @param vo
+	 */
+	public void insertReportsScore(PoolManageVO vo) {
+		String pollId = vo.getPollId();
+		
+		switch (pollId) {
+		case "QES00000000000000001":
+			mapper.insertReportsScore1(vo);			
+			break;
+		case "QES00000000000000002":
+			mapper.insertReportsScore2(vo);			
+			break;
+		case "QES00000000000000003":
+			mapper.insertReportsScore3(vo);			
+			break;
+		}
 	}
 
 	/**

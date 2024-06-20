@@ -10,6 +10,7 @@ import javax.annotation.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.ResultVO;
+import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.service.Students;
 import egovframework.example.user.service.Teachers;
@@ -187,4 +189,38 @@ public class UserManageController {
 		
 	}
 	
+	/**
+	 * 아이디 톡톡 선생님
+	 */
+	@GetMapping("/users/idTokTok")
+	public ResponseEntity<?> selectIdTokTokTeacher(@RequestHeader HttpHeaders header, @RequestParam String id) {
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.build();
+		
+		if(!userManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		
+		LoginVO teacherInfo = userManageService.isReallyTeacherDtl(auth.getUniqId());
+		teacherInfo.setUniqId(id);
+		
+		if(teacherInfo.getIsTeacher()) {
+			HashMap<String, Object> result = new HashMap<String, Object>();
+			
+			for(IdTokTokVO vo : userManageService.selectIdTokTokTeacher(teacherInfo)) {
+				HashMap<String, Object> map = new HashMap<String, Object>();
+				
+				map.put("score", vo.getPoolScore());
+				map.put("mean", vo.getPoolMean());
+				map.put("stddev", vo.getPoolStddev());
+				
+				result.put(vo.getQesitmAnswerType(), map);
+			}
+			
+			return ResponseEntity.ok(result);
+		}
+		
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	}
 }

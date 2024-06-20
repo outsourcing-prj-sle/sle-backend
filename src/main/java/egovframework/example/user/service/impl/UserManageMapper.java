@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 
 @Mapper("userManageMapper")
@@ -58,4 +59,14 @@ public interface UserManageMapper {
 	 * 선생님 권한 사용자 체크
 	 */
 	Boolean isReallyTeacher(String uniqId);
+	
+	/**
+	 * 선생님 권한 사용자 체크 상세
+	 */
+	LoginVO isReallyTeacherDtl(String uniqId);
+	
+	/**
+	 * 아이디 톡톡 선생님 조회
+	 */
+	List<IdTokTokVO> selectIdTokTokTeacher(LoginVO loginVO);
 }

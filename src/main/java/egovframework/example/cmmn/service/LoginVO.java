@@ -96,6 +96,11 @@ public class LoginVO {
 	private String brthdy;
 	
 	/**
+	 * 선생님 구분 코드
+	 */
+	private Boolean isTeacher;
+	
+	/**
 	 * 역할 배정
 	 */
 	public void isRole() {

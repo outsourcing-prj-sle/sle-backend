@@ -118,10 +118,10 @@ public class PoolManageController {
 			 for(int i=0; i<randSnList.length; i++) {
 				 int sn = Integer.parseInt(randSnList[i]);
 				 
-				 stepList.append(sn);
+				 stepList.append(sn).append(":/");
 				 
 				 if(i < randSnList.length-1) {
-					 stepList.append(":/,");
+					 stepList.append(",");
 				 }
 			 }
 		 } else {
@@ -261,6 +261,7 @@ public class PoolManageController {
 		if(poolManageService.selectIsDone(poolManageVO) == 1) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
 		} else {
+			poolManageService.insertReports(poolManageVO);
 			poolManageService.updateReportsStatus(poolManageVO);
 		}
 		

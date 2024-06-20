@@ -83,12 +83,9 @@
 	<update id="updateUserInfo" parameterType="hashmap">
 		UPDATE COMTNMBER
 		SET
-			USER_NM = #{name}, 
-			PASSWORD = #{password}, 
+			BRTHDY = #{brthdy}
 			PHOTO_STRE_FILE_NM = #{profileImageId}, 
-			EMAIL_ADRES = #{userEmail}, 
-			SEXDSTN = #{sex}, 
-			TEACHER_SE_CODE = #{userType}, 
+			SEXDSTN = #{sex},
 			SCHUL_CODE = #{userSpaceInfo}, 
 			ST_GRADE = #{gradeNm},
 			ST_CLASS = #{classNm},
@@ -171,5 +168,37 @@
 			case when AUTHOR_CODE='ROLE_TEACHER' then true else false end as isTeacher
 		from COMTNEMPLYRSCRTYESTBS
 		where SCRTY_DTRMN_TRGET_ID = #{uniqId}
+	</select>
+	
+	<select id="isReallyTeacherDtl" parameterType="String" resultType="loginVO">
+		select
+			case when a.AUTHOR_CODE='ROLE_TEACHER' then 1 else 0 end as isTeacher,
+			b.SCHUL_CODE as userSpaceOrgInfo,
+			b.ST_CLASS as classNm,
+			b.ST_GRADE as gradeNm
+		from COMTNEMPLYRSCRTYESTBS a
+		left join COMTNMBER b
+		on a.SCRTY_DTRMN_TRGET_ID = b.USER_ID
+		where SCRTY_DTRMN_TRGET_ID = #{uniqId}
+	</select>
+	
+	<select id="selectIdTokTokTeacher" parameterType="loginVO" resultType="tokVO">
+		select
+			b.QESITM_ANSWER_TYPE as qesitmAnswerType,
+			b.POOL_SCORE as poolScore,
+			c.POOL_MEAN as poolMean,
+			c.POOL_STDDEV as poolStddev
+		from COMTNMBER a
+		join COMTNBBSPOLLSCORE b
+		on a.USER_ID = b.USER_ID
+		left join VW_COMTNBBSPOOLCALC c
+		on a.SCHUL_CODE = c.SCHUL_CODE
+		and a.ST_GRADE = c.ST_GRADE
+		and a.ST_CLASS = c.ST_CLASS
+		and b.QESITM_ANSWER_TYPE = c.QESITM_ANSWER_TYPE
+		where a.USER_ID = #{uniqId}
+		and a.SCHUL_CODE = #{userSpaceOrgInfo}
+		and a.ST_CLASS = #{classNm}
+		and a.ST_GRADE = #{gradeNm}
 	</select>
 </mapper>

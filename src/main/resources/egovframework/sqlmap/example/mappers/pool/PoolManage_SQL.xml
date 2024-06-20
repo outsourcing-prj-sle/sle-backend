@@ -45,7 +45,7 @@
 		with sub as (
 			select
 				mstr.POLL_ID,
-				GROUP_CONCAT(concat(sub.QESITM_SN, ':', sub.QESITM_ANSWER, '/', sub.QUESITM_ANSWER_IMAGE) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
+				GROUP_CONCAT(concat(sub.QESITM_SN, ':', sub.QESITM_ANSWER, '/', sub.QESITM_ANSWER_IMAGE) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
 				mstr.QESITM_SN_LIST,
 				mstr.POLL_STATUS
 			from COMTNBBSPOOLMANAGE mstr
@@ -106,10 +106,87 @@
 		)
 	</insert>
 	
+	<insert id="insertReportsScore1" parameterType="poolManageVO">
+		insert into COMTNBBSPOLLSCORE 
+		(
+			select
+				b.USER_ID,
+				'GM' as QESITM_ANSWER_TYPE,
+				sum(b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as score
+			from COMTNBBSPOOLQESITM a
+			left join COMTNBBSPOOLATDRN b
+			on a.POLL_ID = b.POLL_ID
+			and a.QESITM_SN = b.QESITM_SN
+			and b.USER_ID = #{uniqId}
+			where QESITM_ANSWER_TYPE = 'GM'
+		)
+	</insert>
+	
+	<insert id="insertReportsScore2" parameterType="poolManageVO">
+		insert into COMTNBBSPOLLSCORE 
+		(
+			select
+				b.USER_ID,
+				'IBP' as QESITM_ANSWER_TYPE,
+				sum(5 - b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as POLL_SCORE
+			from COMTNBBSPOOLQESITM a
+			left join COMTNBBSPOOLATDRN b
+			on a.POLL_ID = b.POLL_ID
+			and a.QESITM_SN = b.QESITM_SN
+			and b.USER_ID = #{uniqId}
+			where QESITM_ANSWER_TYPE = 'IBP'
+			union all
+			select
+				b.USER_ID,
+				'EBP' as QESITM_ANSWER_TYPE,
+				sum(5 - b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as score
+			from COMTNBBSPOOLQESITM a
+			left join COMTNBBSPOOLATDRN b
+			on a.POLL_ID = b.POLL_ID
+			and a.QESITM_SN = b.QESITM_SN
+			and b.USER_ID = #{uniqId}
+			where QESITM_ANSWER_TYPE = 'EBP'
+		)
+	</insert>
+	
+	<insert id="insertReportsScore3" parameterType="poolManageVO">
+		insert into COMTNBBSPOLLSCORE 
+		(
+			select
+				b.USER_ID,
+				'EK' as QESITM_ANSWER_TYPE,
+				sum(case when b.QESITM_ANSWER = sub.answer then 1 else 0 end) as score
+			from COMTNBBSPOOLQESITM a
+			left join COMTNBBSPOOLATDRN b
+			on a.POLL_ID = b.POLL_ID
+			and a.QESITM_SN = b.QESITM_SN
+			and b.USER_ID = #{uniqId}
+			left join (
+				select
+					1 as QESITM_SN,
+					2 as answer
+				union all
+				select
+					2 as QESITM_SN,
+					1 as answer
+				union all
+				select
+					3 as QESITM_SN,
+					4 as answer
+				union all
+				select
+					4 as QESITM_SN,
+					2 as answer
+			) as sub
+			on a.QESITM_SN = sub.QESITM_SN
+			where QESITM_ANSWER_TYPE = 'EK'
+		)
+	</insert>
+	
 	<update id="updateReports" parameterType="poolManageVO">
 		update  COMTNBBSPOOLATDRN
 		set QESITM_ANSWER = #{qesitmAnswer},
-			QUESITM_ANSWER_IMAGE = #{quesitmAnswerImage}
+			QESITM_ANSWER_IMAGE = #{quesitmAnswerImage}
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
 		and QESITM_SN = #{qesitmSn}
@@ -155,7 +232,7 @@
 			a.POLL_BGNDE as startDate,
 			a.POLL_ENDDE as endDate,
 			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
-	    from COMTNBBSPOOLATDRN
+	    from COMTNBBSPOLL a
 	    where POLL_ID = #{pollId}
     </select>
 	
@@ -175,4 +252,15 @@
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
 	</select>
+	
+	<update id="updateUserInfo" parameterType="loginVO">
+		update COMTNMBER
+		set 
+			SCHUL_CODE = #{userSpaceOrgInfo},
+			ST_GRADE = #{gradeNm},
+			ST_CLASS = #{classNm},
+			SEXDSTN = #{sex},
+			BRTHDY = #{brthdy}
+		where USER_ID = #{uniqId}
+	</update>
 </mapper>

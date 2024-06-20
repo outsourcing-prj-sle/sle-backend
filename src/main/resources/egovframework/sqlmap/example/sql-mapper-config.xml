@@ -12,5 +12,6 @@
 		<typeAlias alias="poolManageVO" type="egovframework.example.pool.service.PoolManageVO"/>
 		<typeAlias alias="poolNoticeDTO" type="egovframework.example.pool.service.PoolNoticeDTO"/>
 		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
+		<typeAlias alias="tokVO" type="egovframework.example.user.service.IdTokTokVO"/>
     </typeAliases>
 </configuration>

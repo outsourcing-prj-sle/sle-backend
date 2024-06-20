@@ -47,4 +47,14 @@ public interface UserManageService {
 	 * 선생님 권한 사용자 체크
 	 */
 	Boolean isReallyTeacher(String uniqId);
+	
+	/**
+	 * 선생님 권한 사용자 체크 상세
+	 */
+	LoginVO isReallyTeacherDtl(String uniqId);
+	
+	/**
+	 * 아이디 톡톡 선생님 조회
+	 */
+	List<IdTokTokVO> selectIdTokTokTeacher(LoginVO loginVO);
 }
