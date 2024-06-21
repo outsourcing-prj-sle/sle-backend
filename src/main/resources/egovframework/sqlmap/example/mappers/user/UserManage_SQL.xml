@@ -13,7 +13,8 @@
 			USER_ID as uniqId,
 			CONFM_AT as isFirstInvite,
 			SEXDSTN as sex,
-			EMAIL_ADRES as userEmail
+			EMAIL_ADRES as userEmail,
+			BRTHDY
 		from COMTNMBER
 		where USER_ID = #{uniqId}
 	</select>
@@ -83,7 +84,7 @@
 	<update id="updateUserInfo" parameterType="hashmap">
 		UPDATE COMTNMBER
 		SET
-			BRTHDY = #{brthdy}
+			BRTHDY = #{brthdy},
 			PHOTO_STRE_FILE_NM = #{profileImageId}, 
 			SEXDSTN = #{sex},
 			SCHUL_CODE = #{userSpaceInfo}, 
@@ -141,6 +142,17 @@
 			on b.USER_ID = sub2.SCRTY_DTRMN_TRGET_ID
 			where sub2.AUTHOR_CODE = 'ROLE_STUDENT'
 			group by a.POLL_ID, b.USER_ID
+		), dt as (
+			SELECT
+		        a.POLL_ID,
+		        b.POLL_NM,
+		        a.USER_ID,
+		        a.QESITM_SN,
+		        a.FRST_REGISTER_PNTTM,
+		        ROW_NUMBER() OVER (PARTITION BY POLL_ID, USER_ID ORDER BY QESITM_SN DESC) AS rn
+		    FROM COMTNBBSPOOLATDRN a
+			left join COMTNBBSPOLL b
+			on a.POLL_ID = b.POLL_ID
 		)
 		select
 			group_concat(mstr.POLL_ID order by mstr.POLL_ID separator ",") as pollIdList,
@@ -153,13 +165,19 @@
 			sub.EMAIL_ADRES as email,
 			concat(sub.ST_GRADE, '학년 ', sub.ST_CLASS, '반') as classInfo,
 			sub.SEXDSTN as sex,
-			group_concat(case when sub2.POLL_STATUS = 'done' then true else false end order by mstr.POLL_ID separator ",") as isParticipateList
+			group_concat(case when sub2.POLL_STATUS = 'done' then true else false end order by mstr.POLL_ID separator ",") as isParticipateList,
+			group_concat(dt.POLL_NM order by mstr.POLL_ID separator ",") as pollIDForfrstRegisterPnttm,
+			group_concat(dt.FRST_REGISTER_PNTTM order by mstr.POLL_ID separator ",") as frstRegisterPnttm
 		from mstr
 		left join COMTNMBER sub
 		on mstr.USER_ID = sub.USER_ID
 		left join COMTNBBSPOOLMANAGE sub2
 		on mstr.USER_ID = sub2.USER_ID
 		and mstr.POLL_ID = sub2.POLL_ID
+		left join dt
+		on mstr.USER_ID = dt.USER_ID
+		and mstr.POLL_ID = dt.POLL_ID
+		and rn = 1
 		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
 	</select>
 	

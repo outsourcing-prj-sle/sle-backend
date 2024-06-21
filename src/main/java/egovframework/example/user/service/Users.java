@@ -24,6 +24,7 @@ public class Users {
 	private Boolean isFirstInvite;
 	private String sex;
 	private String userEmail;
+	private String brthdy;
 	
 	public Users(LoginVO loginVO) {
 		this.setId(loginVO.getId());

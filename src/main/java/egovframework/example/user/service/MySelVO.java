@@ -102,4 +102,14 @@ public class MySelVO {
 	 * 설문조사_참여_여부_목록
 	 */
 	private String isParticipateList;
+	
+	/**
+	 * 최종_등록
+	 */
+	private String frstRegisterPnttm;
+	
+	/**
+	 * 최종_등록_설문_ID
+	 */
+	private String pollIDForfrstRegisterPnttm;
 }

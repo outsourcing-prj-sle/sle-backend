@@ -57,6 +57,7 @@ public class UserManageController {
 				.isFirstInvite(userInfo.getIsFirstInvite())
 				.sex(userInfo.getSex())
 				.userEmail(userInfo.getUserEmail())
+				.brthdy(userInfo.getBrthdy())
 				.build();
 		
 		return ResponseEntity.ok(res);
@@ -99,6 +100,8 @@ public class UserManageController {
 		if(!userManageService.authorizationUser(auth)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
+		
+		loginVO.setUniqId(auth.getUniqId());
 		
 		userManageService.updateUserInfo(loginVO);
 		
@@ -151,6 +154,18 @@ public class UserManageController {
 					map2.put(pollNmList[j], Integer.parseInt(isParticipate[j]));
 				}
 				
+				HashMap<String, String> stateFinList = new HashMap<>();
+				
+				if(voList.get(i).getPollIDForfrstRegisterPnttm() != null && voList.get(i).getFrstRegisterPnttm() != null) {
+					String[] pollIDForfrstRegisterPnttm = voList.get(i).getPollIDForfrstRegisterPnttm().split(",");
+					String[] frstRegisterPnttm = voList.get(i).getFrstRegisterPnttm().split(",");
+					
+					for(int k=0; k<pollIDForfrstRegisterPnttm.length; k++) {
+						
+						stateFinList.put(pollIDForfrstRegisterPnttm[k], frstRegisterPnttm[k]);
+					}
+				}
+				
 				Teachers teacher = Teachers.builder()
 						.userId(voList.get(i).getUserId())
 						.name(voList.get(i).getName())
@@ -158,7 +173,10 @@ public class UserManageController {
 						.classInfo(voList.get(i).getClassInfo())
 						.sex(voList.get(i).getSex())
 						.stateList(map2)
+						.stateFinList(stateFinList)
 						.build();
+				
+				
 				
 				infoArr.add(teacher);
 			}

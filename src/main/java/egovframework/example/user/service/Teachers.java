@@ -1,5 +1,6 @@
 package egovframework.example.user.service;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import lombok.AllArgsConstructor;
@@ -18,4 +19,5 @@ public class Teachers {
 	private String classInfo;
 	private String sex;
 	private HashMap<String, Integer> stateList;
+	private HashMap<String, String> stateFinList;
 }
