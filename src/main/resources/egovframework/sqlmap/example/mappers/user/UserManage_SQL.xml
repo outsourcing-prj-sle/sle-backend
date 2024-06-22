@@ -183,7 +183,7 @@
 	
 	<select id="isReallyTeacher" parameterType="String" resultType="Boolean">
 		select
-			case when AUTHOR_CODE='ROLE_TEACHER' then true else false end as isTeacher
+			case when AUTHOR_CODE='ROLE_TEACHER' then 1 else 0 end as isTeacher
 		from COMTNEMPLYRSCRTYESTBS
 		where SCRTY_DTRMN_TRGET_ID = #{uniqId}
 	</select>
@@ -219,4 +219,37 @@
 		and a.ST_CLASS = #{classNm}
 		and a.ST_GRADE = #{gradeNm}
 	</select>
+	
+	<select id="selectSurveyHistoryisExist" parameterType="surveyVO" resultType="Boolean">
+		select
+			case when count(*) then 1 else 0 end as isExist
+		from HISTSURVEYEVALUATION a
+		where a.TEACHER_ID = #{teacherId}
+		and a.STUDENT_ID = #{id}
+		and a.SURVEY_EVALUATION_SE_CODE = #{qesType}
+	</select>
+	
+	<update id="updateResearchResult" parameterType="surveyVO">
+		update HISTSURVEYEVALUATION
+		set
+			SURVEY_EVALUATION_ANSWER_LIST = #{qesAnswer}
+		where TEACHER_ID = #{teacherId}
+		and STUDENT_ID = #{id}
+		and SURVEY_EVALUATION_SE_CODE = #{qesType}
+	</update>
+	
+	<insert id="insertResearchResult" parameterType="surveyVO">
+		insert into HISTSURVEYEVALUATION(
+			TEACHER_ID, 
+			STUDENT_ID, 
+			SURVEY_EVALUATION_SE_CODE, 
+			SURVEY_EVALUATION_ANSWER_LIST
+		)
+		values (
+			#{teacherId},
+			#{id},
+			#{qesType},
+			#{qesAnswer}
+		)
+	</insert>
 </mapper>

@@ -6,6 +6,7 @@ import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 
@@ -69,4 +70,20 @@ public interface UserManageMapper {
 	 * 아이디 톡톡 선생님 조회
 	 */
 	List<IdTokTokVO> selectIdTokTokTeacher(LoginVO loginVO);
+	
+	/**
+	 * 평가 결과 유무 조회
+	 */
+	Boolean selectSurveyHistoryisExist(SurveyVO surveyVO);
+	
+	/**
+	 * 평가 결과 수정
+	 */
+	void updateResearchResult(SurveyVO surveyVO);
+	
+	/**
+	 * 평가 결과 저장
+	 */
+	void insertResearchResult(SurveyVO surveyVO);
+	
 }

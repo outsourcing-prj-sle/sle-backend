@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.ResultVO;
+import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.service.Students;
@@ -240,5 +241,31 @@ public class UserManageController {
 		}
 		
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+	}
+	
+	@PutMapping("/users/research")
+	public ResponseEntity<?> insertResearchResult(@RequestHeader HttpHeaders header, @RequestBody SurveyVO vo) {
+		LoginVO auth = LoginVO.builder()
+				.uniqId(header.get("authorization").get(0))
+				.build();
+		
+		if(!userManageService.authorizationUser(auth)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+		
+		if(userManageService.isReallyTeacher(auth.getUniqId())) {
+			vo.setTeacherId(auth.getUniqId());
+			vo.setQesType("idtt");
+			
+			if(userManageService.selectSurveyHistoryisExist(vo)) {
+				userManageService.updateResearchResult(vo);
+			} else {
+				userManageService.insertResearchResult(vo);
+			}
+		} else {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님 권한이 필요합니다.");
+		}
+		
+		return ResponseEntity.ok().build();
 	}
 }
