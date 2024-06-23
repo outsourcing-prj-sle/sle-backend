@@ -7,6 +7,13 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import egovframework.example.naver.dto.GneInfoDto;
+import egovframework.example.naver.dto.GneUserDto;
+import egovframework.example.naver.dto.NaverTokenDto;
+import egovframework.example.naver.dto.NaverUserDto;
+import egovframework.example.naver.service.NaverService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +42,10 @@ public class UserManageController {
 	
 	@Resource(name = "userManageService")
 	private UserManageService userManageService;
+
+	@Autowired
+	@Qualifier(value = "naverServiceImpl")
+	private NaverService naverService;
 	
 	/**
 	 * 회원정보 조회
@@ -44,8 +55,8 @@ public class UserManageController {
 		LoginVO loginVO = LoginVO.builder()
 				.uniqId(header.get("authorization").get(0))
 				.build();
-		
-		LoginVO userInfo = userManageService.selectUserInfo(loginVO);
+
+		LoginVO userInfo = userManageService.selectUserInfo(makeLoginVO(header.get("accessToken").get(0)));
 		
 		Users res = Users.builder()
 				.id(userInfo.getId())
@@ -63,19 +74,32 @@ public class UserManageController {
 		
 		return ResponseEntity.ok(res);
 	}
-	
+
 	/**
-	 * 회원정보 등록
+	 * 사용자 정보 LoginVO 만들기
 	 */
-	@PutMapping("/users/insert")
-	ResponseEntity<?> insertUserInfo(@RequestBody LoginVO loginVO) {
-		try {
-			userManageService.insertUserInfo(loginVO);
-		}catch(Exception e) {
-			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Register Failed"));
-		}
-		
-		return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,HttpStatus.OK.toString(),loginVO));
+	LoginVO makeLoginVO(String accessToken) {
+		NaverTokenDto naverTokenDto = new NaverTokenDto();
+		naverTokenDto.setAccess_token(accessToken);
+
+		// 네이버 억세스토큰으로 사용자정보 조회
+		NaverUserDto naverUserDto = naverService.procUserInfo(naverTokenDto);
+
+		// 네이버 사용자정보로 경남교육청 사용자정보 조회
+		GneInfoDto<GneUserDto> gneUserDto = naverService.procGneUserInfo(naverUserDto);
+
+		LoginVO loginVO = LoginVO.builder()
+				.id(naverUserDto.getSid())
+				.name(gneUserDto.getData().getUserNm())
+				.userEmail(gneUserDto.getData().getUserId())
+				.profileImageId(naverUserDto.getThumbnailPhotoUrl())
+				.gradeNm(gneUserDto.getData().getStGrade())
+				.classNm(gneUserDto.getData().getStClass())
+				.userType(naverUserDto.getUserType())
+				.relationInfo(gneUserDto.getData().getSchulNm())
+				.build();
+
+		return loginVO;
 	}
 	
 	/**
@@ -104,7 +128,7 @@ public class UserManageController {
 		
 		loginVO.setUniqId(auth.getUniqId());
 		
-		userManageService.updateUserInfo(loginVO);
+		userManageService.updateUserInfoDtl(loginVO);
 		
 		return ResponseEntity.ok().build();
 		

@@ -1,6 +1,7 @@
 package egovframework.example.user.service;
 
 import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.naver.dto.NaverTokenDto;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,18 +26,5 @@ public class Users {
 	private String sex;
 	private String userEmail;
 	private String brthdy;
-	
-	public Users(LoginVO loginVO) {
-		this.setId(loginVO.getId());
-		this.setName(loginVO.getName());
-		this.setProfileImageId(loginVO.getProfileImageId());
-		this.setUserType(loginVO.getUserType());
-		this.setUserSpaceInfo(loginVO.getUserSpaceInfo());
-		this.setUserSpaceOrgInfo(loginVO.getUserSpaceOrgInfo());
-		this.setUniqId(loginVO.getUniqId());
-		this.setRelationInfo(loginVO.getRelationInfo());
-		this.setIsFirstInvite(loginVO.getIsFirstInvite());
-		this.setSex(loginVO.getSex());
-		this.setUserEmail(loginVO.getUserEmail());
-	}
+	private String accessToken;
 }

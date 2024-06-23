@@ -43,36 +43,28 @@
 		insert into COMTNMBER(
 			USER_ID, 
 			USER_SE_CODE,
-			PASSWORD, 
-			USER_NM, 
+			USER_NM,
 			PHOTO_STRE_FILE_NM,
 			EMAIL_ADRES, 
-			SEXDSTN,
 			CONFM_AT,
 			ST_GRADE, 
 			ST_CLASS, 
 			TEACHER_SE_CODE, 
 			SCHUL_CODE,
-			FRST_REGIST_PNTTM,
-			DN,
-			BRTHDY
+			FRST_REGIST_PNTTM
 		)
 		values (
 			#{uniqId},
 			#{id},
-			#{password},
 			#{name},
 			#{profileImageId}, 
 			#{userEmail},
-			#{sex}, 
-			'N', 
+			'Y',
 			#{gradeNm},
 			#{classNm},
 			#{userType},
 			#{userSpaceInfo},
-			now(),
-			#{relationInfo},
-			#{brthdy}
+			now()
 		)
 	</insert>
 	
@@ -84,14 +76,23 @@
 	<update id="updateUserInfo" parameterType="hashmap">
 		UPDATE COMTNMBER
 		SET
-			BRTHDY = #{brthdy},
-			PHOTO_STRE_FILE_NM = #{profileImageId}, 
-			SEXDSTN = #{sex},
-			SCHUL_CODE = #{userSpaceInfo}, 
+			USER_SE_CODE = #{id},
+			EMAIL_ADRES = #{userEmail},
+			PHOTO_STRE_FILE_NM = #{profileImageId},
+			TEACHER_SE_CODE = #{userType},
+			SCHUL_CODE = #{relationInfo},
 			ST_GRADE = #{gradeNm},
 			ST_CLASS = #{classNm},
 			LAST_UPDUSR_PNTTM = now(),
 			LAST_UPDUSR_ID = #{uniqId}
+		WHERE USER_ID = #{uniqId}
+	</update>
+
+	<update id="updateUserInfoDtl" parameterType="hashmap">
+		UPDATE COMTNMBER
+		SET
+			SEXDSTN = #{sex},
+			BRTHDY = #{brthdy}
 		WHERE USER_ID = #{uniqId}
 	</update>
 
@@ -252,4 +253,11 @@
 			#{qesAnswer}
 		)
 	</insert>
+
+	<select id="selectUniqId" parameterType="loginVO" resultType="String">
+		SELECT
+			a.USER_ID
+		FROM COMTNMBER a
+		WHERE a.USER_SE_CODE = #{id}
+	</select>
 </mapper>

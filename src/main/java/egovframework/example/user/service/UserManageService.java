@@ -27,12 +27,17 @@ public interface UserManageService {
 	/**
 	 * 회원정보 등록
 	 */
-	void insertUserInfo(LoginVO loginVO);
+	String insertUserInfo(LoginVO loginVO);
 	
 	/**
 	 * 회원정보 수정
 	 */
 	void updateUserInfo(LoginVO loginVO);
+
+	/**
+	 * 회원정보 수정 상세(성별, 생년월일)
+	 */
+	void updateUserInfoDtl(LoginVO loginVO);
 	
 	/**
 	 * 학생 SEL 목록 조회

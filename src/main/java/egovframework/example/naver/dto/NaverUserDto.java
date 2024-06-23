@@ -1,6 +1,9 @@
 package egovframework.example.naver.dto;
 
 import lombok.Data;
+import org.apache.commons.lang3.StringUtils;
+
+import java.util.HashMap;
 
 @Data
 public class NaverUserDto {
@@ -110,11 +113,41 @@ public class NaverUserDto {
      *       "primaryEmail" : "tlqjach11@gne.go.kr"
      *     , "sid" : "Jvb1NvMlkdTW3oEwad6lSnyWyB50mnuvb4aXb3Mp"
      *     , "userType" : "tea"
-     *     ,"name":{"givenName":"1반 선생님","familyName":"1학년","fullName":"1반 선생님 1학년"},"thumbnailPhotoUrl":"https://whalespace.ssl.phinf.net/MjAyMzA3MjRfMTIg/MDAxNjkwMTU3NjMzNTg1.I2kikBv00DBz6Do-hfDVDsFt-v2F9C-55o6gw7Kjskog.nwdIZlwYB7LBupARoUB68IDzQu6LyH0dIfVwBsKjingg.JPEG/sonagi.jpg","customField":{"number":null},"space":{"name":"경남시범초등학교","code":"S333333"},"customer":{"name":"경상남도교육청","uid":"jgJDiUP2hVdsRPngqBzipB","type":"EDU_OFF","customerDomain":"gne.go.kr"},"orgunit":{"id":"225673","name":"1반","orgUnitPath":"/경남시범초등학교/교직원/1학년/1반"},"userOrgunits":[{"id":"4015450","isPrimary":true,"orgunit":{"id":"225673","name":"1반","orgUnitPath":"/경남시범초등학교/교직원/1학년/1반"}}],"relation":[],"sid_v1":"ozxxayrtm53vkotjpfwvmsdmne3emzlsofkecs3rkrxe4vq"}
+     *     ,"name":{"givenName":"1반 선생님","familyName":"1학년","fullName":"1반 선생님 1학년"},
+     *     "thumbnailPhotoUrl":"https://whalespace.ssl.phinf.net/MjAyMzA3MjRfMTIg/MDAxNjkwMTU3NjMzNTg1.I2kikBv00DBz6Do-hfDVDsFt-v2F9C-55o6gw7Kjskog.nwdIZlwYB7LBupARoUB68IDzQu6LyH0dIfVwBsKjingg.JPEG/sonagi.jpg",
+     *     "customField":{"number":null},
+     *     "space":{"name":"경남시범초등학교","code":"S333333"},
+     *     "customer":{
+     *          "name":"경상남도교육청",
+     *          "uid":"jgJDiUP2hVdsRPngqBzipB",
+     *          "type":"EDU_OFF",
+     *          "customerDomain":"gne.go.kr"
+     *     },
+     *     "orgunit":{"id":"225673","name":"1반","orgUnitPath":"/경남시범초등학교/교직원/1학년/1반"},
+     *     "userOrgunits":
+     *          [
+     *              {
+     *                  "id":"4015450",
+     *                  "isPrimary":true,
+     *                  "orgunit":
+     *                      {
+     *                          "id":"225673",
+     *                          "name":"1반",
+     *                          "orgUnitPath":"/경남시범초등학교/교직원/1학년/1반"
+ *                          }
+*                    }
+*                ],
+*             "relation":[],
+     *        "sid_v1":"ozxxayrtm53vkotjpfwvmsdmne3emzlsofkecs3rkrxe4vq"}
      */
     private String primaryEmail;
     private String sid;
     private String userType; // 학생: stu, 선생님: tea
-    // TODO son : 필요시 추가
+    private String thumbnailPhotoUrl;
+
+    public void setUserType(String userType) {
+        if(userType.equals("stu")) this.userType = "N";
+        if(userType.equals("tea")) this.userType = "Y";
+    }
 }
 

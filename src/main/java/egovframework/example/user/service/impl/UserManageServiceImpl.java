@@ -54,15 +54,23 @@ public class UserManageServiceImpl implements UserManageService {
 	 * 회원정보 등록
 	 */
 	@Override
-	public void insertUserInfo(LoginVO loginVO) {
+	public String insertUserInfo(LoginVO loginVO) {
 		try {
-			loginVO.setUniqId(userIdGnrService.getNextStringId());
-			loginVO.isRole();
-			mapper.insertUserInfo(loginVO);
-			mapper.insertUserScrtyEstbs(loginVO);
+			if(mapper.checkUserById(loginVO.getId())) {
+				loginVO.setUniqId(mapper.selectUniqId(loginVO));
+				mapper.updateUserInfo(loginVO);
+			} else {
+				loginVO.setUniqId(userIdGnrService.getNextStringId());
+				loginVO.isRole();
+
+				mapper.insertUserInfo(loginVO);
+				mapper.insertUserScrtyEstbs(loginVO);
+			}
 		} catch (FdlException e) {
 			e.printStackTrace();
 		}
+
+		return loginVO.getUniqId();
 	}
 
 	/**
@@ -70,7 +78,16 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public void updateUserInfo(LoginVO loginVO) {
+		loginVO.setUniqId(mapper.selectUniqId(loginVO));
 		mapper.updateUserInfo(loginVO);
+	}
+
+	/**
+	 * 회원정보 수정 상세(성별, 생년월일)
+	 */
+	@Override
+	public void updateUserInfoDtl(LoginVO loginVO) {
+		mapper.updateUserInfoDtl(loginVO);
 	}
 
 	/**

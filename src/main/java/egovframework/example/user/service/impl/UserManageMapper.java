@@ -45,6 +45,11 @@ public interface UserManageMapper {
 	 * 회원정보 수정
 	 */
 	void updateUserInfo(LoginVO loginVO);
+
+	/**
+	 * 회원정보 수정 상세(성별, 생년월일)
+	 */
+	void updateUserInfoDtl(LoginVO loginVO);
 	
 	/**
 	 * 학생 SEL 목록 조회
@@ -85,5 +90,11 @@ public interface UserManageMapper {
 	 * 평가 결과 저장
 	 */
 	void insertResearchResult(SurveyVO surveyVO);
-	
+
+	/**
+	 * 아이디로 사용자 UNIQ_ID 조회
+	 * @param loginVO
+	 * @return
+	 */
+	String selectUniqId(LoginVO loginVO);
 }
