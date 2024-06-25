@@ -86,6 +86,12 @@ public interface PoolManageMapper {
 	 * @param poolManageVO
 	 */
 	void updateReportsStatus(PoolManageVO poolManageVO);
+
+	/**
+	 * 회원 마음알기 설문 테이블 내에 유저 정보 저장
+	 * @param poolManageVO
+	 */
+	void updateReportsUserInfo(PoolManageVO poolManageVO);
 	
 	/**
 	 * 마음알기 설문 문제 개수 조회

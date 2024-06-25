@@ -198,6 +198,21 @@
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
 	</update>
+
+	<update id="updateReportsUserInfo" parameterType="poolManageVO">
+		UPDATE COMTNBBSPOOLMANAGE a, COMTNMBER b
+		SET
+			a.ST_YEAR = b.ST_YEAR,
+			a.ST_GRADE = b.ST_GRADE,
+			a.ST_SEMSTR = b.ST_SEMSTR,
+			a.ST_CLASS = b.ST_CLASS,
+			a.ST_CLASS_NM = b.ST_CLASS_NM,
+			a.ST_NUMBER = b.ST_NUMBER,
+			a.SCHUL_NM = b.SCHUL_NM,
+			a.SCHUL_GRADE_CODE = b.SCHUL_GRADE_CODE
+		WHERE a.USER_ID = b.USER_ID
+		  and a.USER_ID = #{uniqId}
+	</update>
 	
 	<select id="selectReportsCount" parameterType="poolManageVO" resultType="int">
 		select

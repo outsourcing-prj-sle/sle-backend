@@ -126,6 +126,7 @@ public class PoolManageServiceImpl implements PoolManageService {
 	public void updateReportsStatus(PoolManageVO poolManageVO) {
 		insertReports(poolManageVO);
 		mapper.updateReportsStatus(poolManageVO);
+		mapper.updateReportsUserInfo(poolManageVO);
 		insertReportsScore(poolManageVO);
 	}
 	
