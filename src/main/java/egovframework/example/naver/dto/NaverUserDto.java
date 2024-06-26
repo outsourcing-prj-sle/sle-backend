@@ -142,12 +142,6 @@ public class NaverUserDto {
      */
     private String primaryEmail;
     private String sid;
-    private String userType; // 학생: stu, 선생님: tea
     private String thumbnailPhotoUrl;
-
-    public void setUserType(String userType) {
-        if(userType.equals("stu")) this.userType = "N";
-        if(userType.equals("tea")) this.userType = "Y";
-    }
 }
 

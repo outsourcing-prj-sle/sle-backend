@@ -54,7 +54,7 @@ public class PoolManageController {
 		HashMap<String, List<Pool>> map = new HashMap<>();
 		
 		if(userManageService.isReallyTeacher(poolManageVO.getUniqId())) {
-			List<PoolManageVO> list = poolManageService.selectReportsTeacher(poolManageVO);
+			List<PoolManageVO> list = poolManageService.selectReportsTeacher();
 			
 			List<Pool> progress = new ArrayList<>(); 
 			List<Pool> expired = new ArrayList<>();

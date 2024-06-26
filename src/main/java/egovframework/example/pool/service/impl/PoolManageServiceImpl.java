@@ -33,12 +33,11 @@ public class PoolManageServiceImpl implements PoolManageService {
 	
 	/**
 	 * 회원 마음알기 설문 선생님 목록 조회
-	 * @param poolManageVO
 	 * @return
 	 */
 	@Override
-	public List<PoolManageVO> selectReportsTeacher(PoolManageVO poolManageVO) {
-		return mapper.selectReportsTeacher(poolManageVO);
+	public List<PoolManageVO> selectReportsTeacher() {
+		return mapper.selectReportsTeacher();
 	}
 
 	/**

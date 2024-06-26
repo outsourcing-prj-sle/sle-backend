@@ -1,14 +1,12 @@
 package egovframework.example.user.service.impl;
 
-import java.util.List;
-
-import org.apache.ibatis.annotations.Param;
-import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
-
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
+import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
+
+import java.util.List;
 
 @Mapper("userManageMapper")
 public interface UserManageMapper {
@@ -23,7 +21,7 @@ public interface UserManageMapper {
 	 * ID로 회원 정보 조회
 	 * @return boolean
 	 */
-	boolean checkUserById(@Param("id") String id);
+	boolean checkUserById(LoginVO loginVO);
 	
 	/**
 	 * 토큰으로 회원 인증
@@ -64,7 +62,7 @@ public interface UserManageMapper {
 	/**
 	 * 선생님 권한 사용자 체크
 	 */
-	Boolean isReallyTeacher(String uniqId);
+	Boolean isReallyTeacher(LoginVO loginVO);
 	
 	/**
 	 * 선생님 권한 사용자 체크 상세

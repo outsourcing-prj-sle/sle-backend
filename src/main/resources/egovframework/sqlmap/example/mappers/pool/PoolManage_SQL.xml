@@ -31,7 +31,7 @@
 		ORDER BY mstr.POLL_ID
 	</select>
 	
-	<select id="selectReportsTeacher" parameterType="poolManageVO" resultType="poolManageVO">
+	<select id="selectReportsTeacher" resultType="poolManageVO">
 		select
 			POLL_ID,
 			POLL_NM,
@@ -97,7 +97,7 @@
 	</insert>
 	
 	<insert id="insertReportsStatus" parameterType="poolManageVO">
-		insert into COMTNBBSPOOLMANAGE
+		insert into COMTNBBSPOOLMANAGE(USER_ID, POLL_ID, QESITM_SN_LIST, POLL_STATUS)
 		values (
 			#{uniqId},
 			#{pollId},

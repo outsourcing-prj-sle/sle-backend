@@ -4,9 +4,9 @@ import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.naver.dto.*;
 import egovframework.example.naver.service.NaverService;
 import egovframework.example.user.service.UserManageService;
-import egovframework.example.user.service.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +16,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.annotation.Resource;
-import java.util.HashMap;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
  * @Class Name : NaverController.java
@@ -67,31 +68,27 @@ public class NaverController {
                 .name(gneUserDto.getData().getUserNm())
                 .userEmail(gneUserDto.getData().getUserId())
                 .profileImageId(naverUserDto.getThumbnailPhotoUrl())
+                .schulGradeCode(gneUserDto.getData().getSchulGradeCode())
+                .stYear(gneUserDto.getData().getStdrYear())
                 .gradeNm(gneUserDto.getData().getStGrade())
-                .classNm(gneUserDto.getData().getStClass())
-                .userType(naverUserDto.getUserType())
-                .relationInfo(gneUserDto.getData().getSchulNm())
+                .classCode(gneUserDto.getData().getStClass())
+                .classNm(gneUserDto.getData().getStClassNm())
+                .stNumber(gneUserDto.getData().getStNumber())
+                .userType(gneUserDto.getData().getUserSeCode())
+                .userSpaceInfo(gneUserDto.getData().getSchulNm())
+                .schulCode(gneUserDto.getData().getSchulCode())
+                .schulGradeCode(gneUserDto.getData().getSchulGradeCode())
                 .build();
 
-        loginVO.setUniqId(userManageService.insertUserInfo(loginVO));
-        LoginVO userInfo = userManageService.selectUserInfo(loginVO);
+        try {
+            URI redirectUri = new URI("/naver/callback");
 
-        Users res = Users.builder()
-                .id(userInfo.getId())
-                .name(userInfo.getName())
-                .userType(userInfo.getUserType())
-                .userSpaceInfo(userInfo.getUserSpaceInfo())
-                .userSpaceOrgInfo(userInfo.getUserSpaceOrgInfo())
-                .uniqId(userInfo.getUniqId())
-                .userSpaceInfo(userInfo.getRelationInfo())
-                .isFirstInvite(userInfo.getIsFirstInvite())
-                .sex(userInfo.getSex())
-                .userEmail(userInfo.getUserEmail())
-                .brthdy(userInfo.getBrthdy())
-                .accessToken(naverTokenDto.getAccess_token())
-                .build();
+            HttpHeaders httpHeaders = new HttpHeaders();
+            httpHeaders.setLocation(redirectUri);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
 
-        return ResponseEntity.ok(res);
+        return ResponseEntity.ok(userManageService.insertUserInfo(loginVO));
     }
-    
 }

@@ -113,7 +113,6 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-//            throw new ServiceException(ResultCode.CUSTOM_MESSAGE, "네이버 엑세스 토큰 발행에 실패하였습니다.");
             throw new RuntimeException("네이버 엑세스 토큰 발행에 실패하였습니다.");
         }
     }
@@ -165,7 +164,6 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-//            throw new ServiceException(ResultCode.CUSTOM_MESSAGE, "네이버 사용자정보 조회에 실패하였습니다.");
             throw new RuntimeException("네이버 사용자정보 조회에 실패하였습니다.");
         }
     }
@@ -217,7 +215,6 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-//            throw new ServiceException(ResultCode.CUSTOM_MESSAGE, "경남교육청 사용자 정보 조회에 실패하였습니다.");
             throw new RuntimeException("경남교육청 사용자 정보 조회에 실패하였습니다.");
         }
     }
@@ -271,7 +268,6 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-//            throw new ServiceException(ResultCode.CUSTOM_MESSAGE, "경남교육청 학교별 사용자 목록 조회에 실패하였습니다.");
             throw new RuntimeException("경남교육청 학교별 사용자 목록 조회에 실패하였습니다.");
         }
     }

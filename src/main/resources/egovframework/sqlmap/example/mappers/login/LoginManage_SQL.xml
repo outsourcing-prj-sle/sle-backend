@@ -19,7 +19,6 @@
 			ST_GRADE as gradeNm,
 			ST_CLASS as classNm,
 			USER_ID as uniqId,
-			CONFM_AT as isFirstInvite,
 			SEXDSTN as sex,
 			EMAIL_ADRES as userEmail,
 			case when TEACHER_SE_CODE = 'Y' then 'teacher' else 'student' end as userRole

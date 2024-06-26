@@ -1,9 +1,9 @@
 package egovframework.example.user.service;
 
-import java.util.List;
-
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
+
+import java.util.List;
 
 public interface UserManageService {
 	
@@ -16,7 +16,7 @@ public interface UserManageService {
 	 * ID로 회원 정보 조회
 	 * @return LoginVO
 	 */
-	boolean checkUserById(String id);
+	boolean checkUserById(LoginVO loginVO);
 	
 	/**
 	 * 토큰으로 회원 인증
@@ -27,7 +27,7 @@ public interface UserManageService {
 	/**
 	 * 회원정보 등록
 	 */
-	String insertUserInfo(LoginVO loginVO);
+	LoginVO insertUserInfo(LoginVO loginVO);
 	
 	/**
 	 * 회원정보 수정
@@ -52,7 +52,7 @@ public interface UserManageService {
 	/**
 	 * 선생님 권한 사용자 체크
 	 */
-	Boolean isReallyTeacher(String uniqId);
+	Boolean isReallyTeacher(LoginVO loginVO);
 	
 	/**
 	 * 선생님 권한 사용자 체크 상세

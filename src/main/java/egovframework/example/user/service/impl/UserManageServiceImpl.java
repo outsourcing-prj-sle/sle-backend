@@ -1,21 +1,23 @@
 package egovframework.example.user.service.impl;
 
-import java.util.List;
-
-import javax.annotation.Resource;
-
-import org.egovframe.rte.fdl.cmmn.exception.FdlException;
-import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
-import org.springframework.stereotype.Service;
-
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.service.UserManageService;
+import org.egovframe.rte.fdl.cmmn.exception.FdlException;
+import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.stereotype.Service;
+
+import javax.annotation.Resource;
+import java.util.List;
 
 @Service("userManageService")
 public class UserManageServiceImpl implements UserManageService {
+
+	private static final Logger LOGGER = LoggerFactory.getLogger(UserManageServiceImpl.class);
 
 	@Resource(name = "userManageMapper")
 	private UserManageMapper mapper;
@@ -38,8 +40,8 @@ public class UserManageServiceImpl implements UserManageService {
 	 * ID로 회원 정보 조회
 	 * @return boolean
 	 */
-	public boolean checkUserById(String id) {
-		return mapper.checkUserById(id);
+	public boolean checkUserById(LoginVO loginVO) {
+		return mapper.checkUserById(loginVO);
 	}
 	
 	/**
@@ -54,23 +56,25 @@ public class UserManageServiceImpl implements UserManageService {
 	 * 회원정보 등록
 	 */
 	@Override
-	public String insertUserInfo(LoginVO loginVO) {
+	public LoginVO insertUserInfo(LoginVO loginVO) {
 		try {
-			if(mapper.checkUserById(loginVO.getId())) {
+			if(mapper.checkUserById(loginVO)) {
+				// 기존 사용자로 판단된 경우
 				loginVO.setUniqId(mapper.selectUniqId(loginVO));
+
 				mapper.updateUserInfo(loginVO);
 			} else {
+				// 신규 사용자로 판단된 경우
 				loginVO.setUniqId(userIdGnrService.getNextStringId());
-				loginVO.isRole();
 
 				mapper.insertUserInfo(loginVO);
 				mapper.insertUserScrtyEstbs(loginVO);
 			}
 		} catch (FdlException e) {
-			e.printStackTrace();
+			LOGGER.error(e.getMessage());
 		}
 
-		return loginVO.getUniqId();
+		return mapper.selectUserInfo(loginVO);
 	}
 
 	/**
@@ -112,9 +116,9 @@ public class UserManageServiceImpl implements UserManageService {
 	 * 선생님 권한 사용자 체크
 	 */
 	@Override
-	public Boolean isReallyTeacher(String uniqId) {
+	public Boolean isReallyTeacher(LoginVO loginVO) {
 		
-		return mapper.isReallyTeacher(uniqId);
+		return mapper.isReallyTeacher(loginVO);
 	}
 
 	/**

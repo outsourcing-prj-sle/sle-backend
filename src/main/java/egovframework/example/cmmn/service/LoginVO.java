@@ -1,25 +1,23 @@
 package egovframework.example.cmmn.service;
 
-import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class LoginVO {
 	
 	/**
 	 * 사용자 id
 	 */
 	private String id;
-	
-	
+
+	/**
+	 * HEADER 사용자 id
+	 */
+	private String authorization;
+
 	/**
 	 * 사용자 비밀번호
 	 */
@@ -36,17 +34,17 @@ public class LoginVO {
 	private String profileImageId;
 	
 	/**
-	 * 사용자 구분
+	 * 사용자 구분(04: 학생, 08: 교사)
 	 */
 	private String userType;
 	
 	/**
-	 * 소속 스페이스 정보
+	 * 학교명
 	 */
 	private String userSpaceInfo;
 	
 	/**
-	 * 소속 조직 정보
+	 * 소속 조직 정보(ex: 1학년 1반)
 	 */
 	private String userSpaceOrgInfo;
 	
@@ -54,16 +52,16 @@ public class LoginVO {
 	 * 고유 번호
 	 */
 	private String uniqId;
-	
+
 	/**
-	 * 관계 정보
+	 * 학교 코드
 	 */
-	private String relationInfo;
-	
+	private String schulCode;
+
 	/**
-	 * 최초 로그인 여부
+	 * 학교급 코드
 	 */
-	private Boolean isFirstInvite;
+	private String schulGradeCode;
 	
 	/**
 	 * 사용자 성별
@@ -74,21 +72,41 @@ public class LoginVO {
 	 * 사용자 이메일
 	 */
 	private String userEmail;
+
+	/**
+	 * 기준년도
+	 */
+	private String stYear;
 	
 	/**
 	 * 학년
 	 */
 	private String gradeNm;
-	
+
 	/**
 	 * 반
 	 */
+	private String classCode;
+
+	/**
+	 * 반 이름
+	 */
 	private String classNm;
+
+	/**
+	 * 번호
+	 */
+	private String stNumber;
 	
 	/**
 	 * 역할
 	 */
 	private String userRole;
+
+	/**
+	 * 권한코드
+	 */
+	private String authorCode;
 	
 	/**
 	 * 생년월일
@@ -99,17 +117,33 @@ public class LoginVO {
 	 * 선생님 구분 코드
 	 */
 	private Boolean isTeacher;
-	
-	/**
-	 * 역할 배정
-	 */
-	public void isRole() {
-		if(this.userType.equals("Y")) {
-			this.setUserRole("ROLE_TEACHER");
+
+	public String getAuthorCode() {
+		if(this.userType.equals("04")) {
+			this.setAuthorCode("ROLE_STUDENT");
 		}
-		
-		if(this.userType.equals("N")) {
-			this.setUserRole("ROLE_STUDENT");
+
+		if(this.userType.equals("08")) {
+			this.setAuthorCode("ROLE_TEACHER");
 		}
+
+		return authorCode;
+	}
+
+	public String getUserRole() {
+		if(this.userType.equals("04")) {
+			this.setUserRole("student");
+		}
+
+		if(this.userType.equals("08")) {
+			this.setUserRole("teacher");
+		}
+
+		return userRole;
+	}
+
+	public void setAuthorization(String authorization) {
+		this.uniqId = authorization;
+		this.authorization = authorization;
 	}
 }

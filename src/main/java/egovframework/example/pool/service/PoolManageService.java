@@ -16,10 +16,9 @@ public interface PoolManageService {
 	
 	/**
 	 * 회원 마음알기 설문 선생님 목록 조회
-	 * @param poolManageVO
 	 * @return
 	 */
-	List<PoolManageVO> selectReportsTeacher(PoolManageVO poolManageVO);
+	List<PoolManageVO> selectReportsTeacher();
 	
 	/**
 	 * 회원 마음알기 설문 상세 조회
