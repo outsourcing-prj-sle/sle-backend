@@ -7,12 +7,16 @@
 	</settings>
     <typeAliases>	
 		<typeAlias alias="egovMap" type="org.egovframe.rte.psl.dataaccess.util.EgovMap"/>
+
 		<typeAlias alias="loginVO" type="egovframework.example.cmmn.service.LoginVO"/>
 		<typeAlias alias="accountDTO" type="egovframework.example.cmmn.service.AccountDTO"/>
+		<typeAlias alias="surveyVO" type="egovframework.example.cmmn.service.SurveyVO" />
+
 		<typeAlias alias="poolManageVO" type="egovframework.example.pool.service.PoolManageVO"/>
-		<typeAlias alias="poolNoticeDTO" type="egovframework.example.pool.service.PoolNoticeDTO"/>
+		<typeAlias alias="poolNoticeDTO" type="egovframework.example.pool.dto.PoolNoticeDTO"/>
+
 		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
 		<typeAlias alias="tokVO" type="egovframework.example.user.service.IdTokTokVO"/>
-		<typeAlias alias="surveyVO" type="egovframework.example.cmmn.service.SurveyVO" />
+		<typeAlias alias="studentsDTO" type="egovframework.example.user.dto.StudentsDTO"/>
     </typeAliases>
 </configuration>

@@ -6,14 +6,12 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
-import org.egovframe.rte.fdl.cmmn.exception.FdlException;
-import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
-import egovframework.example.pool.service.PoolNoticeDTO;
+import egovframework.example.pool.dto.PoolNoticeDTO;
 
 @Service("poolManageService")
 public class PoolManageServiceImpl implements PoolManageService {

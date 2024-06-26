@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class IdTokTokVO {
 	String qesitmAnswerType;
-	String poolScore;
-	String poolMean;
-	String poolStddev;
+	String pollScore;
+	String pollAvg;
+	String pollStddev;
 }

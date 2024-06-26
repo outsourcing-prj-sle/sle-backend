@@ -1,4 +1,4 @@
-package egovframework.example.pool.service;
+package egovframework.example.pool.dto;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @Builder
 @AllArgsConstructor
-public class PoolDtl {
+public class PoolDtlDTO {
 	private String status;
 	private String pollNm;
 	private String startDate;

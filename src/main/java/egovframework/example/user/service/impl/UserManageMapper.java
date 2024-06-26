@@ -4,6 +4,7 @@ import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
+import egovframework.example.user.dto.StudentsDTO;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import java.util.List;
@@ -52,7 +53,7 @@ public interface UserManageMapper {
 	/**
 	 * 학생 SEL 목록 조회
 	 */
-	List<MySelVO> selectStudentSelList(LoginVO loginVO);
+	List<StudentsDTO> selectStudentSelList(LoginVO loginVO);
 	
 	/**
 	 * 선생님 SEL 목록 조회
@@ -67,7 +68,7 @@ public interface UserManageMapper {
 	/**
 	 * 선생님 권한 사용자 체크 상세
 	 */
-	LoginVO isReallyTeacherDtl(String uniqId);
+	LoginVO isReallyTeacherDtl(LoginVO loginVO);
 	
 	/**
 	 * 아이디 톡톡 선생님 조회
@@ -91,8 +92,6 @@ public interface UserManageMapper {
 
 	/**
 	 * 아이디로 사용자 UNIQ_ID 조회
-	 * @param loginVO
-	 * @return
 	 */
 	String selectUniqId(LoginVO loginVO);
 }

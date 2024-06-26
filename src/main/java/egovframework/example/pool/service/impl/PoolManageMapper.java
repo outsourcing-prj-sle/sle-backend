@@ -2,12 +2,11 @@ package egovframework.example.pool.service.impl;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.pool.service.PoolManageVO;
-import egovframework.example.pool.service.PoolNoticeDTO;
+import egovframework.example.pool.dto.PoolNoticeDTO;
 
 @Mapper("poolManageMapper")
 public interface PoolManageMapper {

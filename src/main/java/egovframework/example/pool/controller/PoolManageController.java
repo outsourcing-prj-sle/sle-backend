@@ -1,4 +1,4 @@
-package egovframework.example.pool.web;
+package egovframework.example.pool.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,7 +11,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -20,11 +19,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.cmmn.service.LoginVO;
-import egovframework.example.pool.service.Pool;
-import egovframework.example.pool.service.PoolDtl;
+import egovframework.example.pool.dto.PoolDTO;
+import egovframework.example.pool.dto.PoolDtlDTO;
 import egovframework.example.pool.service.PoolManageService;
 import egovframework.example.pool.service.PoolManageVO;
-import egovframework.example.pool.service.PoolNoticeDTO;
+import egovframework.example.pool.dto.PoolNoticeDTO;
 import egovframework.example.user.service.UserManageService;
 
 @RestController
@@ -51,16 +50,16 @@ public class PoolManageController {
 		}
 		
 		poolManageVO.setUniqId(auth.getUniqId());
-		HashMap<String, List<Pool>> map = new HashMap<>();
+		HashMap<String, List<PoolDTO>> map = new HashMap<>();
 		
 		if(userManageService.isReallyTeacher(poolManageVO.getUniqId())) {
 			List<PoolManageVO> list = poolManageService.selectReportsTeacher();
 			
-			List<Pool> progress = new ArrayList<>(); 
-			List<Pool> expired = new ArrayList<>();
+			List<PoolDTO> progress = new ArrayList<>();
+			List<PoolDTO> expired = new ArrayList<>();
 			
 			for(PoolManageVO vo : list) {
-				Pool pool = new Pool(vo);
+				PoolDTO pool = new PoolDTO(vo);
 				
 				if(pool.getExpired()) {
 					expired.add(pool);
@@ -75,11 +74,11 @@ public class PoolManageController {
 		} else {
 			List<PoolManageVO> list = poolManageService.selectReports(poolManageVO);
 			
-			List<Pool> todos = new ArrayList<>(); 
-			List<Pool> dones = new ArrayList<>();
+			List<PoolDTO> todos = new ArrayList<>();
+			List<PoolDTO> dones = new ArrayList<>();
 			
 			for(PoolManageVO vo : list) {
-				Pool pool = new Pool(vo);
+				PoolDTO pool = new PoolDTO(vo);
 				
 				if(pool.getStatus().equals("done")) {
 					dones.add(pool);
@@ -100,9 +99,9 @@ public class PoolManageController {
 	 * @param poolManageVO
 	 * @return
 	 */
-	public PoolDtl selectReportsDtl(PoolManageVO poolManageVO) {
+	public PoolDtlDTO selectReportsDtl(PoolManageVO poolManageVO) {
 		if(StringUtils.isEmpty(poolManageVO.getUniqId()) || StringUtils.isEmpty(poolManageVO.getPollId())) {
-			return PoolDtl.builder().build();
+			return PoolDtlDTO.builder().build();
 		}
 		
 		PoolManageVO vo = poolManageService.selectReportsDtl(poolManageVO);
@@ -170,7 +169,7 @@ public class PoolManageController {
 			metaList.add(metaMap);
 		}
 		 
-		PoolDtl poolDtl = PoolDtl.builder()
+		PoolDtlDTO poolDtl = PoolDtlDTO.builder()
 				 .status(vo.getStatus())
 				 .pollNm(vo.getPollNm())
 				 .startDate(vo.getStartDate())

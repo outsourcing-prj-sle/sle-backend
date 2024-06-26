@@ -2,6 +2,7 @@ package egovframework.example.user.service;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
+import egovframework.example.user.dto.StudentsDTO;
 
 import java.util.List;
 
@@ -42,7 +43,7 @@ public interface UserManageService {
 	/**
 	 * 학생 SEL 목록 조회
 	 */
-	List<MySelVO> selectStudentSelList(LoginVO loginVO);
+	List<StudentsDTO> selectStudentSelList(LoginVO loginVO);
 	
 	/**
 	 * 선생님 SEL 목록 조회
@@ -57,23 +58,13 @@ public interface UserManageService {
 	/**
 	 * 선생님 권한 사용자 체크 상세
 	 */
-	LoginVO isReallyTeacherDtl(String uniqId);
+	LoginVO isReallyTeacherDtl(LoginVO loginVO);
 	
 	/**
 	 * 아이디 톡톡 선생님 조회
 	 */
 	List<IdTokTokVO> selectIdTokTokTeacher(LoginVO loginVO);
-	
-	/**
-	 * 평가 결과 유무 조회
-	 */
-	Boolean selectSurveyHistoryisExist(SurveyVO surveyVO);
-	
-	/**
-	 * 평가 결과 수정
-	 */
-	void updateResearchResult(SurveyVO surveyVO);
-	
+
 	/**
 	 * 평가 결과 저장
 	 */

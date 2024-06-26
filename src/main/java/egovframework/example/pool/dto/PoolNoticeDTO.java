@@ -1,4 +1,4 @@
-package egovframework.example.pool.service;
+package egovframework.example.pool.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

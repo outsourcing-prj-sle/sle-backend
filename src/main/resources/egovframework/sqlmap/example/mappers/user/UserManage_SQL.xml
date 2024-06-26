@@ -116,12 +116,12 @@
 		WHERE USER_ID = #{uniqId}
 	</update>
 
-	<select id="selectStudentSelList" parameterType="hashmap" resultType="selVO">
+	<select id="selectStudentSelList" parameterType="hashmap" resultType="studentsDTO">
 		with sub as (
 			SELECT
 				a.POLL_ID,
 				a.POLL_STATUS
-			FROM COMTNBBSPOOLMANAGE a
+			FROM COMTNBBSPOLLMANAGE a
 			WHERE a.USER_ID = #{uniqId}
 		)
 		SELECT 
@@ -192,7 +192,7 @@
 		from mstr
 		left join COMTNMBER sub
 		on mstr.USER_ID = sub.USER_ID
-		left join COMTNBBSPOOLMANAGE sub2
+		left join COMTNBBSPOLLMANAGE sub2
 		on mstr.USER_ID = sub2.USER_ID
 		and mstr.POLL_ID = sub2.POLL_ID
 		left join dt
@@ -200,6 +200,39 @@
 		and mstr.POLL_ID = dt.POLL_ID
 		and rn = 1
 		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
+	</select>
+
+	<select id="selectReportList" resultType="reportListDTO">
+		SELECT
+		POLL_NM as pollNm,
+		POLL_BGNDE as startDate,
+		POLL_ENDDE as endDate,
+		case when CAST(POLL_ENDDE as DATE) <![CDATA[<=]]> CAST(now() as DATE) then 1 else 0 end as expired
+		FROM COMTNBBSPOLL
+	</select>
+
+	<select id="selectInfoArr" parameterType="loginVO" resultType="infoArrDTO">
+		select
+			a.USER_ID as userId,
+			a.USER_NM as name,
+			a.EMAIL_ADRES as email,
+			CONCAT(a.ST_GRADE, '학년 ', a.ST_CLASS, '반')as classInfo,
+			a.SEXDSTN as sex
+		from COMTNMBER a
+		where a.SCHUL_CODE = #{schulCode}
+		  and a.ST_GRADE = #{gradeNm}
+		  and a.ST_CLASS = #{classNm}
+	</select>
+
+	<select id="selectStateList" parameterType="loginVO" resultType="stateListDTO">
+		select
+			a.POLL_NM as pollNm,
+			case when b.POLL_STATUS = 'done' then 1 else 0 end as isDone,
+			b.LAST_UPDUSR_PNTTM as lastUpdusrPnttm
+		from COMTNBBSPOLL a
+		left join COMTNBBSPOLLMANAGE  b
+	    on a.POLL_ID = b.POLL_ID
+		where b.USER_ID = #{uniqId}
 	</select>
 	
 	<select id="isReallyTeacher" parameterType="loginVO" resultType="Boolean">
@@ -224,13 +257,13 @@
 	<select id="selectIdTokTokTeacher" parameterType="loginVO" resultType="tokVO">
 		select
 			b.QESITM_ANSWER_TYPE as qesitmAnswerType,
-			b.POOL_SCORE as poolScore,
-			c.POOL_MEAN as poolMean,
-			c.POOL_STDDEV as poolStddev
+			b.POLL_SCORE as pollScore,
+			c.POLL_AVG as pollAvg,
+			c.POLL_STDDEV as pollStddev
 		from COMTNMBER a
 		join COMTNBBSPOLLSCORE b
 		on a.USER_ID = b.USER_ID
-		left join VW_COMTNBBSPOOLCALC c
+		left join VW_COMTNBBSPOLLCALC c
 		on a.SCHUL_CODE = c.SCHUL_CODE
 		and a.ST_GRADE = c.ST_GRADE
 		and a.ST_CLASS = c.ST_CLASS

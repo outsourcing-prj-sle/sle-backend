@@ -2,7 +2,7 @@ package egovframework.example.pool.service;
 
 import java.util.List;
 
-import org.apache.ibatis.annotations.Param;
+import egovframework.example.pool.dto.PoolNoticeDTO;
 
 import egovframework.example.cmmn.service.LoginVO;
 
