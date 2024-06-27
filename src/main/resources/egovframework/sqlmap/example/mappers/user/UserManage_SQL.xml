@@ -4,8 +4,8 @@
 	
 	<select id="selectUserInfo" parameterType="hashmap" resultType="loginVO">
 		select
-			USER_ID as uniqId,
-			USER_SE_CODE as id,
+			USER_ID as authorization,
+			USER_SE_CODE as userType,
 			USER_NM as name,
 			EMAIL_ADRES as userEmail,
 			BRTHDY,
@@ -16,11 +16,19 @@
 			ST_NUMBER as stNumber,
 			SEXDSTN as sex,
 			PHOTO_STRE_FILE_NM as profileImageId,
-			TEACHER_SE_CODE as userType,
-			SCHUL_CODE as userSpaceInfo,
+			TEACHER_SE_CODE as userRole,
+			SCHUL_NM as userSpaceInfo,
 			CONCAT(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo
 		from COMTNMBER
-		where USER_ID = #{uniqId}
+		where 1=1
+		<if test="not empty authorization">
+			and USER_ID = #{authorization}
+		</if>
+		<if test="empty authorization">
+		  	and SCHUL_NM = #{userSpaceInfo}
+			and ST_CLASS_NM = #{classNm}
+			and ST_GRADE = #{gradeNm}
+		</if>
 	</select>
 		
 	<select id="checkUserById" parameterType="loginVO" resultType="boolean">
@@ -30,7 +38,7 @@
 	            ELSE 0
 	        END as userExists
 	    from COMTNMBER
-	    where USER_SE_CODE = #{id}
+	    where USER_SE_CODE = #{authorization}
 	</select>
 	
 	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
@@ -45,7 +53,7 @@
 	
 	<insert id="insertUserInfo" parameterType="hashmap">
 		insert into COMTNMBER(
-			USER_ID, 
+			USER_ID,
 			USER_SE_CODE,
 			USER_NM,
 			EMAIL_ADRES,
@@ -62,8 +70,8 @@
 			FRST_REGIST_PNTTM
 		)
 		values (
-			#{uniqId},
-			#{id},
+			#{authorization},
+			#{userType},
 			#{name},
 			#{userEmail},
 			#{profileImageId},
@@ -73,7 +81,7 @@
 			#{classCode},
 			#{classNm},
 		    #{stNumber},
-			#{userType},
+			#{userRole},
 			#{schulCode},
 			#{userSpaceInfo},
 			now()
@@ -82,19 +90,19 @@
 	
 	<insert id="insertUserScrtyEstbs" parameterType="hashmap">
 		insert into COMTNEMPLYRSCRTYESTBS(SCRTY_DTRMN_TRGET_ID, AUTHOR_CODE)
-		values (#{uniqId}, #{authorCode})
+		values (#{authorization}, #{authorCode})
 	</insert>
 	
 	<update id="updateUserInfo" parameterType="hashmap">
 		UPDATE COMTNMBER
 		SET
-			USER_SE_CODE = #{id},
 			USER_NM = #{name},
 			EMAIL_ADRES = #{userEmail},
 			PHOTO_STRE_FILE_NM = #{profileImageId},
 			SCHUL_GRADE_CODE = #{schulGradeCode},
 			ST_YEAR = #{stYear},
-			TEACHER_SE_CODE = #{userType},
+			USER_SE_CODE = #{userType},
+			TEACHER_SE_CODE = #{userRole},
 			SCHUL_CODE = #{relationInfo},
 			ST_GRADE = #{gradeNm},
 			ST_CLASS = #{classCode},
@@ -113,7 +121,7 @@
 		SET
 			SEXDSTN = #{sex},
 			BRTHDY = #{brthdy}
-		WHERE USER_ID = #{uniqId}
+		WHERE USER_ID = #{authorization}
 	</update>
 
 	<select id="selectStudentSelList" parameterType="hashmap" resultType="studentsDTO">
@@ -122,7 +130,7 @@
 				a.POLL_ID,
 				a.POLL_STATUS
 			FROM COMTNBBSPOLLMANAGE a
-			WHERE a.USER_ID = #{uniqId}
+			WHERE a.USER_ID = #{authorization}
 		)
 		SELECT 
 			mstr.POLL_NM as pollNm,
@@ -201,39 +209,6 @@
 		and rn = 1
 		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
 	</select>
-
-	<select id="selectReportList" resultType="reportListDTO">
-		SELECT
-		POLL_NM as pollNm,
-		POLL_BGNDE as startDate,
-		POLL_ENDDE as endDate,
-		case when CAST(POLL_ENDDE as DATE) <![CDATA[<=]]> CAST(now() as DATE) then 1 else 0 end as expired
-		FROM COMTNBBSPOLL
-	</select>
-
-	<select id="selectInfoArr" parameterType="loginVO" resultType="infoArrDTO">
-		select
-			a.USER_ID as userId,
-			a.USER_NM as name,
-			a.EMAIL_ADRES as email,
-			CONCAT(a.ST_GRADE, '학년 ', a.ST_CLASS, '반')as classInfo,
-			a.SEXDSTN as sex
-		from COMTNMBER a
-		where a.SCHUL_CODE = #{schulCode}
-		  and a.ST_GRADE = #{gradeNm}
-		  and a.ST_CLASS = #{classNm}
-	</select>
-
-	<select id="selectStateList" parameterType="loginVO" resultType="stateListDTO">
-		select
-			a.POLL_NM as pollNm,
-			case when b.POLL_STATUS = 'done' then 1 else 0 end as isDone,
-			b.LAST_UPDUSR_PNTTM as lastUpdusrPnttm
-		from COMTNBBSPOLL a
-		left join COMTNBBSPOLLMANAGE  b
-	    on a.POLL_ID = b.POLL_ID
-		where b.USER_ID = #{uniqId}
-	</select>
 	
 	<select id="isReallyTeacher" parameterType="loginVO" resultType="Boolean">
 		select
@@ -306,11 +281,4 @@
 			#{qesAnswer}
 		)
 	</insert>
-
-	<select id="selectUniqId" parameterType="loginVO" resultType="String">
-		SELECT
-			a.USER_ID
-		FROM COMTNMBER a
-		WHERE a.USER_SE_CODE = #{id}
-	</select>
 </mapper>

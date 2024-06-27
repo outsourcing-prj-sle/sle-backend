@@ -37,7 +37,7 @@ public class PollManageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
         }
 
-        pollManageVO.setUniqId(header.getUniqId());
+//        pollManageVO.setUniqId(header.getUniqId());
         HashMap<String, List<PollDTO>> map = new HashMap<>();
 
         if(userManageService.isReallyTeacher(header)) {
@@ -184,7 +184,7 @@ public class PollManageController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
         }
 
-        pollManageVO.setUniqId(header.getUniqId());
+//        pollManageVO.setUniqId(header.getUniqId());
 
         if(pollManageService.selectIsDone(pollManageVO) == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -206,7 +206,7 @@ public class PollManageController {
         if(!pollManageService.authorizationUser(header)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
         }
-        pollManageVO.setUniqId(header.getUniqId());
+//        pollManageVO.setUniqId(header.getUniqId());
 
         if(pollManageService.selectIsDone(pollManageVO) == 1) {
             return ResponseEntity.ok(selectReportsDtl(pollManageVO));
@@ -227,7 +227,7 @@ public class PollManageController {
         if(!pollManageService.authorizationUser(header)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
         }
-        pollManageVO.setUniqId(header.getUniqId());
+//        pollManageVO.setUniqId(header.getUniqId());
 
         if(pollManageService.selectIsDone(pollManageVO) == 1) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
@@ -247,7 +247,7 @@ public class PollManageController {
         }
 
         PollNoticeDTO pollNoticeDTO = pollManageService.selectReportsNotice(pollId);
-        pollNoticeDTO.setUniqId(header.getUniqId());
+//        pollNoticeDTO.setUniqId(header.getUniqId());
 
         return ResponseEntity.ok(pollNoticeDTO);
     }

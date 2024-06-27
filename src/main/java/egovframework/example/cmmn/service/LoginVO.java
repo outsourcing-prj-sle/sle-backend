@@ -7,14 +7,9 @@ import lombok.Data;
 @Data
 @Builder
 public class LoginVO {
-	
-	/**
-	 * 사용자 id
-	 */
-	private String id;
 
 	/**
-	 * HEADER 사용자 id
+	 * 사용자 ID
 	 */
 	private String authorization;
 
@@ -47,11 +42,6 @@ public class LoginVO {
 	 * 소속 조직 정보(ex: 1학년 1반)
 	 */
 	private String userSpaceOrgInfo;
-	
-	/**
-	 * 고유 번호
-	 */
-	private String uniqId;
 
 	/**
 	 * 학교 코드
@@ -140,10 +130,5 @@ public class LoginVO {
 		}
 
 		return userRole;
-	}
-
-	public void setAuthorization(String authorization) {
-		this.uniqId = authorization;
-		this.authorization = authorization;
 	}
 }

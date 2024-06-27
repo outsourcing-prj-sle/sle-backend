@@ -89,9 +89,4 @@ public interface UserManageMapper {
 	 * 평가 결과 저장
 	 */
 	void insertResearchResult(SurveyVO surveyVO);
-
-	/**
-	 * 아이디로 사용자 UNIQ_ID 조회
-	 */
-	String selectUniqId(LoginVO loginVO);
 }

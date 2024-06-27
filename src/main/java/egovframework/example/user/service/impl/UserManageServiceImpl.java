@@ -22,9 +22,6 @@ public class UserManageServiceImpl implements UserManageService {
 
 	@Resource(name = "userManageMapper")
 	private UserManageMapper mapper;
-	
-	@Resource(name = "userIdGnrService")
-	private EgovIdGnrService userIdGnrService;
 
 	/**
 	 * 회원정보 조회
@@ -58,21 +55,13 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public LoginVO insertUserInfo(LoginVO loginVO) {
-		try {
-			if(mapper.checkUserById(loginVO)) {
-				// 기존 사용자로 판단된 경우
-				loginVO.setUniqId(mapper.selectUniqId(loginVO));
-
-				mapper.updateUserInfo(loginVO);
-			} else {
-				// 신규 사용자로 판단된 경우
-				loginVO.setUniqId(userIdGnrService.getNextStringId());
-
-				mapper.insertUserInfo(loginVO);
-				mapper.insertUserScrtyEstbs(loginVO);
-			}
-		} catch (FdlException e) {
-			LOGGER.error(e.getMessage());
+		if(mapper.checkUserById(loginVO)) {
+			// 기존 사용자
+			mapper.updateUserInfo(loginVO);
+		} else {
+			// 신규 사용자
+			mapper.insertUserInfo(loginVO);
+			mapper.insertUserScrtyEstbs(loginVO);
 		}
 
 		return mapper.selectUserInfo(loginVO);
@@ -83,7 +72,6 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public void updateUserInfo(LoginVO loginVO) {
-		loginVO.setUniqId(mapper.selectUniqId(loginVO));
 		mapper.updateUserInfo(loginVO);
 	}
 

@@ -4,6 +4,7 @@ import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.naver.dto.*;
 import egovframework.example.naver.service.NaverService;
 import egovframework.example.user.service.UserManageService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
@@ -56,17 +57,18 @@ public class NaverController {
         // 네이버 사용자정보로 경남교육청 사용자정보 조회
         GneInfoDto<GneUserDto> gneUserDto = naverService.procGneUserInfo(naverUserDto);
         
-        // 네이버 사용자정보로 경남교육청 학교별 사용자 목록 조회
-        GneListDto<GneSchoolUserDto> gneSchoolUserDto = naverService.procGneSchoolUserInfo(gneUserDto);
-
         if(!gneUserDto.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 정보가 없습니다.");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("경남교육청 사용자 정보를 가져오는데 실패하였습니다.");
+        }
+
+        if(StringUtils.isEmpty(gneUserDto.getData().getUserId())) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 아이디가 없습니다.");
         }
 
         LoginVO loginVO = LoginVO.builder()
-                .id(naverUserDto.getSid())
+                .authorization(gneUserDto.getData().getUserId())
                 .name(gneUserDto.getData().getUserNm())
-                .userEmail(gneUserDto.getData().getUserId())
+                .userEmail(naverUserDto.getPrimaryEmail())
                 .profileImageId(naverUserDto.getThumbnailPhotoUrl())
                 .schulGradeCode(gneUserDto.getData().getSchulGradeCode())
                 .stYear(gneUserDto.getData().getStdrYear())
