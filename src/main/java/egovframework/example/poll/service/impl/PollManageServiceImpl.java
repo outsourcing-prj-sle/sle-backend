@@ -1,4 +1,4 @@
-package egovframework.example.pool.service.impl;
+package egovframework.example.poll.service.impl;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -9,24 +9,24 @@ import javax.annotation.Resource;
 import org.springframework.stereotype.Service;
 
 import egovframework.example.cmmn.service.LoginVO;
-import egovframework.example.pool.service.PoolManageService;
-import egovframework.example.pool.service.PoolManageVO;
-import egovframework.example.pool.dto.PoolNoticeDTO;
+import egovframework.example.poll.service.PollManageService;
+import egovframework.example.poll.service.PollManageVO;
+import egovframework.example.poll.dto.PollNoticeDTO;
 
-@Service("poolManageService")
-public class PoolManageServiceImpl implements PoolManageService {
+@Service("pollManageService")
+public class PollManageServiceImpl implements PollManageService {
 	
-	@Resource(name = "poolManageMapper")
-	private PoolManageMapper mapper;
+	@Resource(name = "pollManageMapper")
+	private PollManageMapper mapper;
 	
 	/**
 	 * 회원 마음알기 설문 목록 조회
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 * @return
 	 */
 	@Override
-	public List<PoolManageVO> selectReports(PoolManageVO poolManageVO) {
-		return mapper.selectReports(poolManageVO);
+	public List<PollManageVO> selectReports(PollManageVO pollManageVO) {
+		return mapper.selectReports(pollManageVO);
 	}
 	
 	/**
@@ -34,57 +34,57 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @return
 	 */
 	@Override
-	public List<PoolManageVO> selectReportsTeacher() {
+	public List<PollManageVO> selectReportsTeacher() {
 		return mapper.selectReportsTeacher();
 	}
 
 	/**
 	 * 회원 마음알기 설문 상세 조회
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 * @return
 	 */
 	@Override
-	public PoolManageVO selectReportsDtl(PoolManageVO poolManageVO) {
-		return mapper.selectReportsDtl(poolManageVO);
+	public PollManageVO selectReportsDtl(PollManageVO pollManageVO) {
+		return mapper.selectReportsDtl(pollManageVO);
 	}
 
 	/**
 	 * 회원 마음알기 설문 문항 및 선지 조회
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 * @return
 	 */
 	@Override
-	public List<PoolManageVO> selectReportsQnA(PoolManageVO poolManageVO) {
-		return mapper.selectReportsQnA(poolManageVO);
+	public List<PollManageVO> selectReportsQnA(PollManageVO pollManageVO) {
+		return mapper.selectReportsQnA(pollManageVO);
 	}
 
 	/**
 	 * 회원 마음알기 설문 등록
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 */
 	@Override
-	public void insertReports(PoolManageVO poolManageVO) {
-		insertReportsStatus(poolManageVO);
+	public void insertReports(PollManageVO pollManageVO) {
+		insertReportsStatus(pollManageVO);
 		
-		if(mapper.selectHistoryIsExist(poolManageVO) == 1) {
-			mapper.updateReports(poolManageVO);
+		if(mapper.selectHistoryIsExist(pollManageVO) == 1) {
+			mapper.updateReports(pollManageVO);
 		} else {
-			mapper.insertReports(poolManageVO);
+			mapper.insertReports(pollManageVO);
 		}
 	}
 
 	/**
 	 * 회원 마음알기 설문 상태 등록(PROGRESS)
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 */
 	@Override
-	public void insertReportsStatus(PoolManageVO poolManageVO) {
-		if(mapper.selectReportsMngIsExist(poolManageVO) == 0) {
-			int size = mapper.selectReportsCount(poolManageVO);
+	public void insertReportsStatus(PollManageVO pollManageVO) {
+		if(mapper.selectReportsMngIsExist(pollManageVO) == 0) {
+			int size = mapper.selectReportsCount(pollManageVO);
 			
-			poolManageVO.setQesitmSnList(makeRandomString(size));
+			pollManageVO.setQesitmSnList(makeRandomString(size));
 			
-			mapper.insertReportsStatus(poolManageVO);
+			mapper.insertReportsStatus(pollManageVO);
 		}
 	}
 	
@@ -117,21 +117,21 @@ public class PoolManageServiceImpl implements PoolManageService {
 
 	/**
 	 * 회원 마음알기 설문 상태 변경(DONE)
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 */
 	@Override
-	public void updateReportsStatus(PoolManageVO poolManageVO) {
-		insertReports(poolManageVO);
-		mapper.updateReportsStatus(poolManageVO);
-		mapper.updateReportsUserInfo(poolManageVO);
-		insertReportsScore(poolManageVO);
+	public void updateReportsStatus(PollManageVO pollManageVO) {
+		insertReports(pollManageVO);
+		mapper.updateReportsStatus(pollManageVO);
+		mapper.updateReportsUserInfo(pollManageVO);
+		insertReportsScore(pollManageVO);
 	}
 	
 	/**
 	 * 회원 마음알기 점수 등록 함수
 	 * @param vo
 	 */
-	public void insertReportsScore(PoolManageVO vo) {
+	public void insertReportsScore(PollManageVO vo) {
 		String pollId = vo.getPollId();
 		
 		switch (pollId) {
@@ -152,9 +152,9 @@ public class PoolManageServiceImpl implements PoolManageService {
 	 * @return
 	 */
 	@Override
-	public int selectIsDone(PoolManageVO poolManageVO) {
+	public int selectIsDone(PollManageVO pollManageVO) {
 
-		return mapper.selectIsDone(poolManageVO);
+		return mapper.selectIsDone(pollManageVO);
 	} 
 	
 	/**
@@ -168,9 +168,9 @@ public class PoolManageServiceImpl implements PoolManageService {
 	
 	/**
 	 * 마음알기 설문 안내 사항 조회(기본데이터)
-	 * @return PoolNoticeDTL
+	 * @return pollNoticeDTL
 	 */
-	public PoolNoticeDTO selectReportsNotice(String pollId) {
+	public PollNoticeDTO selectReportsNotice(String pollId) {
 		return mapper.selectReportsNotice(pollId);
 	}
 }

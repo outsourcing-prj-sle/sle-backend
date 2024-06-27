@@ -1,8 +1,7 @@
-package egovframework.example.pool.dto;
+package egovframework.example.poll.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,7 +11,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PoolNoticeDTO {
+public class PollNoticeDTO {
 	/**
 	 * 고유ID
 	 */

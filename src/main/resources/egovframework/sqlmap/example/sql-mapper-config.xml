@@ -12,8 +12,8 @@
 		<typeAlias alias="accountDTO" type="egovframework.example.cmmn.service.AccountDTO"/>
 		<typeAlias alias="surveyVO" type="egovframework.example.cmmn.service.SurveyVO" />
 
-		<typeAlias alias="poolManageVO" type="egovframework.example.pool.service.PoolManageVO"/>
-		<typeAlias alias="poolNoticeDTO" type="egovframework.example.pool.dto.PoolNoticeDTO"/>
+		<typeAlias alias="pollManageVO" type="egovframework.example.poll.service.PollManageVO"/>
+		<typeAlias alias="pollNoticeDTO" type="egovframework.example.poll.dto.PollNoticeDTO"/>
 
 		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
 		<typeAlias alias="tokVO" type="egovframework.example.user.service.IdTokTokVO"/>

@@ -4,8 +4,8 @@ import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.naver.dto.GneInfoDto;
 import egovframework.example.naver.dto.GneUserDto;
 import egovframework.example.naver.service.NaverService;
-import egovframework.example.pool.service.PoolManageService;
-import egovframework.example.pool.service.PoolManageVO;
+import egovframework.example.poll.service.PollManageService;
+import egovframework.example.poll.service.PollManageVO;
 import egovframework.example.user.dto.MySelTeacherResultDTO;
 import egovframework.example.user.dto.ReportDTO;
 import egovframework.example.user.dto.TeachersDTO;
@@ -26,8 +26,8 @@ public class UserManageUtils {
     @Resource(name = "userManageService")
     private UserManageService userManageService;
 
-    @Resource(name = "poolManageService")
-    private PoolManageService poolManageService;
+    @Resource(name = "pollManageService")
+    private PollManageService pollManageService;
 
     @Autowired
     @Qualifier(value = "naverServiceImpl")
@@ -87,7 +87,7 @@ public class UserManageUtils {
      */
     public ArrayList<ReportDTO> isEmptyReportList(ArrayList<ReportDTO> reportList) {
         if(reportList.isEmpty()) {
-            for(PoolManageVO vo : poolManageService.selectReportsTeacher()) {
+            for(PollManageVO vo : pollManageService.selectReportsTeacher()) {
                 reportList.add(ReportDTO.builder()
                         .pollNm(vo.getPollNm())
                         .startDate(vo.getStartDate())

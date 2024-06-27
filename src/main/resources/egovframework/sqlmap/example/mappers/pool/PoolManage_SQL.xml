@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="egovframework.example.pool.service.impl.PoolManageMapper">
+<mapper namespace="egovframework.example.poll.service.impl.PollManageMapper">
 	
-	<select id="selectReports" parameterType="poolManageVO" resultType="poolManageVO">
+	<select id="selectReports" parameterType="pollManageVO" resultType="pollManageVO">
 		with sub as (
 			SELECT
 				mstr.POLL_ID,
 				GROUP_CONCAT(mstr.QESITM_SN order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
 				sub.POLL_STATUS
-			FROM COMTNBBSPOOLATDRN mstr
+			FROM COMTNBBSpollATDRN mstr
 			LEFT JOIN COMTNBBSPOLLMANAGE sub
 			ON mstr.POLL_ID = sub.POLL_ID
 			AND mstr.USER_ID = sub.USER_ID
@@ -31,7 +31,7 @@
 		ORDER BY mstr.POLL_ID
 	</select>
 	
-	<select id="selectReportsTeacher" resultType="poolManageVO">
+	<select id="selectReportsTeacher" resultType="pollManageVO">
 		select
 			POLL_ID,
 			POLL_NM,
@@ -41,7 +41,7 @@
 		from COMTNBBSPOLL
 	</select>
 	
-	<select id="selectReportsDtl" parameterType="poolManageVO" resultType="poolManageVO">
+	<select id="selectReportsDtl" parameterType="pollManageVO" resultType="pollManageVO">
 		with sub as (
 			select
 				mstr.POLL_ID,
@@ -49,7 +49,7 @@
 				mstr.QESITM_SN_LIST,
 				mstr.POLL_STATUS
 			from COMTNBBSPOLLMANAGE mstr
-			left join COMTNBBSPOOLATDRN sub
+			left join COMTNBBSpollATDRN sub
 			on mstr.POLL_ID = sub.POLL_ID
 			and mstr.USER_ID = sub.USER_ID
 			where mstr.USER_ID = #{uniqId}
@@ -73,7 +73,7 @@
 		and mstr.POLL_ID = #{pollId}
 	</select>
 	
-	<select id="selectReportsQnA" parameterType="poolManageVO" resultType="poolManageVO">
+	<select id="selectReportsQnA" parameterType="pollManageVO" resultType="pollManageVO">
 		select
 			a.POLL_ID as pollId,
 			a.QESITM_SN as qesitmSn,
@@ -84,8 +84,8 @@
 		where POLL_ID = #{pollId}
 	</select>
 	
-	<insert id="insertReports" parameterType="poolManageVO">
-		insert into COMTNBBSPOOLATDRN
+	<insert id="insertReports" parameterType="pollManageVO">
+		insert into COMTNBBSpollATDRN
 		values (
 			#{pollId},
 			#{qesitmSn},
@@ -96,7 +96,7 @@
 		)
 	</insert>
 	
-	<insert id="insertReportsStatus" parameterType="poolManageVO">
+	<insert id="insertReportsStatus" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLMANAGE(USER_ID, POLL_ID, QESITM_SN_LIST, POLL_STATUS)
 		values (
 			#{uniqId},
@@ -106,7 +106,7 @@
 		)
 	</insert>
 	
-	<insert id="insertReportsScore1" parameterType="poolManageVO">
+	<insert id="insertReportsScore1" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLSCORE 
 		(
 			select
@@ -114,7 +114,7 @@
 				'GM' as QESITM_ANSWER_TYPE,
 				sum(b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as score
 			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSPOOLATDRN b
+			left join COMTNBBSpollATDRN b
 			on a.POLL_ID = b.POLL_ID
 			and a.QESITM_SN = b.QESITM_SN
 			and b.USER_ID = #{uniqId}
@@ -122,7 +122,7 @@
 		)
 	</insert>
 	
-	<insert id="insertReportsScore2" parameterType="poolManageVO">
+	<insert id="insertReportsScore2" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLSCORE 
 		(
 			select
@@ -130,7 +130,7 @@
 				'IBP' as QESITM_ANSWER_TYPE,
 				sum(5 - b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as POLL_SCORE
 			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSPOOLATDRN b
+			left join COMTNBBSpollATDRN b
 			on a.POLL_ID = b.POLL_ID
 			and a.QESITM_SN = b.QESITM_SN
 			and b.USER_ID = #{uniqId}
@@ -141,7 +141,7 @@
 				'EBP' as QESITM_ANSWER_TYPE,
 				sum(5 - b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as score
 			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSPOOLATDRN b
+			left join COMTNBBSpollATDRN b
 			on a.POLL_ID = b.POLL_ID
 			and a.QESITM_SN = b.QESITM_SN
 			and b.USER_ID = #{uniqId}
@@ -149,7 +149,7 @@
 		)
 	</insert>
 	
-	<insert id="insertReportsScore3" parameterType="poolManageVO">
+	<insert id="insertReportsScore3" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLSCORE 
 		(
 			select
@@ -157,7 +157,7 @@
 				'EK' as QESITM_ANSWER_TYPE,
 				sum(case when b.QESITM_ANSWER = sub.answer then 1 else 0 end) as score
 			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSPOOLATDRN b
+			left join COMTNBBSpollATDRN b
 			on a.POLL_ID = b.POLL_ID
 			and a.QESITM_SN = b.QESITM_SN
 			and b.USER_ID = #{uniqId}
@@ -183,8 +183,8 @@
 		)
 	</insert>
 	
-	<update id="updateReports" parameterType="poolManageVO">
-		update  COMTNBBSPOOLATDRN
+	<update id="updateReports" parameterType="pollManageVO">
+		update  COMTNBBSpollATDRN
 		set QESITM_ANSWER = #{qesitmAnswer},
 			QESITM_ANSWER_IMAGE = #{quesitmAnswerImage}
 		where USER_ID = #{uniqId}
@@ -192,14 +192,14 @@
 		and QESITM_SN = #{qesitmSn}
 	</update>
 	
-	<update id="updateReportsStatus" parameterType="poolManageVO">
+	<update id="updateReportsStatus" parameterType="pollManageVO">
 		update  COMTNBBSPOLLMANAGE
 		set POLL_STATUS = 'done'
 		where USER_ID = #{uniqId}
 		and POLL_ID = #{pollId}
 	</update>
 
-	<update id="updateReportsUserInfo" parameterType="poolManageVO">
+	<update id="updateReportsUserInfo" parameterType="pollManageVO">
 		UPDATE COMTNBBSPOLLMANAGE a, COMTNMBER b
 		SET
 			a.ST_YEAR = b.ST_YEAR,
@@ -214,14 +214,14 @@
 		  and a.USER_ID = #{uniqId}
 	</update>
 	
-	<select id="selectReportsCount" parameterType="poolManageVO" resultType="int">
+	<select id="selectReportsCount" parameterType="pollManageVO" resultType="int">
 		select
 			count(*)
 		from COMTNBBSPOLLQESITM mstr
 		where mstr.POLL_ID = #{pollId}
 	</select>
 	
-	<select id="selectIsDone" parameterType="poolManageVO" resultType="int">
+	<select id="selectIsDone" parameterType="pollManageVO" resultType="int">
 		select
 			case when count(*) > 0 then 1 else 0 end as isExist
 		from COMTNBBSPOLLMANAGE a
@@ -240,7 +240,7 @@
 	    where USER_ID = #{uniqId}
 	</select>
 	
-	<select id="selectReportsNotice" parameterType="String" resultType="poolNoticeDTO">
+	<select id="selectReportsNotice" parameterType="String" resultType="pollNoticeDTO">
 	    select
 			a.POLL_ID as pollId,
 			a.POLL_NM as pollNm,
@@ -254,7 +254,7 @@
 	<select id="selectHistoryIsExist" parameterType="hashmap" resultType="int">
 		select
 			case when count(*) > 0 then 1 else 0 end as isExist
-		from COMTNBBSPOOLATDRN a
+		from COMTNBBSpollATDRN a
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
 		and QESITM_SN = #{qesitmSn}

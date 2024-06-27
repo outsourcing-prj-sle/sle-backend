@@ -1,62 +1,62 @@
-package egovframework.example.pool.service;
+package egovframework.example.poll.service;
 
 import java.util.List;
 
-import egovframework.example.pool.dto.PoolNoticeDTO;
+import egovframework.example.poll.dto.PollNoticeDTO;
 
 import egovframework.example.cmmn.service.LoginVO;
 
-public interface PoolManageService {
+public interface PollManageService {
 	/**
 	 * 회원 마음알기 설문 목록 조회
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 * @return
 	 */
-	List<PoolManageVO> selectReports(PoolManageVO poolManageVO);
+	List<PollManageVO> selectReports(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 선생님 목록 조회
 	 * @return
 	 */
-	List<PoolManageVO> selectReportsTeacher();
+	List<PollManageVO> selectReportsTeacher();
 	
 	/**
 	 * 회원 마음알기 설문 상세 조회
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 * @return
 	 */
-	PoolManageVO selectReportsDtl(PoolManageVO poolManageVO);
+	PollManageVO selectReportsDtl(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 문항 및 선지 조회
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 * @return
 	 */
-	List<PoolManageVO> selectReportsQnA(PoolManageVO poolManageVO);
+	List<PollManageVO> selectReportsQnA(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 등록
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 */
-	void insertReports(PoolManageVO poolManageVO);
+	void insertReports(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 상태 등록(PROGRESS)
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 */
-	void insertReportsStatus(PoolManageVO poolManageVO);
+	void insertReportsStatus(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 상태 변경(DONE)
-	 * @param poolManageVO
+	 * @param pollManageVO
 	 */
-	void updateReportsStatus(PoolManageVO poolManageVO);
+	void updateReportsStatus(PollManageVO pollManageVO);
 	
 	/**
 	 * 마음알기 설문 완료 상태 조회
 	 * @return
 	 */
-	int selectIsDone(PoolManageVO poolManageVO);
+	int selectIsDone(PollManageVO pollManageVO);
 	
 	/**
 	 * 토큰으로 회원 인증
@@ -66,7 +66,7 @@ public interface PoolManageService {
 	
 	/**
 	 * 마음알기 설문 안내 사항 조회(기본데이터)
-	 * @return PoolNoticeDTO
+	 * @return pollNoticeDTO
 	 */
-	PoolNoticeDTO selectReportsNotice(String pollId);
+	PollNoticeDTO selectReportsNotice(String pollId);
 }

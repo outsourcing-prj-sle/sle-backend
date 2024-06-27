@@ -1,4 +1,4 @@
-package egovframework.example.pool.service;
+package egovframework.example.poll.service;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -11,7 +11,7 @@ import lombok.Setter;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class PoolManageVO {
+public class PollManageVO {
 	
 	/**
 	 * 고유ID
