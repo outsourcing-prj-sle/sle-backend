@@ -2,6 +2,7 @@ package egovframework.example.poll.service;
 
 import java.util.List;
 
+import egovframework.example.poll.dto.PollDTO;
 import egovframework.example.poll.dto.PollNoticeDTO;
 
 import egovframework.example.cmmn.service.LoginVO;
@@ -12,13 +13,13 @@ public interface PollManageService {
 	 * @param pollManageVO
 	 * @return
 	 */
-	List<PollManageVO> selectReports(PollManageVO pollManageVO);
+	List<PollDTO> selectReports(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 선생님 목록 조회
 	 * @return
 	 */
-	List<PollManageVO> selectReportsTeacher();
+	List<PollDTO> selectReportsTeacher();
 	
 	/**
 	 * 회원 마음알기 설문 상세 조회
@@ -57,13 +58,7 @@ public interface PollManageService {
 	 * @return
 	 */
 	int selectIsDone(PollManageVO pollManageVO);
-	
-	/**
-	 * 토큰으로 회원 인증
-	 * @return boolean
-	 */
-	boolean authorizationUser(LoginVO loginVO);
-	
+
 	/**
 	 * 마음알기 설문 안내 사항 조회(기본데이터)
 	 * @return pollNoticeDTO

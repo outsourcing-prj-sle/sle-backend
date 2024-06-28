@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egovframework.example.poll.service.impl.PollManageMapper">
 	
-	<select id="selectReports" parameterType="pollManageVO" resultType="pollManageVO">
+	<select id="selectReports" parameterType="pollManageVO" resultType="pollDTO">
 		with sub as (
 			SELECT
 				mstr.POLL_ID,
@@ -31,13 +31,13 @@
 		ORDER BY mstr.POLL_ID
 	</select>
 	
-	<select id="selectReportsTeacher" resultType="pollManageVO">
+	<select id="selectReportsTeacher" resultType="pollDTO">
 		select
 			POLL_ID,
 			POLL_NM,
 			POLL_BGNDE as startDate,
 			POLL_ENDDE as endDate,
-			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
+			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then 1 else 0 end as expired
 		from COMTNBBSPOLL
 	</select>
 	
@@ -45,32 +45,31 @@
 		with sub as (
 			select
 				mstr.POLL_ID,
-				GROUP_CONCAT(concat(sub.QESITM_SN, ':', sub.QESITM_ANSWER, '/', sub.QESITM_ANSWER_IMAGE) order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
 				mstr.QESITM_SN_LIST,
+				mstr.QESITM_ANSWER_LIST,
+				mstr.QESITM_ANSWER_IMAGE_LIST,
 				mstr.POLL_STATUS
 			from COMTNBBSPOLLMANAGE mstr
-			left join COMTNBBSpollATDRN sub
-			on mstr.POLL_ID = sub.POLL_ID
-			and mstr.USER_ID = sub.USER_ID
-			where mstr.USER_ID = #{uniqId}
-			and mstr.POLL_ID = #{pollId}
+			where mstr.USER_ID = #{authorization}
+			  and mstr.POLL_ID = #{pollId}
 			group by mstr.POLL_ID
 		)
 		select
-			mstr.POLL_ID,
-			mstr.POLL_NM,
+			mstr.POLL_ID as pollId,
+			mstr.POLL_NM as pollNm,
 			mstr.POLL_BGNDE as startDate,
 			mstr.POLL_ENDDE as endDate,
 			mstr.TEMP_SAVE as isSave,
-			mstr.VOICE_SUP as isVoice, 
-		 	case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
-		 	sub.QESITM_SN,
-		 	sub.QESITM_SN_LIST
+			mstr.VOICE_SUP as isVoice,
+			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
+			sub.QESITM_SN_LIST as qesitmSn,
+			sub.QESITM_ANSWER_LIST as qesitmAnswer,
+			sub.QESITM_ANSWER_IMAGE_LIST as qesitmAnswerImage
 		from COMTNBBSPOLL mstr
-		left join sub
-		on mstr.POLL_ID = sub.POLL_ID
-		where mstr.USE_AT = 'Y'
-		and mstr.POLL_ID = #{pollId}
+				 left join COMTNBBSPOLLMANAGE sub
+						   on mstr.POLL_ID = sub.POLL_ID
+							   and sub.USER_ID = #{authorization}
+		where mstr.POLL_ID = #{pollId}
 	</select>
 	
 	<select id="selectReportsQnA" parameterType="pollManageVO" resultType="pollManageVO">
@@ -97,14 +96,32 @@
 	</insert>
 	
 	<insert id="insertReportsStatus" parameterType="pollManageVO">
-		insert into COMTNBBSPOLLMANAGE(USER_ID, POLL_ID, QESITM_SN_LIST, POLL_STATUS)
+		insert into COMTNBBSPOLLMANAGE(USER_ID, POLL_ID, QESITM_SN_LIST, QESITM_ANSWER_IMAGE_LIST, QESITM_ANSWER_LIST, POLL_STATUS)
 		values (
 			#{uniqId},
 			#{pollId},
-			#{qesitmSnList},
+			#{qesitmSn},
+			'',
+			'',
 			'progress'
 		)
 	</insert>
+
+	<update id="insertReportsUserInfo" parameterType="pollManageVO">
+		update COMTNBBSPOLLMANAGE a
+			join COMTNMBER b on a.USER_ID = b.USER_ID
+			set
+				a.ST_YEAR = b.ST_YEAR,
+				a.ST_GRADE = b.ST_GRADE,
+				a.ST_CLASS = b.ST_CLASS,
+				a.ST_CLASS_NM = b.ST_CLASS_NM,
+				a.ST_NUMBER = b.ST_NUMBER,
+				a.SCHUL_NM = b.SCHUL_NM,
+				a.SCHUL_GRADE_CODE = b.SCHUL_GRADE_CODE,
+				a.SCHUL_CODE = b.SCHUL_CODE,
+				a.LAST_UPDUSR_PNTTM = now()
+		where a.USER_ID = #{authorization}
+	</update>
 	
 	<insert id="insertReportsScore1" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLSCORE 
@@ -228,16 +245,6 @@
 		where a.USER_ID = #{uniqId}
 		and a.POLL_ID = #{pollId}
 		and a.POLL_STATUS = 'done'
-	</select>	
-	
-	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
-	    select
-	        CASE 
-	            WHEN count(*) > 0 THEN 1
-	            ELSE 0
-	        END as userExists
-	    from COMTNMBER
-	    where USER_ID = #{uniqId}
 	</select>
 	
 	<select id="selectReportsNotice" parameterType="String" resultType="pollNoticeDTO">
@@ -264,7 +271,7 @@
 		select
 			case when count(*) > 0 then 1 else 0 end as isExist
 		from COMTNBBSPOLLMANAGE a
-		where a.USER_ID = #{uniqId}
+		where a.USER_ID = #{authorization}
 		and a.POLL_ID = #{pollId}
 	</select>
 	

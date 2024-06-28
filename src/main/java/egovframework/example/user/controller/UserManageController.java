@@ -21,6 +21,7 @@ public class UserManageController {
 
 	@Resource(name = "userManageService")
 	private UserManageService userManageService;
+
 	@Resource(name = "userManageUtils")
 	private UserManageUtils userManageUtils;
 
@@ -34,15 +35,6 @@ public class UserManageController {
 	}
 
 	/**
-	 * 회원정보 ID 중복체크 함수
-	 */
-	@GetMapping("/users/checkId")
-	public ResponseEntity<Boolean> idDuplicatedCheck(@RequestBody LoginVO loginVO) {
-
-		return ResponseEntity.ok(userManageService.checkUserById(loginVO));
-	}
-
-	/**
 	 * 회원정보 수정
 	 */
 	@PutMapping("/users/update")
@@ -52,7 +44,7 @@ public class UserManageController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
 		}
 
-//		loginVO.setUniqId(header.getUniqId());
+		loginVO.setAuthorization(header.getAuthorization());
 
 		userManageService.updateUserInfoDtl(loginVO);
 
@@ -88,7 +80,7 @@ public class UserManageController {
 		}
 
 		LoginVO teacherInfo = userManageService.isReallyTeacherDtl(header);
-//		teacherInfo.setUniqId(id);
+		teacherInfo.setAuthorization(id);
 
 		// 교사 권한 확인
 		if(teacherInfo.getIsTeacher()) {
@@ -100,7 +92,7 @@ public class UserManageController {
 						vo.getQesitmAnswerType(),
 						new HashMap<String, String>() {{
 							put("score", vo.getPollScore());
-							put("mean", vo.getPollAvg());
+							put("avg", vo.getPollAvg());
 							put("stddev", vo.getPollStddev());
 						}}
 				);
@@ -121,7 +113,7 @@ public class UserManageController {
 
 		// 교사 권한 확인
 		if(userManageService.isReallyTeacher(header)) {
-//			vo.setTeacherId(header.getUniqId());
+			vo.setTeacherId(header.getAuthorization());
 			vo.setQesType("idtt");
 
 			userManageService.insertResearchResult(vo);

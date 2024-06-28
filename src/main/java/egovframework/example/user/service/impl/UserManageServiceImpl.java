@@ -35,14 +35,6 @@ public class UserManageServiceImpl implements UserManageService {
 	}
 	
 	/**
-	 * ID로 회원 정보 조회
-	 * @return boolean
-	 */
-	public boolean checkUserById(LoginVO loginVO) {
-		return mapper.checkUserById(loginVO);
-	}
-	
-	/**
 	 * 토큰으로 회원 인증
 	 * @return boolean
 	 */
@@ -55,7 +47,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public LoginVO insertUserInfo(LoginVO loginVO) {
-		if(mapper.checkUserById(loginVO)) {
+		if(mapper.authorizationUser(loginVO)) {
 			// 기존 사용자
 			mapper.updateUserInfo(loginVO);
 		} else {

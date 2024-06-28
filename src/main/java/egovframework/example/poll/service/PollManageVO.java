@@ -16,7 +16,7 @@ public class PollManageVO {
 	/**
 	 * 고유ID
 	 */
-	private String uniqId;
+	private String authorization;
 	
 	/**
 	 * 설문ID
@@ -62,7 +62,17 @@ public class PollManageVO {
 	/**
 	 * 문항순번배열
 	 */
-	private String qesitmSnList;
+	private String[] qesitmSnList;
+
+	/**
+	 * 문항답변배열
+	 */
+	private String[] qesitmAnswerList;
+
+	/**
+	 * 문항답변이미지배열
+	 */
+	private String[] qesitmAnswerImageList;
 	
 	/**
 	 * 문항답변문자
@@ -93,4 +103,16 @@ public class PollManageVO {
 	 * 문항 질문
 	 */
 	private String qesitmSj;
+
+	public String[] getQesitmSnList() {
+		return qesitmSn.split(",");
+	}
+
+	public String[] getQesitmAnswerList() {
+		return qesitmAnswer.split(",");
+	}
+
+	public String[] getQesitmAnswerImageList() {
+		return qesitmAnswerImage.split(",");
+	}
 }

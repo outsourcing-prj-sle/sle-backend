@@ -30,25 +30,15 @@
 			and ST_GRADE = #{gradeNm}
 		</if>
 	</select>
-		
-	<select id="checkUserById" parameterType="loginVO" resultType="boolean">
+	
+	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
 	    select
 	        CASE 
 	            WHEN count(*) > 0 THEN 1
 	            ELSE 0
 	        END as userExists
 	    from COMTNMBER
-	    where USER_SE_CODE = #{authorization}
-	</select>
-	
-	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
-	    select
-	        CASE 
-	            WHEN count(*) > 0 THEN true
-	            ELSE false
-	        END as userExists
-	    from COMTNMBER
-	    where USER_ID = #{uniqId}
+	    where USER_ID = #{authorization}
 	</select>
 	
 	<insert id="insertUserInfo" parameterType="hashmap">
@@ -112,8 +102,8 @@
 			SCHUL_CODE = #{schulCode},
 			SCHUL_NM = #{userSpaceInfo},
 			LAST_UPDUSR_PNTTM = now(),
-			LAST_UPDUSR_ID = #{uniqId}
-		WHERE USER_ID = #{uniqId}
+			LAST_UPDUSR_ID = #{authorization}
+		WHERE USER_ID = #{authorization}
 	</update>
 
 	<update id="updateUserInfoDtl" parameterType="hashmap">
@@ -151,7 +141,7 @@
 				ST_GRADE,
 				ST_CLASS
 			from COMTNMBER
-			where USER_ID = #{uniqId}
+			where USER_ID = #{authorization}
 		)
 		, mstr as (
 			select
@@ -214,7 +204,7 @@
 		select
 			case when AUTHOR_CODE='ROLE_TEACHER' then 1 else 0 end as isTeacher
 		from COMTNEMPLYRSCRTYESTBS
-		where SCRTY_DTRMN_TRGET_ID = #{uniqId}
+		where SCRTY_DTRMN_TRGET_ID = #{authorization}
 	</select>
 	
 	<select id="isReallyTeacherDtl" parameterType="String" resultType="loginVO">
@@ -226,7 +216,7 @@
 		from COMTNEMPLYRSCRTYESTBS a
 		left join COMTNMBER b
 		on a.SCRTY_DTRMN_TRGET_ID = b.USER_ID
-		where SCRTY_DTRMN_TRGET_ID = #{uniqId}
+		where SCRTY_DTRMN_TRGET_ID = #{authorization}
 	</select>
 	
 	<select id="selectIdTokTokTeacher" parameterType="loginVO" resultType="tokVO">
@@ -243,7 +233,7 @@
 		and a.ST_GRADE = c.ST_GRADE
 		and a.ST_CLASS = c.ST_CLASS
 		and b.QESITM_ANSWER_TYPE = c.QESITM_ANSWER_TYPE
-		where a.USER_ID = #{uniqId}
+		where a.USER_ID = #{authorization}
 		and a.SCHUL_CODE = #{userSpaceOrgInfo}
 		and a.ST_CLASS = #{classNm}
 		and a.ST_GRADE = #{gradeNm}
@@ -254,7 +244,7 @@
 			case when count(*) then 1 else 0 end as isExist
 		from HISTSURVEYEVALUATION a
 		where a.TEACHER_ID = #{teacherId}
-		and a.STUDENT_ID = #{id}
+		and a.STUDENT_ID = #{authorization}
 		and a.SURVEY_EVALUATION_SE_CODE = #{qesType}
 	</select>
 	
@@ -263,7 +253,7 @@
 		set
 			SURVEY_EVALUATION_ANSWER_LIST = #{qesAnswer}
 		where TEACHER_ID = #{teacherId}
-		and STUDENT_ID = #{id}
+		and STUDENT_ID = #{authorization}
 		and SURVEY_EVALUATION_SE_CODE = #{qesType}
 	</update>
 	
@@ -276,7 +266,7 @@
 		)
 		values (
 			#{teacherId},
-			#{id},
+			#{authorization},
 			#{qesType},
 			#{qesAnswer}
 		)

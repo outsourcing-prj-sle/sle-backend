@@ -4,6 +4,7 @@ import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.naver.dto.GneInfoDto;
 import egovframework.example.naver.dto.GneUserDto;
 import egovframework.example.naver.service.NaverService;
+import egovframework.example.poll.dto.PollDTO;
 import egovframework.example.poll.service.PollManageService;
 import egovframework.example.poll.service.PollManageVO;
 import egovframework.example.user.dto.MySelTeacherResultDTO;
@@ -87,7 +88,7 @@ public class UserManageUtils {
      */
     public ArrayList<ReportDTO> isEmptyReportList(ArrayList<ReportDTO> reportList) {
         if(reportList.isEmpty()) {
-            for(PollManageVO vo : pollManageService.selectReportsTeacher()) {
+            for(PollDTO vo : pollManageService.selectReportsTeacher()) {
                 reportList.add(ReportDTO.builder()
                         .pollNm(vo.getPollNm())
                         .startDate(vo.getStartDate())

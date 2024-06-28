@@ -3,22 +3,17 @@ package egovframework.example.poll.dto;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Getter
-@Setter
+@Data
 @Builder
-@AllArgsConstructor
 public class PollDtlDTO {
 	private String status;
 	private String pollNm;
 	private String startDate;
 	private String endDate;
 	private String step;
-	private ArrayList<HashMap<String, Object>> metadata;
+	private ArrayList<PollMetaDTO> metadata;
 	private Boolean isSave;
 	private Boolean isVoice;
 }

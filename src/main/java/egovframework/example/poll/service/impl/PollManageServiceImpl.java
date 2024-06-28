@@ -6,6 +6,9 @@ import java.util.List;
 
 import javax.annotation.Resource;
 
+import egovframework.example.poll.dto.PollDTO;
+import egovframework.example.poll.utils.PollManageUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import egovframework.example.cmmn.service.LoginVO;
@@ -18,14 +21,17 @@ public class PollManageServiceImpl implements PollManageService {
 	
 	@Resource(name = "pollManageMapper")
 	private PollManageMapper mapper;
-	
+
+    @Autowired
+    private PollManageUtils pollManageUtils;
+
 	/**
 	 * 회원 마음알기 설문 목록 조회
 	 * @param pollManageVO
 	 * @return
 	 */
 	@Override
-	public List<PollManageVO> selectReports(PollManageVO pollManageVO) {
+	public List<PollDTO> selectReports(PollManageVO pollManageVO) {
 		return mapper.selectReports(pollManageVO);
 	}
 	
@@ -34,7 +40,7 @@ public class PollManageServiceImpl implements PollManageService {
 	 * @return
 	 */
 	@Override
-	public List<PollManageVO> selectReportsTeacher() {
+	public List<PollDTO> selectReportsTeacher() {
 		return mapper.selectReportsTeacher();
 	}
 
@@ -82,37 +88,11 @@ public class PollManageServiceImpl implements PollManageService {
 		if(mapper.selectReportsMngIsExist(pollManageVO) == 0) {
 			int size = mapper.selectReportsCount(pollManageVO);
 			
-			pollManageVO.setQesitmSnList(makeRandomString(size));
+			pollManageVO.setQesitmSn(pollManageUtils.makeRandomString(size));
 			
 			mapper.insertReportsStatus(pollManageVO);
+			mapper.insertReportsUserInfo(pollManageVO);
 		}
-	}
-	
-	/**
-	 * 랜덤 문제 문자열 생성
-	 * @param size
-	 * @return
-	 */
-	public String makeRandomString(int size) {
-		
-		List<Integer> numbers = new ArrayList<>();
-		
-		for(int i=1; i<=size; i++) {
-			numbers.add(i);
-		}
-		
-		Collections.shuffle(numbers);
-		
-		StringBuilder sb = new StringBuilder();
-		
-		for(int i=0; i < size; i++) {
-			sb.append(numbers.get(i));
-			if(i < size-1) {
-				sb.append(","); 
-			}
-		}
-		
-		return sb.toString();
 	}
 
 	/**
@@ -156,16 +136,7 @@ public class PollManageServiceImpl implements PollManageService {
 
 		return mapper.selectIsDone(pollManageVO);
 	} 
-	
-	/**
-	 * 토큰으로 회원 인증
-	 * @return boolean
-	 */
-	public boolean authorizationUser(LoginVO loginVO) {
-		
-		return mapper.authorizationUser(loginVO);
-	}
-	
+
 	/**
 	 * 마음알기 설문 안내 사항 조회(기본데이터)
 	 * @return pollNoticeDTL
