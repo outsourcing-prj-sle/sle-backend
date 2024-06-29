@@ -3,36 +3,24 @@
 <mapper namespace="egovframework.example.poll.service.impl.PollManageMapper">
 	
 	<select id="selectReports" parameterType="pollManageVO" resultType="pollDTO">
-		with sub as (
-			SELECT
-				mstr.POLL_ID,
-				GROUP_CONCAT(mstr.QESITM_SN order by FRST_REGISTER_PNTTM asc separator ",") as QESITM_SN,
-				sub.POLL_STATUS
-			FROM COMTNBBSpollATDRN mstr
-			LEFT JOIN COMTNBBSPOLLMANAGE sub
-			ON mstr.POLL_ID = sub.POLL_ID
-			AND mstr.USER_ID = sub.USER_ID
-			WHERE mstr.USER_ID = #{uniqId}
-			GROUP BY mstr.POLL_ID
-		)
 		SELECT
+		    mstr.NTT_NO,
 			mstr.POLL_ID,
-			sub2.POLL_NM,
+			mstr.POLL_NM,
 			mstr.POLL_BGNDE as startDate,
 			mstr.POLL_ENDDE as endDate,
 			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
-			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<]]> now() then true else false end expired
+			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<]]>now() then 1 else 0 end expired
 		FROM COMTNBBSPOLL mstr
-		LEFT JOIN sub
+		LEFT JOIN COMTNBBSPOLLMANAGE sub
 		ON mstr.POLL_ID = sub.POLL_ID
-		LEFT JOIN COMTNBBSPOLL sub2
-		ON mstr.POLL_ID = sub2.POLL_ID
-		WHERE mstr.USE_AT = 'Y'
+		and sub.USER_ID = #{authorization}
 		ORDER BY mstr.POLL_ID
 	</select>
 	
 	<select id="selectReportsTeacher" resultType="pollDTO">
 		select
+			NTT_NO,
 			POLL_ID,
 			POLL_NM,
 			POLL_BGNDE as startDate,
@@ -52,7 +40,6 @@
 			from COMTNBBSPOLLMANAGE mstr
 			where mstr.USER_ID = #{authorization}
 			  and mstr.POLL_ID = #{pollId}
-			group by mstr.POLL_ID
 		)
 		select
 			mstr.POLL_ID as pollId,
@@ -83,17 +70,27 @@
 		where POLL_ID = #{pollId}
 	</select>
 	
-	<insert id="insertReports" parameterType="pollManageVO">
-		insert into COMTNBBSpollATDRN
-		values (
-			#{pollId},
-			#{qesitmSn},
-			#{qesitmAnswer},
-			#{uniqId},
-			now(),
-			#{quesitmAnswerImage}
-		)
-	</insert>
+	<update id="insertReports" parameterType="pollManageVO">
+		update COMTNBBSPOLLMANAGE
+		set
+			QESITM_ANSWER_LIST = #{qesitmAnswer},
+			QESITM_ANSWER_IMAGE_LIST = #{qesitmAnswerImage},
+			LAST_UPDUSR_PNTTM = now()
+		where USER_ID = #{authorization}
+		  and POLL_ID = #{pollId}
+	</update>
+
+	<select id="selectReportsUserAnswer" parameterType="pollManageVO" resultType="pollManageVO">
+		SELECT
+			USER_ID as userId,
+			POLL_ID as pollId,
+			QESITM_SN_LIST as qesitmSn,
+			QESITM_ANSWER_LIST as qesitmAnswer,
+			QESITM_ANSWER_IMAGE_LIST as qesitmAnswerImage
+		from COMTNBBSPOLLMANAGE
+		where USER_ID = #{authorization}
+		  and POLL_ID = #{pollId}
+	</select>
 	
 	<insert id="insertReportsStatus" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLMANAGE(USER_ID, POLL_ID, QESITM_SN_LIST, QESITM_ANSWER_IMAGE_LIST, QESITM_ANSWER_LIST, POLL_STATUS)
@@ -123,112 +120,11 @@
 		where a.USER_ID = #{authorization}
 	</update>
 	
-	<insert id="insertReportsScore1" parameterType="pollManageVO">
-		insert into COMTNBBSPOLLSCORE 
-		(
-			select
-				b.USER_ID,
-				'GM' as QESITM_ANSWER_TYPE,
-				sum(b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as score
-			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSpollATDRN b
-			on a.POLL_ID = b.POLL_ID
-			and a.QESITM_SN = b.QESITM_SN
-			and b.USER_ID = #{uniqId}
-			where QESITM_ANSWER_TYPE = 'GM'
-		)
-	</insert>
-	
-	<insert id="insertReportsScore2" parameterType="pollManageVO">
-		insert into COMTNBBSPOLLSCORE 
-		(
-			select
-				b.USER_ID,
-				'IBP' as QESITM_ANSWER_TYPE,
-				sum(5 - b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as POLL_SCORE
-			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSpollATDRN b
-			on a.POLL_ID = b.POLL_ID
-			and a.QESITM_SN = b.QESITM_SN
-			and b.USER_ID = #{uniqId}
-			where QESITM_ANSWER_TYPE = 'IBP'
-			union all
-			select
-				b.USER_ID,
-				'EBP' as QESITM_ANSWER_TYPE,
-				sum(5 - b.QESITM_ANSWER) / count(b.QESITM_ANSWER) as score
-			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSpollATDRN b
-			on a.POLL_ID = b.POLL_ID
-			and a.QESITM_SN = b.QESITM_SN
-			and b.USER_ID = #{uniqId}
-			where QESITM_ANSWER_TYPE = 'EBP'
-		)
-	</insert>
-	
-	<insert id="insertReportsScore3" parameterType="pollManageVO">
-		insert into COMTNBBSPOLLSCORE 
-		(
-			select
-				b.USER_ID,
-				'EK' as QESITM_ANSWER_TYPE,
-				sum(case when b.QESITM_ANSWER = sub.answer then 1 else 0 end) as score
-			from COMTNBBSPOLLQESITM a
-			left join COMTNBBSpollATDRN b
-			on a.POLL_ID = b.POLL_ID
-			and a.QESITM_SN = b.QESITM_SN
-			and b.USER_ID = #{uniqId}
-			left join (
-				select
-					1 as QESITM_SN,
-					2 as answer
-				union all
-				select
-					2 as QESITM_SN,
-					1 as answer
-				union all
-				select
-					3 as QESITM_SN,
-					4 as answer
-				union all
-				select
-					4 as QESITM_SN,
-					2 as answer
-			) as sub
-			on a.QESITM_SN = sub.QESITM_SN
-			where QESITM_ANSWER_TYPE = 'EK'
-		)
-	</insert>
-	
-	<update id="updateReports" parameterType="pollManageVO">
-		update  COMTNBBSpollATDRN
-		set QESITM_ANSWER = #{qesitmAnswer},
-			QESITM_ANSWER_IMAGE = #{quesitmAnswerImage}
-		where USER_ID = #{uniqId}
-		and POLL_ID = #{pollId}
-		and QESITM_SN = #{qesitmSn}
-	</update>
-	
 	<update id="updateReportsStatus" parameterType="pollManageVO">
 		update  COMTNBBSPOLLMANAGE
 		set POLL_STATUS = 'done'
-		where USER_ID = #{uniqId}
+		where USER_ID = #{authorization}
 		and POLL_ID = #{pollId}
-	</update>
-
-	<update id="updateReportsUserInfo" parameterType="pollManageVO">
-		UPDATE COMTNBBSPOLLMANAGE a, COMTNMBER b
-		SET
-			a.ST_YEAR = b.ST_YEAR,
-			a.ST_GRADE = b.ST_GRADE,
-			a.ST_SEMSTR = b.ST_SEMSTR,
-			a.ST_CLASS = b.ST_CLASS,
-			a.ST_CLASS_NM = b.ST_CLASS_NM,
-			a.ST_NUMBER = b.ST_NUMBER,
-			a.SCHUL_NM = b.SCHUL_NM,
-			a.SCHUL_GRADE_CODE = b.SCHUL_GRADE_CODE
-		WHERE a.USER_ID = b.USER_ID
-		  and a.USER_ID = #{uniqId}
 	</update>
 	
 	<select id="selectReportsCount" parameterType="pollManageVO" resultType="int">
@@ -242,30 +138,22 @@
 		select
 			case when count(*) > 0 then 1 else 0 end as isExist
 		from COMTNBBSPOLLMANAGE a
-		where a.USER_ID = #{uniqId}
+		where a.USER_ID = #{authorization}
 		and a.POLL_ID = #{pollId}
 		and a.POLL_STATUS = 'done'
 	</select>
 	
 	<select id="selectReportsNotice" parameterType="String" resultType="pollNoticeDTO">
 	    select
+	        a.NTT_NO as nttNo,
 			a.POLL_ID as pollId,
 			a.POLL_NM as pollNm,
 			a.POLL_BGNDE as startDate,
 			a.POLL_ENDDE as endDate,
-			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then true else false end as expired
+			case when cast(POLL_ENDDE as date) <![CDATA[<]]> cast(now() as date) then 1 else 0 end as expired
 	    from COMTNBBSPOLL a
 	    where POLL_ID = #{pollId}
     </select>
-	
-	<select id="selectHistoryIsExist" parameterType="hashmap" resultType="int">
-		select
-			case when count(*) > 0 then 1 else 0 end as isExist
-		from COMTNBBSpollATDRN a
-		where a.USER_ID = #{uniqId}
-		and a.POLL_ID = #{pollId}
-		and QESITM_SN = #{qesitmSn}
-	</select>
 		
 	<select id="selectReportsMngIsExist" parameterType="hashmap" resultType="int">
 		select
@@ -274,15 +162,14 @@
 		where a.USER_ID = #{authorization}
 		and a.POLL_ID = #{pollId}
 	</select>
-	
-	<update id="updateUserInfo" parameterType="loginVO">
-		update COMTNMBER
-		set 
-			SCHUL_CODE = #{userSpaceOrgInfo},
-			ST_GRADE = #{gradeNm},
-			ST_CLASS = #{classNm},
-			SEXDSTN = #{sex},
-			BRTHDY = #{brthdy}
-		where USER_ID = #{uniqId}
-	</update>
+
+	<insert id="insertReportsScore" parameterType="pollScoreDTO">
+		INSERT INTO COMTNBBSPOLLSCORE(USER_ID, QESITM_ANSWER_TYPE, POOL_SCORE)
+		VALUES
+		    (
+				  #{authorization},
+				  #{qesitmAnswerType},
+				  #{poolScore}
+			  );
+	</insert>
 </mapper>

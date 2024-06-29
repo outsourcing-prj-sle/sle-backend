@@ -1,12 +1,14 @@
 package egovframework.example.poll.dto;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.util.ArrayList;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PollMetaDTO {
     private String Q;
     private ArrayList<String> AT;

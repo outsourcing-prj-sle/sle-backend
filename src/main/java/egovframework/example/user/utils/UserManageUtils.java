@@ -130,7 +130,7 @@ public class UserManageUtils {
         gneUserDto.setStClass(loginVO.getClassCode());
 
         GneInfoDto<GneUserDto> gneInfoDto = new GneInfoDto<GneUserDto>();
-        gneInfoDto.setData(gneUserDto);
+            gneInfoDto.setData(gneUserDto);
 
         return (ArrayList<TeachersDTO>) naverService.procGneSchoolUserInfo(gneInfoDto).getData().stream()
                 .map(dto -> TeachersDTO.builder()

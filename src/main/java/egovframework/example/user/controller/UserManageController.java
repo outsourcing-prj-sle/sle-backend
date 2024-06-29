@@ -29,7 +29,8 @@ public class UserManageController {
 	 * 회원정보 조회
 	 */
 	@GetMapping("/users")
-	public ResponseEntity<?> selectUserInfo(@RequestHeader LoginVO header) {
+	public ResponseEntity<?> selectUserInfo(@RequestHeader String authorization) {
+		LoginVO header = LoginVO.builder().authorization(authorization).build();
 
 		return ResponseEntity.ok(userManageService.selectUserInfo(header));
 	}
@@ -38,7 +39,8 @@ public class UserManageController {
 	 * 회원정보 수정
 	 */
 	@PutMapping("/users/update")
-	public ResponseEntity<?> updateUserInfo(@RequestHeader LoginVO header, @RequestBody LoginVO loginVO) {
+	public ResponseEntity<?> updateUserInfo(@RequestHeader String authorization, @RequestBody LoginVO loginVO) {
+		LoginVO header = LoginVO.builder().authorization(authorization).build();
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -55,7 +57,8 @@ public class UserManageController {
 	 * 학생 나의 SEL 알기
 	 */
 	@GetMapping("/users/mysel")
-	public ResponseEntity<?> selectMySelList(@RequestHeader LoginVO header) {
+	public ResponseEntity<?> selectMySelList(@RequestHeader String authorization) {
+		LoginVO header = LoginVO.builder().authorization(authorization).build();
 
 		if(userManageService.isReallyTeacher(header)) {
 			// 교사일 시
@@ -73,7 +76,8 @@ public class UserManageController {
 	 * 아이디 톡톡 선생님
 	 */
 	@GetMapping("/users/idTokTok")
-	public ResponseEntity<?> selectIdTokTokTeacher(@RequestHeader LoginVO header, @RequestParam String id) {
+	public ResponseEntity<?> selectIdTokTokTeacher(@RequestHeader String authorization, @RequestParam String id) {
+		LoginVO header = LoginVO.builder().authorization(authorization).build();
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -105,7 +109,8 @@ public class UserManageController {
 	}
 
 	@PutMapping("/users/research")
-	public ResponseEntity<?> insertResearchResult(@RequestHeader LoginVO header, @RequestBody SurveyVO vo) {
+	public ResponseEntity<?> insertResearchResult(@RequestHeader String authorization, @RequestBody SurveyVO vo) {
+		LoginVO header = LoginVO.builder().authorization(authorization).build();
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");

@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 @Getter
 @Setter
@@ -51,13 +52,7 @@ public class PollManageVO {
 	/**
 	 * 문항답변
 	 */
-	private String qesitmAnswer;
-	
-	/**
-	 * 문항답변이미지
-	 */
-	@Builder.Default
-	private String quesitmAnswerImage = "0";
+	private String qesitmAnswer = "0";
 	
 	/**
 	 * 문항순번배열
@@ -82,7 +77,7 @@ public class PollManageVO {
 	/**
 	 * 문항답변이미지
 	 */
-	private String qesitmAnswerImage;
+	private String qesitmAnswerImage = "0";
 	
 	/**
 	 * 설문시작일자

@@ -2,9 +2,13 @@ package egovframework.example.user.dto;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class StudentsDTO {
+	private int nttNo;
 	private String pollNm;
 	private String pollId;
 	private String startDate;

@@ -2,9 +2,13 @@ package egovframework.example.poll.dto;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PollNoticeDTO {
+	private String nttNo;
 	/**
 	 * 고유ID
 	 */

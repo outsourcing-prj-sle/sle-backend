@@ -18,17 +18,11 @@
 			PHOTO_STRE_FILE_NM as profileImageId,
 			TEACHER_SE_CODE as userRole,
 			SCHUL_NM as userSpaceInfo,
+			SCHUL_CODE as schulCode,
 			CONCAT(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo
 		from COMTNMBER
 		where 1=1
-		<if test="not empty authorization">
 			and USER_ID = #{authorization}
-		</if>
-		<if test="empty authorization">
-		  	and SCHUL_NM = #{userSpaceInfo}
-			and ST_CLASS_NM = #{classNm}
-			and ST_GRADE = #{gradeNm}
-		</if>
 	</select>
 	
 	<select id="authorizationUser" parameterType="hashmap" resultType="boolean">
@@ -93,7 +87,7 @@
 			ST_YEAR = #{stYear},
 			USER_SE_CODE = #{userType},
 			TEACHER_SE_CODE = #{userRole},
-			SCHUL_CODE = #{relationInfo},
+			SCHUL_CODE = #{schulCode},
 			ST_GRADE = #{gradeNm},
 			ST_CLASS = #{classCode},
 			ST_CLASS_Nm = #{classNm},
@@ -122,7 +116,8 @@
 			FROM COMTNBBSPOLLMANAGE a
 			WHERE a.USER_ID = #{authorization}
 		)
-		SELECT 
+		SELECT
+		    mstr.NTT_NO as nttNo,
 			mstr.POLL_NM as pollNm,
 			mstr.POLL_ID as pollId,
 			mstr.POLL_BGNDE as startDate,
@@ -161,15 +156,14 @@
 			on b.USER_ID = sub2.SCRTY_DTRMN_TRGET_ID
 			where sub2.AUTHOR_CODE = 'ROLE_STUDENT'
 			group by a.POLL_ID, b.USER_ID
-		), dt as (
+		), sub2 as (
 			SELECT
-		        a.POLL_ID,
-		        b.POLL_NM,
-		        a.USER_ID,
-		        a.QESITM_SN,
-		        a.FRST_REGISTER_PNTTM,
-		        ROW_NUMBER() OVER (PARTITION BY POLL_ID, USER_ID ORDER BY QESITM_SN DESC) AS rn
-		    FROM COMTNBBSpollATDRN a
+				a.USER_ID,
+				a.POLL_ID,
+				b.POLL_NM,
+				a.POLL_STATUS,
+				a.LAST_UPDUSR_PNTTM
+			FROM COMTNBBSPOLLMANAGE a
 			left join COMTNBBSPOLL b
 			on a.POLL_ID = b.POLL_ID
 		)
@@ -185,18 +179,14 @@
 			concat(sub.ST_GRADE, '학년 ', sub.ST_CLASS, '반') as classInfo,
 			sub.SEXDSTN as sex,
 			group_concat(case when sub2.POLL_STATUS = 'done' then true else false end order by mstr.POLL_ID separator ",") as isParticipateStr,
-			group_concat(dt.POLL_NM order by mstr.POLL_ID separator ",") as pollIDForfrstRegisterPnttm,
-			group_concat(dt.FRST_REGISTER_PNTTM order by mstr.POLL_ID separator ",") as frstRegisterPnttm
+			group_concat(sub2.POLL_ID order by mstr.POLL_ID separator ",") as pollIDForfrstRegisterPnttm,
+			group_concat(sub2.LAST_UPDUSR_PNTTM order by mstr.POLL_ID separator ",") as frstRegisterPnttm
 		from mstr
 		left join COMTNMBER sub
 		on mstr.USER_ID = sub.USER_ID
-		left join COMTNBBSPOLLMANAGE sub2
+		left join sub2
 		on mstr.USER_ID = sub2.USER_ID
 		and mstr.POLL_ID = sub2.POLL_ID
-		left join dt
-		on mstr.USER_ID = dt.USER_ID
-		and mstr.POLL_ID = dt.POLL_ID
-		and rn = 1
 		group by mstr.USER_ID, sub.USER_NM, sub.EMAIL_ADRES, sub.ST_GRADE, sub.ST_CLASS
 	</select>
 	
@@ -223,6 +213,7 @@
 		select
 			b.QESITM_ANSWER_TYPE as qesitmAnswerType,
 			b.POLL_SCORE as pollScore,
+			c.POLL_AVG as pollAvg,
 			c.POLL_AVG as pollAvg,
 			c.POLL_STDDEV as pollStddev
 		from COMTNMBER a
@@ -271,4 +262,25 @@
 			#{qesAnswer}
 		)
 	</insert>
+
+	<update id="updateGneUserInfo" parameterType="loginVO">
+		UPDATE COMTNMBER
+		SET
+			USER_NM = #{name},
+			SCHUL_GRADE_CODE = #{schulGradeCode},
+			ST_YEAR = #{stYear},
+			USER_SE_CODE = #{userType},
+			TEACHER_SE_CODE = #{userRole},
+			SCHUL_CODE = #{relationInfo},
+			ST_GRADE = #{gradeNm},
+			ST_CLASS = #{classCode},
+			ST_CLASS_Nm = #{classNm},
+			ST_NUMBER = #{stNumber},
+			TEACHER_SE_CODE = #{userType},
+			SCHUL_CODE = #{schulCode},
+			SCHUL_NM = #{userSpaceInfo},
+			LAST_UPDUSR_PNTTM = now(),
+			LAST_UPDUSR_ID = #{authorization}
+		WHERE USER_ID = #{authorization}
+	</update>
 </mapper>

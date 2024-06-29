@@ -1,14 +1,15 @@
 package egovframework.example.poll.dto;
 
 import egovframework.example.poll.service.PollManageVO;
-import lombok.Builder;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PollDTO {
+	private String nttNo;
 	private String pollId;
 	private String pollNm;
 	private String status;

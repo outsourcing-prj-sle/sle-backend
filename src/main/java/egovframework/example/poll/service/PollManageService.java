@@ -1,11 +1,10 @@
 package egovframework.example.poll.service;
 
-import java.util.List;
-
 import egovframework.example.poll.dto.PollDTO;
 import egovframework.example.poll.dto.PollNoticeDTO;
 
-import egovframework.example.cmmn.service.LoginVO;
+import java.util.HashMap;
+import java.util.List;
 
 public interface PollManageService {
 	/**
@@ -40,7 +39,13 @@ public interface PollManageService {
 	 * @param pollManageVO
 	 */
 	void insertReports(PollManageVO pollManageVO);
-	
+
+	/**
+	 * 회원 마음알기 사용자 정보 등록
+	 * @param pollManageVO
+	 */
+	void insertReportsUserInfo(PollManageVO pollManageVO);
+
 	/**
 	 * 회원 마음알기 설문 상태 등록(PROGRESS)
 	 * @param pollManageVO
@@ -64,4 +69,12 @@ public interface PollManageService {
 	 * @return pollNoticeDTO
 	 */
 	PollNoticeDTO selectReportsNotice(String pollId);
+
+	/**
+	 * 보고서 목록 상태 생성
+	 * @param list
+	 * @param se
+	 * @return
+	 */
+	HashMap<String, List<PollDTO>> makeReportsStatus(List<PollDTO> list, String se);
 }

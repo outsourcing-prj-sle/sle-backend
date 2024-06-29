@@ -15,6 +15,7 @@
 		<typeAlias alias="pollManageVO" type="egovframework.example.poll.service.PollManageVO"/>
 		<typeAlias alias="pollNoticeDTO" type="egovframework.example.poll.dto.PollNoticeDTO"/>
 		<typeAlias alias="pollDTO" type="egovframework.example.poll.dto.PollDTO"/>
+		<typeAlias alias="pollScoreDTO" type="egovframework.example.poll.dto.PollScoreDTO"/>
 
 		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
 		<typeAlias alias="tokVO" type="egovframework.example.user.service.IdTokTokVO"/>

@@ -63,5 +63,11 @@ public interface UserManageService {
 	 * 평가 결과 저장
 	 */
 	void insertResearchResult(SurveyVO surveyVO);
-	
+
+
+	/**
+	 * Gne 사용자 정보 입력
+	 * @param loginVO
+	 */
+	void updateGneUserInfo(LoginVO loginVO);
 }

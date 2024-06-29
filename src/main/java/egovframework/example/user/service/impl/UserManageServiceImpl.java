@@ -2,6 +2,11 @@ package egovframework.example.user.service.impl;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
+import egovframework.example.naver.dto.GneInfoDto;
+import egovframework.example.naver.dto.GneUserDto;
+import egovframework.example.naver.dto.NaverTokenDto;
+import egovframework.example.naver.dto.NaverUserDto;
+import egovframework.example.naver.service.NaverService;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.dto.StudentsDTO;
@@ -10,6 +15,8 @@ import org.egovframe.rte.fdl.cmmn.exception.FdlException;
 import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,6 +26,9 @@ import java.util.List;
 public class UserManageServiceImpl implements UserManageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserManageServiceImpl.class);
+
+	@Resource(name = "naverServiceImpl")
+	private NaverService naverService;
 
 	@Resource(name = "userManageMapper")
 	private UserManageMapper mapper;
@@ -129,5 +139,39 @@ public class UserManageServiceImpl implements UserManageService {
 		} else {
 			mapper.insertResearchResult(surveyVO);
 		}
+	}
+
+	/**
+	 * Gne 사용자 정보 입력
+	 * @param loginVO
+	 */
+	@Override
+	public void updateGneUserInfo(LoginVO loginVO) {
+		NaverUserDto naverUserDto = NaverUserDto.builder()
+				.primaryEmail(loginVO.getUserEmail())
+				.build();
+
+		GneInfoDto<GneUserDto> gneUserDto = naverService.procGneUserInfo(naverUserDto);
+
+		if(!gneUserDto.isSuccess()) {
+			throw new RuntimeException("경남교육청 사용자 정보 조회에 실패하였습니다.");
+		}
+
+		LoginVO vo = LoginVO.builder()
+				.authorization(gneUserDto.getData().getUserId())
+				.name(gneUserDto.getData().getUserNm())
+				.schulGradeCode(gneUserDto.getData().getSchulGradeCode())
+				.stYear(gneUserDto.getData().getStdrYear())
+				.gradeNm(gneUserDto.getData().getStGrade())
+				.classCode(gneUserDto.getData().getStClass())
+				.classNm(gneUserDto.getData().getStClassNm())
+				.stNumber(gneUserDto.getData().getStNumber())
+				.userType(gneUserDto.getData().getUserSeCode())
+				.userSpaceInfo(gneUserDto.getData().getSchulNm())
+				.schulCode(gneUserDto.getData().getSchulCode())
+				.schulGradeCode(gneUserDto.getData().getSchulGradeCode())
+				.build();
+
+		mapper.updateGneUserInfo(vo);
 	}
 }

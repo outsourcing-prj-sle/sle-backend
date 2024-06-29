@@ -5,8 +5,11 @@ import java.util.HashMap;
 
 import lombok.*;
 
-@Data
+@Getter
+@Setter
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class PollDtlDTO {
 	private String status;
 	private String pollNm;

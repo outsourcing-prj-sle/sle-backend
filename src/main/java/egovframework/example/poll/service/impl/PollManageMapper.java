@@ -3,6 +3,7 @@ package egovframework.example.poll.service.impl;
 import java.util.List;
 
 import egovframework.example.poll.dto.PollDTO;
+import egovframework.example.poll.dto.PollScoreDTO;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import egovframework.example.cmmn.service.LoginVO;
@@ -55,24 +56,13 @@ public interface PollManageMapper {
 	 * @param pollManageVO
 	 */
 	void insertReportsUserInfo(PollManageVO pollManageVO);
-	
+
 	/**
-	 * 회원 마음알기 설문 점수 등록(GM)
+	 * 회원 마음알기 설문 답변 조회
 	 * @param pollManageVO
+	 * @return
 	 */
-	void insertReportsScore1(PollManageVO pollManageVO);
-	
-	/**
-	 * 회원 마음알기 설문 점수 등록(IBP, EBP)
-	 * @param pollManageVO
-	 */
-	void insertReportsScore2(PollManageVO pollManageVO);
-	
-	/**
-	 * 회원 마음알기 설문 점수 등록(EK)
-	 * @param pollManageVO
-	 */
-	void insertReportsScore3(PollManageVO pollManageVO);
+	PollManageVO selectReportsUserAnswer(PollManageVO pollManageVO);
 	
 	/**
 	 * 마음알기 설문 완료 상태 조회
@@ -81,22 +71,10 @@ public interface PollManageMapper {
 	int selectIsDone(PollManageVO pollManageVO);
 	
 	/**
-	 * 회원 마음알기 설문 수정
-	 * @param pollManageVO
-	 */
-	void updateReports(PollManageVO pollManageVO);
-	
-	/**
 	 * 회원 마음알기 설문 상태 변경(DONE)
 	 * @param pollManageVO
 	 */
 	void updateReportsStatus(PollManageVO pollManageVO);
-
-	/**
-	 * 회원 마음알기 설문 테이블 내에 유저 정보 저장
-	 * @param pollManageVO
-	 */
-	void updateReportsUserInfo(PollManageVO pollManageVO);
 	
 	/**
 	 * 마음알기 설문 문제 개수 조회
@@ -110,15 +88,16 @@ public interface PollManageMapper {
 	 * @return pollNoticeDTL
 	 */
 	PollNoticeDTO selectReportsNotice(String pollId);
-
-	/**설문조사 기록 확인
-	 * @return boolean
-	 */
-	int selectHistoryIsExist(PollManageVO pollManageVO);
 	
 	/**
 	 * 설문 관리 목록 기록 확인
 	 * @return boolean
 	 */
 	int selectReportsMngIsExist(PollManageVO pollManageVO);
+
+	/**
+	 * 설문 점수 등록
+	 * @param pollScoreDTO
+	 */
+	void insertReportsScore(PollScoreDTO pollScoreDTO);
 }
