@@ -1,6 +1,7 @@
 package egovframework.example.poll.service;
 
 import egovframework.example.poll.dto.PollDTO;
+import egovframework.example.poll.dto.PollDtlDTO;
 import egovframework.example.poll.dto.PollNoticeDTO;
 
 import java.util.HashMap;
@@ -26,6 +27,13 @@ public interface PollManageService {
 	 * @return
 	 */
 	PollManageVO selectReportsDtl(PollManageVO pollManageVO);
+
+	/**
+	 * 회원 마음알기 설문 상세 조회
+	 * @param pollManageVO
+	 * @return
+	 */
+	PollDtlDTO selectReportsDtlItm(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 문항 및 선지 조회

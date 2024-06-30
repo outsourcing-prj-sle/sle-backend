@@ -15,13 +15,6 @@ public class TeachersDTO {
 	private String email;
 	private String classInfo;
 	private String sex = "F";
-	private HashMap<String, Integer> stateList = new HashMap<String, Integer>() {{
-		put("마음알기 설문1", 0);
-		put("마음알기 설문2", 0);
-		put("마음알기 설문3", 0);
-		put("마음알기 설문4", 0);
-		put("마음알기 설문5", 0);
-		put("마음알기 설문6", 0);
-	}};
-	private HashMap<String, String> stateFinList = new HashMap<>();
+	private HashMap<String, Integer> stateList;
+	private HashMap<String, String> stateFinList;
 }

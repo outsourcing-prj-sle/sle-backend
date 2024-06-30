@@ -55,7 +55,7 @@ public class UserManageUtils {
                             .build());
                 }
 
-                state.put(voList.get(i).getPollNmList()[j], Integer.parseInt(voList.get(i).getIsParticipateList()[j]));
+                state.put(String.valueOf(j+1), Integer.parseInt(voList.get(i).getIsParticipateList()[j]));
             }
 
             infoArr.add(TeachersDTO.builder()
@@ -137,6 +137,15 @@ public class UserManageUtils {
                         .name(dto.getUserNm())
                         .email(dto.getStGrade() + "학년 " + dto.getStClass() + "반 " + dto.getStNumber() + "번")
                         .classInfo(dto.getStGrade() + "학년 " + dto.getStClass() + "반")
+                        .stateList(new HashMap<String, Integer>() {{
+                            put("1", 0);
+                            put("2", 0);
+                            put("3", 0);
+                            put("4", 0);
+                            put("5", 0);
+                            put("6", 0);
+                        }})
+                        .stateFinList(new HashMap<>())
                         .build())
                 .collect(Collectors.toList());
     }

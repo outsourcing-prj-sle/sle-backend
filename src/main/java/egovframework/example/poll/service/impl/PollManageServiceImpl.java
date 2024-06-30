@@ -172,9 +172,9 @@ public class PollManageServiceImpl implements PollManageService {
 		if(StringUtils.isNotEmpty(se) && se.equals("teacher")) {
 			for(PollDTO dto : list) {
 				if(dto.getExpired()) {
-					todo.add(dto);
-				} else {
 					done.add(dto);
+				} else {
+					todo.add(dto);
 				}
 			}
 		}
@@ -227,6 +227,7 @@ public class PollManageServiceImpl implements PollManageService {
 	 * @param pollManageVO
 	 * @return
 	 */
+	@Override
 	public PollDtlDTO selectReportsDtlItm(PollManageVO pollManageVO) {
 		if(StringUtils.isEmpty(pollManageVO.getAuthorization()) || StringUtils.isEmpty(pollManageVO.getPollId())) {
 			return PollDtlDTO.builder().build();
@@ -241,18 +242,14 @@ public class PollManageServiceImpl implements PollManageService {
 					.append(":");
 
 			if(i < vo.getQesitmAnswerList().length) {
-				stepList.append(vo.getQesitmAnswerList()[i])
-						.append("/");
-			} else {
-				stepList.append("0/");
+				stepList.append(vo.getQesitmAnswerList()[i]);
 			}
+			stepList.append("/");
 
 			if(i < vo.getQesitmAnswerImageList().length) {
-				stepList.append(vo.getQesitmAnswerImageList()[i])
-						.append(",");
-			} else {
-				stepList.append("0,");
+				stepList.append(vo.getQesitmAnswerImageList()[i]);
 			}
+			stepList.append(",");
 
 			if(i == vo.getQesitmSnList().length - 1) {
 				stepList.deleteCharAt(stepList.length() - 1);
@@ -311,7 +308,7 @@ public class PollManageServiceImpl implements PollManageService {
 	 * @param pollManageVO
 	 */
 	public void updateGneUserInfo(PollManageVO pollManageVO) {
-		LoginVO vo = userManageService.selectUserInfo(LoginVO.builder().userEmail(pollManageVO.getAuthorization()).build());
+		LoginVO vo = userManageService.selectUserInfo(LoginVO.builder().authorization(pollManageVO.getAuthorization()).build());
 		userManageService.updateGneUserInfo(vo);
 		insertReportsUserInfo(pollManageVO);
 	}
@@ -320,14 +317,14 @@ public class PollManageServiceImpl implements PollManageService {
 	 * 회원 마음알기 점수 계산 및 가공(마음알기 설문1 : GM)
 	 */
 	public PollScoreDTO makePoll1(PollManageVO pollManageVO) {
-		int sum = Arrays.stream(pollManageVO.getQesitmAnswerList())
-				.map(Integer::parseInt)
-				.reduce(0, Integer::sum);
-		int count = pollManageVO.getQesitmAnswerList().length;
+		double score = Arrays.stream(pollManageVO.getQesitmAnswerList())
+				.mapToInt(Integer::parseInt)
+				.average()
+				.orElse(0.0);
 
 		return PollScoreDTO.builder()
 				.authorization(pollManageVO.getAuthorization())
-				.poolScore(sum / count)
+				.pollScore(score)
 				.qesitmAnswerType("GM")
 				.build();
 	}
@@ -344,14 +341,14 @@ public class PollManageServiceImpl implements PollManageService {
 			}
 		}
 
-		int sum = targetList.stream()
-				.map(num -> 5 - Integer.parseInt(num))
-				.reduce(0, Integer::sum);
-		int count = pollManageVO.getQesitmAnswerList().length;
+		double avg = targetList.stream()
+				.mapToInt(num -> 5 - Integer.parseInt(num))
+				.average()
+				.orElse(0.0);
 
 		return PollScoreDTO.builder()
 				.authorization(pollManageVO.getAuthorization())
-				.poolScore(sum / count)
+				.pollScore(avg)
 				.qesitmAnswerType("IBP")
 				.build();
 	}
@@ -368,14 +365,15 @@ public class PollManageServiceImpl implements PollManageService {
 			}
 		}
 
-		int sum = targetList.stream()
-				.map(num -> 5 - Integer.parseInt(num))
-				.reduce(0, Integer::sum);
-		int count = pollManageVO.getQesitmAnswerList().length;
+		double avg = targetList.stream()
+				.mapToInt(num -> 5 - Integer.parseInt(num))
+				.average()
+				.orElse(0.0);
+
 
 		return PollScoreDTO.builder()
 				.authorization(pollManageVO.getAuthorization())
-				.poolScore(sum / count)
+				.pollScore(avg)
 				.qesitmAnswerType("EBP")
 				.build();
 	}
@@ -388,16 +386,14 @@ public class PollManageServiceImpl implements PollManageService {
 		int sum = 0;
 
 		for(int i=0; i<pollManageVO.getQesitmSnList().length; i++) {
-			if(compareVal[Integer.parseInt(pollManageVO.getQesitmSnList()[i])] == Integer.parseInt(pollManageVO.getQesitmAnswerList()[i])) {
+			if(compareVal[Integer.parseInt(pollManageVO.getQesitmSnList()[i]) - 1] == Integer.parseInt(pollManageVO.getQesitmAnswerList()[i])) {
 				sum += 1;
 			}
 		}
 
-		int count = pollManageVO.getQesitmAnswerList().length;
-
 		return PollScoreDTO.builder()
 				.authorization(pollManageVO.getAuthorization())
-				.poolScore(sum / count)
+				.pollScore(sum)
 				.qesitmAnswerType("EK")
 				.build();
 	}

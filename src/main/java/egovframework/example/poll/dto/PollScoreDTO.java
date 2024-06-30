@@ -10,5 +10,5 @@ import lombok.*;
 public class PollScoreDTO {
     private String authorization;
     private String qesitmAnswerType;
-    private double poolScore;
+    private double pollScore;
 }

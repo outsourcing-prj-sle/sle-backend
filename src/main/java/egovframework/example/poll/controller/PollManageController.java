@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 
 @RestController
 @RequestMapping("/api/reports")
@@ -24,8 +25,8 @@ public class PollManageController {
      * 회원 마음알기 설문 목록 조회
      */
     @GetMapping("/status")
-    public ResponseEntity<?> selectReports(@RequestHeader String authorization) {
-        LoginVO header = LoginVO.builder().authorization(authorization).build();
+    public ResponseEntity<?> selectReports(@RequestHeader HashMap<String, String> req) {
+        LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         PollManageVO pollManageVO = new PollManageVO();
 
@@ -49,8 +50,8 @@ public class PollManageController {
      * @param pollManageVO
      */
     @PutMapping("/start")
-    public ResponseEntity<?> insertReportsStatus(@RequestHeader String authorization, @RequestBody PollManageVO pollManageVO) {
-        LoginVO header = LoginVO.builder().authorization(authorization).build();
+    public ResponseEntity<?> insertReportsStatus(@RequestHeader HashMap<String, String> req, @RequestBody PollManageVO pollManageVO) {
+        LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -62,7 +63,7 @@ public class PollManageController {
             pollManageService.insertReportsStatus(pollManageVO);
         }
 
-        return ResponseEntity.ok(pollManageService.selectReportsDtl(pollManageVO));
+        return ResponseEntity.ok(pollManageService.selectReportsDtlItm(pollManageVO));
     }
 
     /**
@@ -70,8 +71,8 @@ public class PollManageController {
      * @param pollManageVO
      */
     @PutMapping("/save")
-    public ResponseEntity<?> insertReports(@RequestHeader String authorization, @RequestBody PollManageVO pollManageVO) {
-        LoginVO header = LoginVO.builder().authorization(authorization).build();
+    public ResponseEntity<?> insertReports(@RequestHeader HashMap<String, String> req, @RequestBody PollManageVO pollManageVO) {
+        LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -85,7 +86,7 @@ public class PollManageController {
             pollManageService.insertReports(pollManageVO);
         }
 
-        return ResponseEntity.ok(pollManageService.selectReportsDtl(pollManageVO));
+        return ResponseEntity.ok(pollManageService.selectReportsDtlItm(pollManageVO));
     }
 
     /**
@@ -93,8 +94,8 @@ public class PollManageController {
      * @param pollManageVO
      */
     @PutMapping("/complete")
-    public ResponseEntity<?> updateReportsStatus(@RequestHeader String authorization, @RequestBody PollManageVO pollManageVO) {
-        LoginVO header = LoginVO.builder().authorization(authorization).build();
+    public ResponseEntity<?> updateReportsStatus(@RequestHeader HashMap<String, String> req, @RequestBody PollManageVO pollManageVO) {
+        LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -112,8 +113,8 @@ public class PollManageController {
     }
 
     @GetMapping("/notice")
-    public ResponseEntity<?> selectReportsNotice(@RequestHeader String authorization, @RequestParam String pollId){
-        LoginVO header = LoginVO.builder().authorization(authorization).build();
+    public ResponseEntity<?> selectReportsNotice(@RequestHeader HashMap<String, String> req, @RequestParam String pollId){
+        LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");

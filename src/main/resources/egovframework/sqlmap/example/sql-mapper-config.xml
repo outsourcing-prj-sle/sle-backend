@@ -20,5 +20,11 @@
 		<typeAlias alias="selVO" type="egovframework.example.user.service.MySelVO"/>
 		<typeAlias alias="tokVO" type="egovframework.example.user.service.IdTokTokVO"/>
 		<typeAlias alias="studentsDTO" type="egovframework.example.user.dto.StudentsDTO"/>
-    </typeAliases>
+
+		<typeAlias alias="idAdminIdttVO" type="egovframework.example.idadminidtt.service.IdAdminIdttManageVO"/>
+
+		<typeAlias alias="idAdminUserVO" type="egovframework.example.idaminuser.service.IdAdminUserManageVO"/>
+
+		<typeAlias alias="idAdminPollVO" type="egovframework.example.idadminpoll.service.IdAdminPollManageVO"/>
+	</typeAliases>
 </configuration>

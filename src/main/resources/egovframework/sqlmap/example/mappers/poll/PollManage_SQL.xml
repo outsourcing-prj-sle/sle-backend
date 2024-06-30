@@ -82,7 +82,7 @@
 
 	<select id="selectReportsUserAnswer" parameterType="pollManageVO" resultType="pollManageVO">
 		SELECT
-			USER_ID as userId,
+			USER_ID as authorization,
 			POLL_ID as pollId,
 			QESITM_SN_LIST as qesitmSn,
 			QESITM_ANSWER_LIST as qesitmAnswer,
@@ -95,7 +95,7 @@
 	<insert id="insertReportsStatus" parameterType="pollManageVO">
 		insert into COMTNBBSPOLLMANAGE(USER_ID, POLL_ID, QESITM_SN_LIST, QESITM_ANSWER_IMAGE_LIST, QESITM_ANSWER_LIST, POLL_STATUS)
 		values (
-			#{uniqId},
+			#{authorization},
 			#{pollId},
 			#{qesitmSn},
 			'',
@@ -164,12 +164,12 @@
 	</select>
 
 	<insert id="insertReportsScore" parameterType="pollScoreDTO">
-		INSERT INTO COMTNBBSPOLLSCORE(USER_ID, QESITM_ANSWER_TYPE, POOL_SCORE)
+		INSERT INTO COMTNBBSPOLLSCORE(USER_ID, QESITM_ANSWER_TYPE, POLL_SCORE)
 		VALUES
 		    (
 				  #{authorization},
 				  #{qesitmAnswerType},
-				  #{poolScore}
+				  #{pollScore}
 			  );
 	</insert>
 </mapper>

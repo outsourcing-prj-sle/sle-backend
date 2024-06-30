@@ -29,8 +29,8 @@ public class UserManageController {
 	 * 회원정보 조회
 	 */
 	@GetMapping("/users")
-	public ResponseEntity<?> selectUserInfo(@RequestHeader String authorization) {
-		LoginVO header = LoginVO.builder().authorization(authorization).build();
+	public ResponseEntity<?> selectUserInfo(@RequestHeader HashMap<String, String> req) {
+		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		return ResponseEntity.ok(userManageService.selectUserInfo(header));
 	}
@@ -39,8 +39,8 @@ public class UserManageController {
 	 * 회원정보 수정
 	 */
 	@PutMapping("/users/update")
-	public ResponseEntity<?> updateUserInfo(@RequestHeader String authorization, @RequestBody LoginVO loginVO) {
-		LoginVO header = LoginVO.builder().authorization(authorization).build();
+	public ResponseEntity<?> updateUserInfo(@RequestHeader HashMap<String, String> req, @RequestBody LoginVO loginVO) {
+		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -57,8 +57,8 @@ public class UserManageController {
 	 * 학생 나의 SEL 알기
 	 */
 	@GetMapping("/users/mysel")
-	public ResponseEntity<?> selectMySelList(@RequestHeader String authorization) {
-		LoginVO header = LoginVO.builder().authorization(authorization).build();
+	public ResponseEntity<?> selectMySelList(@RequestHeader HashMap<String, String> req) {
+		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(userManageService.isReallyTeacher(header)) {
 			// 교사일 시
@@ -76,8 +76,8 @@ public class UserManageController {
 	 * 아이디 톡톡 선생님
 	 */
 	@GetMapping("/users/idTokTok")
-	public ResponseEntity<?> selectIdTokTokTeacher(@RequestHeader String authorization, @RequestParam String id) {
-		LoginVO header = LoginVO.builder().authorization(authorization).build();
+	public ResponseEntity<?> selectIdTokTokTeacher(@RequestHeader HashMap<String, String> req, @RequestParam String id) {
+		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
@@ -109,8 +109,8 @@ public class UserManageController {
 	}
 
 	@PutMapping("/users/research")
-	public ResponseEntity<?> insertResearchResult(@RequestHeader String authorization, @RequestBody SurveyVO vo) {
-		LoginVO header = LoginVO.builder().authorization(authorization).build();
+	public ResponseEntity<?> insertResearchResult(@RequestHeader HashMap<String, String> req, @RequestBody SurveyVO vo) {
+		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
