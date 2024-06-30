@@ -11,6 +11,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PollDtlDTO {
+	private String nttNo;
 	private String status;
 	private String pollNm;
 	private String startDate;

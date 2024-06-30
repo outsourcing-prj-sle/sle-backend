@@ -2,6 +2,7 @@ package egovframework.example.user.service;
 
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
+import egovframework.example.user.dto.IdttLTResultDTO;
 import egovframework.example.user.dto.StudentsDTO;
 
 import java.util.List;
@@ -70,4 +71,11 @@ public interface UserManageService {
 	 * @param loginVO
 	 */
 	void updateGneUserInfo(LoginVO loginVO);
+
+	/**
+	 * 학습성향톡톡 API 조회
+	 * @param loginVO
+	 * @return
+	 */
+	IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id);
 }

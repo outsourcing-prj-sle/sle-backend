@@ -257,6 +257,7 @@ public class PollManageServiceImpl implements PollManageService {
 		}
 
 		return PollDtlDTO.builder()
+				.nttNo(vo.getNttNo())
 				.status(vo.getStatus())
 				.pollNm(vo.getPollNm())
 				.startDate(vo.getStartDate())

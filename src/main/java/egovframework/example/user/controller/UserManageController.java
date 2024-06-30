@@ -128,4 +128,11 @@ public class UserManageController {
 
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("선생님 권한이 필요합니다.");
 	}
+
+	@GetMapping("/users/idttLT")
+	public ResponseEntity<?> selectIdttLearningTendency(@RequestHeader HashMap<String, String> req, @RequestParam String id) {
+		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
+
+		return ResponseEntity.ok(userManageService.selectIdttLT(header, id));
+	}
 }

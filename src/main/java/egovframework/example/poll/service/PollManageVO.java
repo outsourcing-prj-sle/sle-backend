@@ -18,7 +18,12 @@ public class PollManageVO {
 	 * 고유ID
 	 */
 	private String authorization;
-	
+
+	/**
+	 * 설문번호
+	 */
+	private String nttNo;
+
 	/**
 	 * 설문ID
 	 */

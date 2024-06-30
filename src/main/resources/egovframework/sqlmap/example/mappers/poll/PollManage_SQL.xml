@@ -42,6 +42,7 @@
 			  and mstr.POLL_ID = #{pollId}
 		)
 		select
+		    mstr.NTT_NO as nttNo,
 			mstr.POLL_ID as pollId,
 			mstr.POLL_NM as pollNm,
 			mstr.POLL_BGNDE as startDate,

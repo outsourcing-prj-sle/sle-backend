@@ -1,31 +1,44 @@
 package egovframework.example.user.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.json.JsonReadFeature;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.naver.dto.GneInfoDto;
 import egovframework.example.naver.dto.GneUserDto;
-import egovframework.example.naver.dto.NaverTokenDto;
 import egovframework.example.naver.dto.NaverUserDto;
 import egovframework.example.naver.service.NaverService;
+import egovframework.example.user.dto.IdttLTResultDTO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
 import egovframework.example.user.dto.StudentsDTO;
 import egovframework.example.user.service.UserManageService;
-import org.egovframe.rte.fdl.cmmn.exception.FdlException;
-import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.http.client.ClientHttpResponse;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.DefaultResponseErrorHandler;
+import org.springframework.web.client.RestTemplate;
 
 import javax.annotation.Resource;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service("userManageService")
 public class UserManageServiceImpl implements UserManageService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(UserManageServiceImpl.class);
+
+	private static final String apiKey = "pCc9mplHYCQ0xsRfrJSB2tUEIRPGGZkw";
 
 	@Resource(name = "naverServiceImpl")
 	private NaverService naverService;
@@ -35,7 +48,7 @@ public class UserManageServiceImpl implements UserManageService {
 
 	/**
 	 * 회원정보 조회
-	 * 
+	 *
 	 * @return LoginVO
 	 */
 	@Override
@@ -43,7 +56,7 @@ public class UserManageServiceImpl implements UserManageService {
 
 		return mapper.selectUserInfo(loginVO);
 	}
-	
+
 	/**
 	 * 토큰으로 회원 인증
 	 * @return boolean
@@ -51,7 +64,7 @@ public class UserManageServiceImpl implements UserManageService {
 	public boolean authorizationUser(LoginVO loginVO) {
 		return mapper.authorizationUser(loginVO);
 	}
-	
+
 	/**
 	 * 회원정보 등록
 	 */
@@ -90,7 +103,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public List<StudentsDTO> selectStudentSelList(LoginVO loginVO) {
-		
+
 		return mapper.selectStudentSelList(loginVO);
 	}
 
@@ -99,7 +112,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public List<MySelVO> selectTeacherSelList(LoginVO loginVO) {
-		
+
 		return mapper.selectTeacherSelList(loginVO);
 	}
 
@@ -108,7 +121,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 */
 	@Override
 	public Boolean isReallyTeacher(LoginVO loginVO) {
-		
+
 		return mapper.isReallyTeacher(loginVO);
 	}
 
@@ -119,7 +132,7 @@ public class UserManageServiceImpl implements UserManageService {
 	public LoginVO isReallyTeacherDtl(LoginVO loginVO) {
 		return mapper.isReallyTeacherDtl(loginVO);
 	}
-	
+
 	/**
 	 * 아이디 톡톡 선생님 조회
 	 */
@@ -173,5 +186,106 @@ public class UserManageServiceImpl implements UserManageService {
 				.build();
 
 		mapper.updateGneUserInfo(vo);
+	}
+
+	/**
+	 * 학습성향톡톡 API 조회
+	 * @param loginVO
+	 * @return
+	 */
+	@Override
+	public IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id) {
+
+		LoginVO vo = mapper.selectUserInfo(loginVO);
+
+		String baseUrl = "https://smile-second-store.itt.link:4555/gne-api/folio/v3.1/analysis-result";
+
+		try {
+			URI uriUserPersonality = new URI(baseUrl +
+					"?apiKey=" + apiKey +
+					"&analysisId=folio-instructor-user-personality" +
+					"&schoolId=" + vo.getSchulCode() +
+					"&grade=" + vo.getGradeNm() +
+					"&schoolYear=" + vo.getStYear() +
+					"&classNo=" + vo.getClassCode() +
+					"&learnerId=" + id
+			);
+
+			URI uriClassPersonality = new URI(baseUrl +
+					"?apiKey=" + apiKey +
+					"&analysisId=folio-instructor-class-personality" +
+					"&schoolId=" + vo.getSchulCode() +
+					"&grade=" + vo.getGradeNm() +
+					"&schoolYear=" + vo.getStYear() +
+					"&classNo=" + vo.getClassCode() +
+					"&learnerId=" + vo.getAuthorization()
+			);
+
+			RestTemplate restTemplate = new RestTemplate();
+			restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+			restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+				@Override
+				public boolean hasError(ClientHttpResponse response) throws IOException {
+					HttpStatus statusCode = response.getStatusCode();
+					return statusCode.series() == HttpStatus.Series.SERVER_ERROR;
+				}
+			});
+
+			HttpHeaders headers = new HttpHeaders();
+			HttpEntity<String> entity = new HttpEntity<>(headers);
+
+			IdttLTResultDTO dto = new IdttLTResultDTO();
+
+			// User Personality API Call
+			ResponseEntity<String> responseEntityUser = restTemplate.exchange(uriUserPersonality, HttpMethod.GET, entity, String.class);
+			if (responseEntityUser.getStatusCode() == HttpStatus.OK) {
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				mapper.enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature());
+
+				try {
+					ArrayList<HashMap<String, Object>> userPersonalityList = mapper.readValue(
+							responseEntityUser.getBody(),
+							new TypeReference<ArrayList<HashMap<String, Object>>>() {}
+					);
+					dto.setUserPersonality(userPersonalityList);
+				} catch (JsonProcessingException e) {
+					LOGGER.error("학습성향 학생별 점수 수집에 실패하였습니다.", e.getMessage(), e);
+					throw new RuntimeException("학습성향 학생별 점수 수집에 실패하였습니다.", e);
+				}
+			} else {
+				LOGGER.error("학습성향 학생별 점수 API 접속에 실패하였습니다.", responseEntityUser.getBody());
+				throw new RuntimeException("학습성향 학생별 점수 API 접속에 실패하였습니다.");
+			}
+
+			// Class Personality API Call
+			ResponseEntity<String> responseEntityClass = restTemplate.exchange(uriClassPersonality, HttpMethod.GET, entity, String.class);
+			if (responseEntityClass.getStatusCode() == HttpStatus.OK) {
+				ObjectMapper mapper = new ObjectMapper();
+				mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+				mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+				mapper.enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature());
+
+				try {
+					ArrayList<HashMap<String, Object>> classPersonalityList = mapper.readValue(
+							responseEntityClass.getBody(),
+							new TypeReference<ArrayList<HashMap<String, Object>>>() {}
+					);
+					dto.setClassPersonality(classPersonalityList);
+				} catch (JsonProcessingException e) {
+					LOGGER.error("학습성향 학급별 점수 수집에 실패하였습니다.", e.getMessage(), e);
+					throw new RuntimeException("학습성향 학급별 점수 수집에 실패하였습니다.", e);
+				}
+			} else {
+				LOGGER.error("학습성향 학급별 점수 API 접속에 실패하였습니다.", responseEntityClass.getBody());
+				throw new RuntimeException("학습성향 학급별 점수 API 접속에 실패하였습니다.");
+			}
+
+			return dto;
+		} catch (URISyntaxException e) {
+			LOGGER.error(e.getMessage());
+			throw new RuntimeException("URI 생성에 실패하셨습니다.", e);
+		}
 	}
 }
