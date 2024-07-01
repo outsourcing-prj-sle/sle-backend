@@ -6,6 +6,7 @@ import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.dto.TeachersDTO;
 import egovframework.example.user.service.*;
 import egovframework.example.user.utils.UserManageUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -32,6 +33,10 @@ public class UserManageController {
 	public ResponseEntity<?> selectUserInfo(@RequestHeader HashMap<String, String> req) {
 		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
+		if(!userManageService.authorizationUser(header)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
+
 		return ResponseEntity.ok(userManageService.selectUserInfo(header));
 	}
 
@@ -44,6 +49,10 @@ public class UserManageController {
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		} else if(StringUtils.isEmpty(loginVO.getSex())){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("sex는 필수값입니다.");
+		} else if(StringUtils.isEmpty(loginVO.getBrthdy())){
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("brthdy는 필수값입니다.");
 		}
 
 		loginVO.setAuthorization(header.getAuthorization());
@@ -59,6 +68,10 @@ public class UserManageController {
 	@GetMapping("/users/mysel")
 	public ResponseEntity<?> selectMySelList(@RequestHeader HashMap<String, String> req) {
 		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
+
+		if(!userManageService.authorizationUser(header)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		}
 
 		if(userManageService.isReallyTeacher(header)) {
 			// 교사일 시
@@ -81,6 +94,8 @@ public class UserManageController {
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		} else if(StringUtils.isEmpty(id)) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("id는 필수값입니다.");
 		}
 
 		LoginVO teacherInfo = userManageService.isReallyTeacherDtl(header);
@@ -114,6 +129,10 @@ public class UserManageController {
 
 		if(!userManageService.authorizationUser(header)) {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+		} else if(StringUtils.isEmpty(vo.getId())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("id는 필수값입니다.");
+		} else if(StringUtils.isEmpty(vo.getQesAnswer())) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("qesAnswer는 필수값입니다.");
 		}
 
 		// 교사 권한 확인

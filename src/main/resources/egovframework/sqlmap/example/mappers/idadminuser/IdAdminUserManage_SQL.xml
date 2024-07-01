@@ -2,4 +2,60 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egovframework.example.idadminuser.service.impl.IdAdminUserManageMapper">
 
+    <insert id="insertIdAdminUserInfo">
+        INSERT INTO IDADMINMBER(
+            USER_ID,
+            USER_SE_CODE,
+            PASSWORD,
+            USER_NM,
+            EMAIL_ADRES,
+            PHONE_NUMBER,
+            USER_SPACE_INFO
+        )
+        VALUES(
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  NULL,
+                  'ID연구소'
+              )
+    </insert>
+
+    <update id="updateIdAdminUserInfo">
+        UPDATE
+            IDADMINMBER
+        SET
+            USER_ID = 'test',
+            USER_SE_CODE = 'test',
+            PASSWORD = NULL,
+            USER_NM = NULL,
+            EMAIL_ADRES = NULL,
+            PHONE_NUMBER = NULL,
+            USER_SPACE_INFO = 'ID연구소'
+    </update>
+
+    <delete id="deleteIdAdminUserInfo">
+        DELETE
+        FROM
+            SURVEY.IDADMINMBER
+        WHERE
+            USER_ID = 'test'
+    </delete>
+
+    <select id="selectIdAdminUserInfo">
+        select
+            USER_ID,
+            USER_SE_CODE,
+            password,
+            USER_NM,
+            EMAIL_ADRES,
+            PHONE_NUMBER,
+            USER_SPACE_INFO
+        from
+            IDADMINMBER
+        limit 10
+        offset 0
+    </select>
 </mapper>

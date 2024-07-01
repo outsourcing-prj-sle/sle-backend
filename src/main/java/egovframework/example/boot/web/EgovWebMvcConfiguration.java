@@ -43,26 +43,6 @@ public class EgovWebMvcConfiguration extends WebMvcConfigurationSupport {
 		return rmha;
 	}
 
-	@Override
-	public void configureHandlerExceptionResolvers(List<HandlerExceptionResolver> exceptionResolvers) {
-		Properties prop = new Properties();
-		prop.setProperty("org.springframework.dao.DataAccessException", "cmmn/dataAccessFailure");
-		prop.setProperty("org.springframework.transaction.TransactionException", "cmmn/transactionFailure");
-		prop.setProperty("org.egovframe.rte.fdl.cmmn.exception.EgovBizException", "cmmn/egovError");
-		prop.setProperty("org.springframework.security.AccessDeniedException", "cmmn/egovError");
-		prop.setProperty("java.lang.Throwable", "mmn/egovError");
-
-		Properties statusCode = new Properties();
-		statusCode.setProperty("cmmn/egovError", "400");
-		statusCode.setProperty("cmmn/egovError", "500");
-
-		SimpleMappingExceptionResolver smer = new SimpleMappingExceptionResolver();
-		smer.setDefaultErrorView("cmmn/egovError");
-		smer.setExceptionMappings(prop);
-		smer.setStatusCodes(statusCode);
-		exceptionResolvers.add(smer);
-	}
-
 	@Bean
 	public UrlBasedViewResolver urlBasedViewResolver() {
 		UrlBasedViewResolver urlBasedViewResolver = new UrlBasedViewResolver();

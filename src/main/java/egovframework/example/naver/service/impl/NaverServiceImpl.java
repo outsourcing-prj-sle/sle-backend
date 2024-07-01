@@ -20,6 +20,7 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import egovframework.example.cmmn.CustomException;
 import egovframework.example.naver.dto.*;
 import egovframework.example.naver.service.NaverService;
 import lombok.extern.slf4j.Slf4j;
@@ -113,7 +114,7 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-            throw new RuntimeException("네이버 엑세스 토큰 발행에 실패하였습니다.");
+            throw new CustomException("no_naver_token");
         }
     }
 
@@ -164,7 +165,7 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-            throw new RuntimeException("네이버 사용자정보 조회에 실패하였습니다.");
+            throw new CustomException("no_naver_user");
         }
     }
 
@@ -215,7 +216,7 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-            throw new RuntimeException("경남교육청 사용자 정보 조회에 실패하였습니다.");
+            throw new CustomException("no_userdata");
         }
     }
 
@@ -268,7 +269,7 @@ public class NaverServiceImpl implements NaverService {
         }
         else {
             log.error("{}", responseEntity.getBody());
-            throw new RuntimeException("경남교육청 학교별 사용자 목록 조회에 실패하였습니다.");
+            throw new CustomException("no_userlist");
         }
     }
 }

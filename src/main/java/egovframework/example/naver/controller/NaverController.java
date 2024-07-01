@@ -1,5 +1,6 @@
 package egovframework.example.naver.controller;
 
+import egovframework.example.cmmn.CustomException;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.naver.dto.*;
 import egovframework.example.naver.service.NaverService;
@@ -58,11 +59,11 @@ public class NaverController {
         GneInfoDto<GneUserDto> gneUserDto = naverService.procGneUserInfo(naverUserDto);
         
         if(!gneUserDto.isSuccess()) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("경남교육청 사용자 정보를 가져오는데 실패하였습니다.");
+            throw new CustomException("no_userdata");
         }
 
         if(StringUtils.isEmpty(gneUserDto.getData().getUserId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("사용자 아이디가 없습니다.");
+            throw new CustomException("no_userid");
         }
 
         LoginVO loginVO = LoginVO.builder()
