@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egovframework.example.idadminuser.service.impl.IdAdminUserManageMapper">
 
-    <insert id="insertIdAdminUserInfo">
+    <insert id="insertIdAdminUserInfo" parameterType="idAdminUserVO">
         INSERT INTO IDADMINMBER(
             USER_ID,
             USER_SE_CODE,
@@ -13,49 +13,75 @@
             USER_SPACE_INFO
         )
         VALUES(
-                  NULL,
-                  NULL,
-                  NULL,
-                  NULL,
-                  NULL,
-                  NULL,
+                  #{userId},
+                  #{userSeCode},
+                  #{password},
+                  #{userNm},
+                  #{emailAdres},
+                  #{phoneNumber},
                   'ID연구소'
               )
     </insert>
 
-    <update id="updateIdAdminUserInfo">
+    <update id="updateIdAdminUserInfo" parameterType="idAdminUserVO">
         UPDATE
             IDADMINMBER
         SET
-            USER_ID = 'test',
-            USER_SE_CODE = 'test',
-            PASSWORD = NULL,
-            USER_NM = NULL,
-            EMAIL_ADRES = NULL,
-            PHONE_NUMBER = NULL,
+            USER_ID = #{userId},
+            USER_SE_CODE = #{userSeCode},
+            PASSWORD = #{password},
+            USER_NM = #{userNm},
+            EMAIL_ADRES = #{emailAdres},
+            PHONE_NUMBER = #{phoneNumber},
             USER_SPACE_INFO = 'ID연구소'
     </update>
 
-    <delete id="deleteIdAdminUserInfo">
+    <delete id="deleteIdAdminUserInfo" parameterType="idAdminUserVO">
         DELETE
         FROM
             SURVEY.IDADMINMBER
         WHERE
-            USER_ID = 'test'
+            USER_ID = #{userId}
     </delete>
 
-    <select id="selectIdAdminUserInfo">
+    <select id="selectIdAdminUserInfoList" parameterType="idAdminUserVO" resultType="idAdminUserDTO">
         select
             USER_ID,
             USER_SE_CODE,
-            password,
             USER_NM,
             EMAIL_ADRES,
             PHONE_NUMBER,
             USER_SPACE_INFO
         from
             IDADMINMBER
-        limit 10
-        offset 0
+        limit #{recordCount}
+        offset #{firstIndex}
+    </select>
+
+    <select id="selectIdAdminUserInfo" parameterType="idAdminUserVO" resultType="idAdminUserDTO">
+        select
+            USER_ID,
+            USER_SE_CODE,
+            USER_NM,
+            EMAIL_ADRES,
+            PHONE_NUMBER,
+            USER_SPACE_INFO
+        from
+            IDADMINMBER
+        where USER_ID = #{userId}
+    </select>
+
+    <select id="selectIdAdminUserInfoCount" resultType="int">
+        select
+            count(*)
+        from IDADMINMBER
+    </select>
+
+    <select id="isAuthorizedUser" parameterType="idAdminUserVO" resultType="boolean">
+        select
+            case when count(*) > 0 then 1 else 0 end
+        from IDADMINMBER
+        where USER_ID = #{userId}
+         and PASSWORD = #{password}
     </select>
 </mapper>

@@ -68,16 +68,30 @@ public class PollManageServiceImpl implements PollManageService {
 
 		PollManageVO vo = mapper.selectReportsUserAnswer(pollManageVO);
 
-		if(StringUtils.isEmpty(vo.getQesitmAnswer())) {
-			vo.setQesitmAnswer(pollManageVO.getQesitmAnswer());
-		} else {
-			vo.setQesitmAnswer(vo.getQesitmAnswer().concat(",").concat(pollManageVO.getQesitmAnswer()));
-		}
+		if(
+				StringUtils.isEmpty(vo.getQesitmAnswer()) ||
+				vo.getQesitmAnswerList().length < Integer.parseInt(pollManageVO.getQesitmSn() + 1)
+		) {
+			if(StringUtils.isEmpty(vo.getQesitmAnswer())) {
+				vo.setQesitmAnswer(pollManageVO.getQesitmAnswer());
+			} else {
+				vo.setQesitmAnswer(vo.getQesitmAnswer().concat(",").concat(pollManageVO.getQesitmAnswer()));
+			}
 
-		if(StringUtils.isEmpty(vo.getQesitmAnswerImage())) {
-			vo.setQesitmAnswerImage(pollManageVO.getQesitmAnswerImage());
+			if(StringUtils.isEmpty(vo.getQesitmAnswerImage())) {
+				vo.setQesitmAnswerImage(pollManageVO.getQesitmAnswerImage());
+			} else {
+				vo.setQesitmAnswerImage(vo.getQesitmAnswerImage().concat(",").concat(pollManageVO.getQesitmAnswerImage()));
+			}
 		} else {
-			vo.setQesitmAnswerImage(vo.getQesitmAnswerImage().concat(",").concat(pollManageVO.getQesitmAnswerImage()));
+			String[] answerList = vo.getQesitmAnswerList();
+			String[] answerImgList = vo.getQesitmAnswerImageList();
+
+			answerList[Integer.parseInt(pollManageVO.getQesitmSn())] = pollManageVO.getQesitmAnswer();
+			answerImgList[Integer.parseInt(pollManageVO.getQesitmSn())] = pollManageVO.getQesitmAnswerImage();
+
+			vo.setQesitmAnswer(String.join(",", answerList));
+			vo.setQesitmAnswerImage(String.join(",", answerImgList));
 		}
 
 		mapper.insertReports(vo);

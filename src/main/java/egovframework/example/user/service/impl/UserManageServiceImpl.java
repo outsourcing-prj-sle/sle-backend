@@ -236,7 +236,6 @@ public class UserManageServiceImpl implements UserManageService {
 
 			IdttLTResultDTO dto = new IdttLTResultDTO();
 
-			// User Personality API Call
 			ResponseEntity<String> responseEntityUser = restTemplate.exchange(uriUserPersonality, HttpMethod.GET, entity, String.class);
 			if (responseEntityUser.getStatusCode() == HttpStatus.OK) {
 				ObjectMapper mapper = new ObjectMapper();
@@ -259,7 +258,6 @@ public class UserManageServiceImpl implements UserManageService {
 				throw new RuntimeException("학습성향 학생별 점수 API 접속에 실패하였습니다.");
 			}
 
-			// Class Personality API Call
 			ResponseEntity<String> responseEntityClass = restTemplate.exchange(uriClassPersonality, HttpMethod.GET, entity, String.class);
 			if (responseEntityClass.getStatusCode() == HttpStatus.OK) {
 				ObjectMapper mapper = new ObjectMapper();

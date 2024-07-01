@@ -44,6 +44,12 @@ public interface PollManageMapper {
 	 * @param pollManageVO
 	 */
 	void insertReports(PollManageVO pollManageVO);
+
+	/**
+	 * 회원 마음알기 설문 수정
+	 * @param pollManageVO
+	 */
+	void updateReports(PollManageVO pollManageVO);
 	
 	/**
 	 * 회원 마음알기 설문 상태 등록(PROGRESS)

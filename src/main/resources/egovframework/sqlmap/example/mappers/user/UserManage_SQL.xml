@@ -235,7 +235,7 @@
 			case when count(*) then 1 else 0 end as isExist
 		from HISTSURVEYEVALUATION a
 		where a.TEACHER_ID = #{teacherId}
-		and a.STUDENT_ID = #{authorization}
+		and a.STUDENT_ID = #{id}
 		and a.SURVEY_EVALUATION_SE_CODE = #{qesType}
 	</select>
 	
@@ -244,7 +244,7 @@
 		set
 			SURVEY_EVALUATION_ANSWER_LIST = #{qesAnswer}
 		where TEACHER_ID = #{teacherId}
-		and STUDENT_ID = #{authorization}
+		and STUDENT_ID = #{id}
 		and SURVEY_EVALUATION_SE_CODE = #{qesType}
 	</update>
 	
@@ -257,7 +257,7 @@
 		)
 		values (
 			#{teacherId},
-			#{authorization},
+			#{id},
 			#{qesType},
 			#{qesAnswer}
 		)

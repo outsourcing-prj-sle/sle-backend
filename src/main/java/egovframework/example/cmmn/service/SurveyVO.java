@@ -12,8 +12,24 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SurveyVO {
+	/**
+	 * 학생 아이디
+	 */
 	private String id;
+
+	/**
+	 * 선생님 아이디
+	 */
 	private String teacherId;
-	private String qesType;
+
+	/**
+	 * 설문조사 타입
+	 * SM : 사회정서, LT : 학습성향
+	 */
+	private String qesType = "SM";
+
+	/**
+	 * 설문조사 답변
+	 */
 	private String qesAnswer;
 }

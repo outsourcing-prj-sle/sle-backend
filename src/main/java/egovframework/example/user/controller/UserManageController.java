@@ -138,7 +138,6 @@ public class UserManageController {
 		// 교사 권한 확인
 		if(userManageService.isReallyTeacher(header)) {
 			vo.setTeacherId(header.getAuthorization());
-			vo.setQesType("idtt");
 
 			userManageService.insertResearchResult(vo);
 

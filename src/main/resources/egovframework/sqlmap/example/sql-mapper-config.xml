@@ -22,9 +22,12 @@
 		<typeAlias alias="studentsDTO" type="egovframework.example.user.dto.StudentsDTO"/>
 
 		<typeAlias alias="idAdminIdttVO" type="egovframework.example.idadminidtt.service.IdAdminIdttManageVO"/>
+		<typeAlias alias="idAdminIdttResultDTO" type="egovframework.example.idadminidtt.dto.IdAdminIdttResultDTO"/>
 
 		<typeAlias alias="idAdminUserVO" type="egovframework.example.idaminuser.service.IdAdminUserManageVO"/>
+		<typeAlias alias="idAdminUserDTO" type="egovframework.example.idaminuser.dto.IdAdminUserDTO"/>
 
 		<typeAlias alias="idAdminPollVO" type="egovframework.example.idadminpoll.service.IdAdminPollManageVO"/>
+		<typeAlias alias="idAdminPollDTO" type="egovframework.example.idadminpoll.dto.IdAdminPollDTO"/>
 	</typeAliases>
 </configuration>

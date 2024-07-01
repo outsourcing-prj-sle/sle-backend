@@ -4,9 +4,6 @@ import lombok.*;
 
 @Getter
 @Setter
-@Builder
-@AllArgsConstructor
-@NoArgsConstructor
 public class PaginationVO {
     /**
      * 현재 페이지 넘버
