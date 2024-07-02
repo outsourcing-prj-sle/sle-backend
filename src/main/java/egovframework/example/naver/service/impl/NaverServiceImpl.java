@@ -36,6 +36,9 @@ import org.springframework.web.client.RestTemplate;
 
 import java.io.IOException;
 import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @Class Name : NaverServiceImpl.java
@@ -270,6 +273,63 @@ public class NaverServiceImpl implements NaverService {
         else {
             log.error("{}", responseEntity.getBody());
             throw new CustomException("no_userlist");
+        }
+    }
+
+    @Override
+    public GneInfoDto<List<GneSchulDTO>> procGneSchulInfo() {
+        RestTemplate restTemplate = new RestTemplate();
+        // 에러 핸들링
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                HttpStatus statusCode = response.getStatusCode();
+                return statusCode.series() == HttpStatus.Series.SERVER_ERROR;
+            }
+        });
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", API_KEY);
+
+        String url = "https://devnewtab.itt.link".concat("/api/sch/schulList.do");
+        HttpEntity request = new HttpEntity(null, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            log.info("{}", responseEntity.getBody());
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 이 설정을 통해 JSON의 모든 데이터를 파싱하는 것이 아닌 내가 필요로 하는 데이터, 즉 내가 필드로 선언한 데이터들만 파싱할 수 있다.
+            mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true); // String "" -> null
+            mapper.enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature());
+
+            GneInfoDto<List<GneSchulDTO>> gneDto = null;
+            try {
+                gneDto = mapper.readValue(responseEntity.getBody(), new TypeReference<GneInfoDto<List<GneSchulDTO>>>() {
+                    @Override
+                    public Type getType() {
+                        return super.getType();
+                    }
+                });
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+
+            List<GneSchulDTO> list = gneDto.getData().stream()
+                    .collect(Collectors.collectingAndThen(
+                       Collectors.toMap(GneSchulDTO::getSchulCode, dto -> dto, (exist, replace) -> exist),
+                       map -> new ArrayList<>(map.values())
+                    ));
+
+            gneDto.setData(list);
+
+            return gneDto;
+        }
+        else {
+            log.error("{}", responseEntity.getBody());
+            throw new CustomException("경남교육청 API 통신에 실패했습니다.");
         }
     }
 }

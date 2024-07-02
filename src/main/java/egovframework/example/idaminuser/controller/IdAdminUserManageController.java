@@ -5,6 +5,7 @@ import egovframework.example.idadminidtt.service.IdAdminIdttManageService;
 import egovframework.example.idaminuser.service.IdAdminUserManageService;
 import egovframework.example.idaminuser.service.IdAdminUserManageVO;
 import org.apache.commons.lang3.StringUtils;
+import org.egovframe.rte.fdl.cmmn.exception.FdlException;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,16 +28,16 @@ public class IdAdminUserManageController {
             throw new CustomException("password는 필수값입니다.");
         }
 
-        if(!userManageService.isAuthorizedUser(idAdminUserManageVO)) {
+        if(!userManageService.isSignUpUser(idAdminUserManageVO)) {
             throw new CustomException("회원정보가 없습니다.");
         }
 
-        return ResponseEntity.ok(userManageService.selectIdAdminUserInfo(idAdminUserManageVO));
+        return ResponseEntity.ok(userManageService.selectIdAdminUserUniqId(idAdminUserManageVO));
     }
 
     @GetMapping("/users")
     public ResponseEntity<?> selectIdAdminUserInfoList(@RequestHeader HashMap<String, String> req) {
-        IdAdminUserManageVO header = IdAdminUserManageVO.builder().userId(req.get("authorization")).build();
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
@@ -46,11 +47,23 @@ public class IdAdminUserManageController {
     }
 
     @PutMapping("/users")
-    public ResponseEntity<?> insertIdAdminUserInfo(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminUserManageVO idAdminUserManageVO) {
-        IdAdminUserManageVO header = IdAdminUserManageVO.builder().userId(req.get("authorization")).build();
+    public ResponseEntity<?> insertIdAdminUserInfo(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminUserManageVO idAdminUserManageVO) throws FdlException {
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
+        }
+
+        if(StringUtils.isEmpty(idAdminUserManageVO.getUserId())) {
+            throw new CustomException("userId는 필수값입니다.");
+        } else if(StringUtils.isEmpty(idAdminUserManageVO.getUserNm())) {
+            throw new CustomException("userNm은 필수값입니다.");
+        } else if(StringUtils.isEmpty(idAdminUserManageVO.getPassword())) {
+            throw new CustomException("password는 필수값입니다.");
+        } else if(StringUtils.isEmpty(idAdminUserManageVO.getEmailAdres())) {
+            throw new CustomException("emailAdres는 필수값입니다.");
+        } else if(StringUtils.isEmpty(idAdminUserManageVO.getPhoneNumber())) {
+            throw new CustomException("phoneNumber는 필수값입니다.");
         }
 
         userManageService.insertIdAdminUserInfo(idAdminUserManageVO);
@@ -60,13 +73,14 @@ public class IdAdminUserManageController {
 
     @PutMapping("/users/{userId}")
     public ResponseEntity<?> updateIdAdminUserInfo(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminUserManageVO idAdminUserManageVO, @PathVariable String userId) {
-        IdAdminUserManageVO header = IdAdminUserManageVO.builder().userId(req.get("authorization")).build();
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
         }
 
-        idAdminUserManageVO.setUserId(userId);
+        idAdminUserManageVO.setUserId2(header.getUniqId());
+        idAdminUserManageVO.setUniqId(userId);
         userManageService.updateIdAdminUserInfo(idAdminUserManageVO);
 
         return ResponseEntity.ok("성공적으로 수정됐습니다.");
@@ -74,13 +88,13 @@ public class IdAdminUserManageController {
 
     @DeleteMapping("/users/{userId}")
     public ResponseEntity<?> deleteIdAdminUserInfo(@RequestHeader HashMap<String, String> req, @PathVariable String userId) {
-        IdAdminUserManageVO header = IdAdminUserManageVO.builder().userId(req.get("authorization")).build();
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
         }
 
-        userManageService.deleteIdAdminUserInfo(IdAdminUserManageVO.builder().userId(userId).build());
+        userManageService.deleteIdAdminUserInfo(IdAdminUserManageVO.builder().uniqId(userId).build());
 
         return ResponseEntity.ok("성공적으로 삭제됐습니다.");
     }

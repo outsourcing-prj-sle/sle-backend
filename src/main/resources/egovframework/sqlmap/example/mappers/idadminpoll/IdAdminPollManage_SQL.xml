@@ -1,12 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="egovframework.example.idadminpoll.service.impl.IdAdminPollManageMapper">
-    <select id="selectIdAdminPollList" parameterType="idAdminPollVO" resultType="idAdminPollDTO">
+    <select id="selectIdAdminPollList" parameterType="idAdminPollVO" resultType="idAdminPollVO">
         SELECT
             POLL_BGNDE,
             POLL_ENDDE,
             POLL_NM,
-            POLL_TARGET_LIST
+            POLL_TARGET_LIST as pollTarget
+        FROM
+            COMTNBBSPOLL
+        WHERE
+            POLL_ID = #{pollId}
+        LIMIT #{pageNo}
+        OFFSET #{firstIndex}
+    </select>
+
+    <select id="selectIdAdminPollListCount" parameterType="idAdminPollVO" resultType="int">
+        SELECT
+            count(*)
         FROM
             COMTNBBSPOLL
         WHERE
@@ -15,9 +26,9 @@
 
     <select id="selectIdAdminPollDtl" parameterType="idAdminPollVO" resultType="idAdminPollVO">
         SELECT
-            a.QESITM_SN_LIST,
-            a.QESITM_ANSWER_IMAGE_LIST,
-            a.QESITM_ANSWER_LIST,
+            a.QESITM_SN_LIST as qesitmSn,
+            a.QESITM_ANSWER_IMAGE_LIST as qesitmAnswerImage,
+            a.QESITM_ANSWER_LIST as qesitmAnswer,
             a.ST_GRADE,
             a.SCHUL_NM,
             b.SEXDSTN,
@@ -29,16 +40,17 @@
                           on a.USER_ID = b.USER_ID
         WHERE
             a.POLL_ID = #{pollId}
-    </select>
-
-    <select id="selectIdAdminPollTargetList" parameterType="idAdminPollVO" resultType="idAdminPollVO">
-        SELECT
-            POLL_ID,
-            POLL_TARGET_LIST
-        FROM
-            COMTNBBSPOLL
-        WHERE
-            POLL_ID = #{pollId};
+        <if test="not empty schulGradeCode">
+            and b.SCHUL_GRADE_CODE = #{schulGradeCode}
+        </if>
+        <if test="not empty schulGradeCode">
+            and b.ST_GRADE = #{stGrade}
+        </if>
+        <if test="not empty searchKeyword">
+            and b.SCHUL_NM like concat('%',#{searchKeyword},'%')
+        </if>
+        LIMIT #{recordCount}
+        OFFSET #{firstIndex}
     </select>
 
     <update id="updateIdAdminPollTargetInfo" parameterType="idAdminPollVO">
@@ -46,9 +58,31 @@
             COMTNBBSPOLL
         SET
             LAST_UPDUSR_PNTTM = now(),
-            LAST_UPDUSR_ID = #{userId},
-            POLL_TARGET_LIST = #{pollTarget}
+            LAST_UPDUSR_ID = #{uniqId},
+            POLL_TARGET_LIST = #{pollTarget},
+            POLL_BGNDE = #{pollBgnde},
+            POLL_ENDDE = #{pollEndde}
         WHERE
             POLL_ID = #{pollId}
     </update>
+
+    <select id="selectIdAdminPollTargetList" parameterType="String" resultType="idAdminPollVO">
+        SELECT
+            POLL_ID,
+            POLL_TARGET_LIST as pollTarget
+        FROM
+            COMTNBBSPOLL
+        WHERE
+            POLL_ID = #{pollId};
+    </select>
+
+    <select id="selectSchulName" parameterType="String" resultType="String">
+        SELECT
+            SCHUL_NM
+        FROM
+            COMTNMBER
+        WHERE
+            SCHUL_CODE = #{schulCode}
+        GROUP BY SCHUL_NM
+    </select>
 </mapper>

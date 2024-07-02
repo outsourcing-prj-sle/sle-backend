@@ -1,25 +1,29 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="egovframework.example.idadminuser.service.impl.IdAdminUserManageMapper">
+<mapper namespace="egovframework.example.idaminuser.service.impl.IdAdminUserManageMapper">
 
     <insert id="insertIdAdminUserInfo" parameterType="idAdminUserVO">
         INSERT INTO IDADMINMBER(
+            UNIQ_ID,
             USER_ID,
             USER_SE_CODE,
             PASSWORD,
             USER_NM,
             EMAIL_ADRES,
             PHONE_NUMBER,
-            USER_SPACE_INFO
+            USER_SPACE_INFO,
+            FRST_REGIST_PNTTM
         )
         VALUES(
+                  #{uniqId},
                   #{userId},
                   #{userSeCode},
                   #{password},
                   #{userNm},
                   #{emailAdres},
                   #{phoneNumber},
-                  'ID연구소'
+                  'ID연구소',
+                  now()
               )
     </insert>
 
@@ -33,7 +37,11 @@
             USER_NM = #{userNm},
             EMAIL_ADRES = #{emailAdres},
             PHONE_NUMBER = #{phoneNumber},
-            USER_SPACE_INFO = 'ID연구소'
+            USER_SPACE_INFO = 'ID연구소',
+            LAST_UPDUSR_ID = #{userId2},
+            LAST_UPDUSR_PNTTM = now()
+        where UNIQ_ID = #{uniqId}
+
     </update>
 
     <delete id="deleteIdAdminUserInfo" parameterType="idAdminUserVO">
@@ -41,7 +49,7 @@
         FROM
             SURVEY.IDADMINMBER
         WHERE
-            USER_ID = #{userId}
+            UNIQ_ID = #{uniqId}
     </delete>
 
     <select id="selectIdAdminUserInfoList" parameterType="idAdminUserVO" resultType="idAdminUserDTO">
@@ -51,9 +59,36 @@
             USER_NM,
             EMAIL_ADRES,
             PHONE_NUMBER,
-            USER_SPACE_INFO
+            USER_SPACE_INFO,
+            CAST(FRST_REGIST_PNTTM AS DATE) as frstRegistPnttm
         from
             IDADMINMBER
+        WHERE 1=1
+          <if test="not empty searchBeginDate">
+              and CAST(FRST_REGIST_PNTTM AS DATE) <![CDATA[>=]]> CAST(#{searchBeginDate} as DATE)
+          </if>
+          <if test="not empty searchEndDate">
+            and CAST(FRST_REGIST_PNTTM AS DATE) <![CDATA[<=]]> CAST(#{searchEndDate} as DATE)
+          </if>
+          <if test="searchType eq '01'">
+              and USER_SE_CODE like concat('%', ${searchKeyword}, '%')
+          </if>
+          <if test="searchType eq '02'">
+              and USER_SPACE_INFO like concat('%', ${searchKeyword}, '%')
+          </if>
+          <if test="searchType eq '03'">
+              and USER_NM like concat('%', ${searchKeyword}, '%')
+          </if>
+          <if test="searchType eq '04'">
+              and USER_ID like concat('%', ${searchKeyword}, '%')
+          </if>
+          <if test="searchType eq '05'">
+              and PHONE_NUMBER like concat('%', ${searchKeyword}, '%')
+          </if>
+          <if test="searchType eq '06'">
+              and EMAIL_ADRES like concat('%', ${searchKeyword}, '%')
+          </if>
+        ORDER BY FRST_REGIST_PNTTM DESC
         limit #{recordCount}
         offset #{firstIndex}
     </select>
@@ -68,7 +103,16 @@
             USER_SPACE_INFO
         from
             IDADMINMBER
+        where UNIQ_ID = #{uniqId}
+    </select>
+
+    <select id="selectIdAdminUserUniqId" parameterType="idAdminUserVO" resultType="hashmap">
+        select
+            UNIQ_ID as authorization,
+
+        from IDADMINMBER
         where USER_ID = #{userId}
+        and PASSWORD = #{password}
     </select>
 
     <select id="selectIdAdminUserInfoCount" resultType="int">
@@ -77,11 +121,18 @@
         from IDADMINMBER
     </select>
 
-    <select id="isAuthorizedUser" parameterType="idAdminUserVO" resultType="boolean">
+    <select id="isSignUpUser" parameterType="idAdminUserVO" resultType="boolean">
         select
             case when count(*) > 0 then 1 else 0 end
         from IDADMINMBER
         where USER_ID = #{userId}
-         and PASSWORD = #{password}
+          and PASSWORD = #{password}
+    </select>
+
+    <select id="isAuthorizedUser" parameterType="idAdminUserVO" resultType="boolean">
+        select
+            case when count(*) > 0 then 1 else 0 end
+        from IDADMINMBER
+        where UNIQ_ID = #{uniqId}
     </select>
 </mapper>

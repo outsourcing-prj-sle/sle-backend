@@ -2,7 +2,9 @@ package egovframework.example.idaminuser.service;
 
 import egovframework.example.idaminuser.dto.IdAdminUserDTO;
 import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
+import org.egovframe.rte.fdl.cmmn.exception.FdlException;
 
+import java.util.HashMap;
 import java.util.List;
 
 public interface IdAdminUserManageService {
@@ -10,7 +12,7 @@ public interface IdAdminUserManageService {
      * ID ADMIN 사용자 정보 등록
      * @param idAdminUserManageVO
      */
-    void insertIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO);
+    void insertIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO) throws FdlException;
 
     /**
      * ID ADMIN 사용자 정보 수정
@@ -37,6 +39,20 @@ public interface IdAdminUserManageService {
      * @return
      */
     IdAdminUserDTO selectIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO);
+
+    /**
+     * ID ADMIN 사용자 uniqId 조회
+     * @param idAdminUserManageVO
+     * @return
+     */
+    HashMap<String, String> selectIdAdminUserUniqId(IdAdminUserManageVO idAdminUserManageVO);
+
+    /**
+     * ID ADMIN 회원가입 확인
+     * @param idAdminUserManageVO
+     * @return
+     */
+    boolean isSignUpUser(IdAdminUserManageVO idAdminUserManageVO);
 
     /**
      * ID ADMIN 사용자 확인

@@ -16,5 +16,5 @@ public class IdAdminPollDtlDTO {
     private String sexdstn;
     private String brthy;
     private String emailAdres;
-    private ArrayList<String> answer;
+    private String[] answer;
 }

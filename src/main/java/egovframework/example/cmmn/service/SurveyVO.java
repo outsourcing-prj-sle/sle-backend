@@ -24,9 +24,9 @@ public class SurveyVO {
 
 	/**
 	 * 설문조사 타입
-	 * SM : 사회정서, LT : 학습성향
+	 * SE : 사회정서, LT : 학습성향
 	 */
-	private String qesType = "SM";
+	private String qesType = "SE";
 
 	/**
 	 * 설문조사 답변

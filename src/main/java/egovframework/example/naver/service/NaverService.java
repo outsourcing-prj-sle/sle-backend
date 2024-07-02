@@ -17,6 +17,8 @@ package egovframework.example.naver.service;
 
 import egovframework.example.naver.dto.*;
 
+import java.util.List;
+
 /**
  * @Class Name : NaverService.java
  * @Description : 웨일 스페이스 연동 및 경남교육청 연동 관련 서비스
@@ -58,4 +60,9 @@ public interface NaverService {
      */
     GneListDto<GneSchoolUserDto> procGneSchoolUserInfo(GneInfoDto<GneUserDto> gneUserDto);
 
+    /**
+     * 경남교육청 학교정보 조회
+     * @return
+     */
+    GneInfoDto<List<GneSchulDTO>> procGneSchulInfo();
 }

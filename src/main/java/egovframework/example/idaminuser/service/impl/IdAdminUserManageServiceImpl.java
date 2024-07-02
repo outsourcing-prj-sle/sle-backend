@@ -1,25 +1,45 @@
 package egovframework.example.idaminuser.service.impl;
 
+import egovframework.example.cmmn.EgovSampleOthersExcepHndlr;
 import egovframework.example.idadminidtt.service.IdAdminIdttManageService;
 import egovframework.example.idaminuser.dto.IdAdminUserDTO;
 import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
 import egovframework.example.idaminuser.service.IdAdminUserManageService;
 import egovframework.example.idaminuser.service.IdAdminUserManageVO;
 import org.apache.commons.lang3.StringUtils;
+import org.egovframe.rte.fdl.cmmn.exception.FdlException;
+import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
+import org.egovframe.rte.fdl.idgnr.impl.strategy.EgovIdGnrStrategyImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.HashMap;
 import java.util.List;
 
 @Service("idAdminUserManageService")
 public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(IdAdminUserManageServiceImpl.class);
+
     @Resource(name = "idAdminUserManageMapper")
     private IdAdminUserManageMapper mapper;
 
+    @Resource(name = "userIdGnrService")
+    private EgovIdGnrService userIdGnrService;
+
 
     @Override
-    public void insertIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO) {
+    public void insertIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO) throws FdlException {
+
+        try {
+            idAdminUserManageVO.setUniqId(userIdGnrService.getNextStringId());
+        } catch(FdlException e) {
+            LOGGER.error(e.getMessage());
+            throw new Error("사용자 고유 아이디 생성에 실패하였습니다.");
+        }
+
         mapper.insertIdAdminUserInfo(idAdminUserManageVO);
     }
 
@@ -61,6 +81,16 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
     @Override
     public IdAdminUserDTO selectIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO) {
         return mapper.selectIdAdminUserInfo(idAdminUserManageVO);
+    }
+
+    @Override
+    public HashMap<String, String> selectIdAdminUserUniqId(IdAdminUserManageVO idAdminUserManageVO) {
+        return mapper.selectIdAdminUserUniqId(idAdminUserManageVO);
+    }
+
+    @Override
+    public boolean isSignUpUser(IdAdminUserManageVO idAdminUserManageVO) {
+        return mapper.isSignUpUser(idAdminUserManageVO);
     }
 
     @Override

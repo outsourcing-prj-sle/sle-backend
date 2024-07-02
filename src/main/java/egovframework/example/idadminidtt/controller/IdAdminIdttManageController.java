@@ -3,7 +3,6 @@ package egovframework.example.idadminidtt.controller;
 import egovframework.example.cmmn.CustomException;
 import egovframework.example.idadminidtt.service.IdAdminIdttManageService;
 import egovframework.example.idadminidtt.service.IdAdminIdttManageVO;
-import egovframework.example.idadminpoll.service.IdAdminPollManageVO;
 import egovframework.example.idaminuser.service.IdAdminUserManageService;
 import egovframework.example.idaminuser.service.IdAdminUserManageVO;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +20,15 @@ public class IdAdminIdttManageController {
     @Resource(name = "idAdminUserManageService")
     private IdAdminUserManageService userManageService;
 
-    @GetMapping("/reports")
-    public ResponseEntity selectReportsList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminIdttManageVO vo) {
-        IdAdminUserManageVO header = IdAdminUserManageVO.builder().userId(req.get("authorization")).build();
+    @GetMapping("/idtt/{qesType}")
+    public ResponseEntity selectReportsList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminIdttManageVO vo, @PathVariable String qesType) {
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
         }
+
+        vo.setQesType(qesType);
 
         return ResponseEntity.ok(idttManageService.selectReportsList(vo));
     }

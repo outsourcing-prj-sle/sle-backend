@@ -1,6 +1,7 @@
 package egovframework.example.user.controller;
 
 
+import egovframework.example.cmmn.CustomException;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.dto.TeachersDTO;
@@ -48,11 +49,11 @@ public class UserManageController {
 		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(!userManageService.authorizationUser(header)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+			throw new CustomException("유저 인증에 실패했습니다.");
 		} else if(StringUtils.isEmpty(loginVO.getSex())){
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("sex는 필수값입니다.");
+			throw new CustomException("sex는 필수값입니다.");
 		} else if(StringUtils.isEmpty(loginVO.getBrthdy())){
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("brthdy는 필수값입니다.");
+			throw new CustomException("brthdy는 필수값입니다.");
 		}
 
 		loginVO.setAuthorization(header.getAuthorization());
@@ -93,9 +94,9 @@ public class UserManageController {
 		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(!userManageService.authorizationUser(header)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+			throw new CustomException("유저 인증에 실패했습니다.");
 		} else if(StringUtils.isEmpty(id)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("id는 필수값입니다.");
+			throw new CustomException("id는 필수값입니다.");
 		}
 
 		LoginVO teacherInfo = userManageService.isReallyTeacherDtl(header);
@@ -128,11 +129,11 @@ public class UserManageController {
 		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
 		if(!userManageService.authorizationUser(header)) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+			throw new CustomException("유저 인증에 실패했습니다.");
 		} else if(StringUtils.isEmpty(vo.getId())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("id는 필수값입니다.");
+			throw new CustomException("id는 필수값입니다.");
 		} else if(StringUtils.isEmpty(vo.getQesAnswer())) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("qesAnswer는 필수값입니다.");
+			throw new CustomException("qesAnswer는 필수값입니다.");
 		}
 
 		// 교사 권한 확인

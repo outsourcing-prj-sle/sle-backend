@@ -4,6 +4,7 @@ import egovframework.example.idaminuser.dto.IdAdminUserDTO;
 import egovframework.example.idaminuser.service.IdAdminUserManageVO;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
+import java.util.HashMap;
 import java.util.List;
 
 @Mapper("idAdminUserManageMapper")
@@ -41,6 +42,20 @@ public interface IdAdminUserManageMapper {
     IdAdminUserDTO selectIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO);
 
     /**
+     * ID ADMIN 사용자 uniqId 조회
+     * @param idAdminUserManageVO
+     * @return
+     */
+    HashMap<String, String> selectIdAdminUserUniqId(IdAdminUserManageVO idAdminUserManageVO);
+
+    /**
+     * ID ADMIN 회원가입 확인
+     * @param idAdminUserManageVO
+     * @return
+     */
+    boolean isSignUpUser(IdAdminUserManageVO idAdminUserManageVO);
+
+    /**
      * ID ADMIN 사용자 확인
      * @param idAdminUserManageVO
      * @return
@@ -48,7 +63,7 @@ public interface IdAdminUserManageMapper {
     boolean isAuthorizedUser(IdAdminUserManageVO idAdminUserManageVO);
 
     /**
-     * ID ADMIn 사용자 목록 총 수
+     * ID ADMIN 사용자 목록 총 수
      * @return
      */
     int selectIdAdminUserInfoCount();

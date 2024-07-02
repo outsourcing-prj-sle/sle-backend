@@ -1,5 +1,6 @@
 package egovframework.example.poll.controller;
 
+import egovframework.example.cmmn.CustomException;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.poll.dto.PollNoticeDTO;
 import egovframework.example.poll.service.PollManageService;
@@ -55,9 +56,9 @@ public class PollManageController {
         LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+            throw new CustomException("유저 인증에 실패했습니다.");
         } else if(StringUtils.isEmpty(pollManageVO.getPollId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("pollId는 필수값입니다.");
+            throw new CustomException("pollId는 필수값입니다.");
         }
 
         pollManageVO.setAuthorization(header.getAuthorization());
@@ -78,13 +79,13 @@ public class PollManageController {
         LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+            throw new CustomException("유저 인증에 실패했습니다.");
         } else if(StringUtils.isEmpty(pollManageVO.getPollId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("pollId는 필수값입니다.");
+            throw new CustomException("pollId는 필수값입니다.");
         } else if(StringUtils.isEmpty(pollManageVO.getQesitmAnswer())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("qesitmAnswer는 필수값입니다.");
+            throw new CustomException("qesitmAnswer는 필수값입니다.");
         } else if(StringUtils.isEmpty(pollManageVO.getQesitmAnswerImage())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("qesitmAnswerImage는 필수값입니다.");
+            throw new CustomException("qesitmAnswerImage는 필수값입니다.");
         }
 
         pollManageVO.setAuthorization(header.getAuthorization());
@@ -107,9 +108,9 @@ public class PollManageController {
         LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+            throw new CustomException("유저 인증에 실패했습니다.");
         } else if(StringUtils.isEmpty(pollManageVO.getPollId())) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("pollId는 필수값입니다.");
+            throw new CustomException("pollId는 필수값입니다.");
         }
 
         pollManageVO.setAuthorization(header.getAuthorization());
@@ -128,9 +129,9 @@ public class PollManageController {
         LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
         if(!userManageService.authorizationUser(header)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("유저 인증에 실패했습니다.");
+            throw new CustomException("유저 인증에 실패했습니다.");
         } else if(StringUtils.isEmpty(pollId)) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("pollId는 필수값입니다.");
+            throw new CustomException("pollId는 필수값입니다.");
         }
 
         PollNoticeDTO pollNoticeDTO = pollManageService.selectReportsNotice(pollId);
