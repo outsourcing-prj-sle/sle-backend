@@ -36,14 +36,16 @@ public class IdAdminUserManageController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> selectIdAdminUserInfoList(@RequestHeader HashMap<String, String> req) {
+    public ResponseEntity<?> selectIdAdminUserInfoList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminUserManageVO idAdminUserManageVO) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
         }
 
-        return ResponseEntity.ok(userManageService.selectIdAdminUserInfoList(header));
+        idAdminUserManageVO.setUniqId(header.getUniqId());
+
+        return ResponseEntity.ok(userManageService.selectIdAdminUserInfoList(idAdminUserManageVO));
     }
 
     @PutMapping("/users")

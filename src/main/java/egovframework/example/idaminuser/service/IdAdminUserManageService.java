@@ -5,7 +5,6 @@ import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
 import org.egovframe.rte.fdl.cmmn.exception.FdlException;
 
 import java.util.HashMap;
-import java.util.List;
 
 public interface IdAdminUserManageService {
     /**

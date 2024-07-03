@@ -1,10 +1,13 @@
 package egovframework.example.idadminpoll.controller;
 
 import egovframework.example.cmmn.CustomException;
+import egovframework.example.cmmn.service.SchulCodeChache;
 import egovframework.example.idadminpoll.service.IdAdminPollManageService;
 import egovframework.example.idadminpoll.service.IdAdminPollManageVO;
 import egovframework.example.idaminuser.service.IdAdminUserManageService;
 import egovframework.example.idaminuser.service.IdAdminUserManageVO;
+import egovframework.example.naver.dto.GneInfoDto;
+import egovframework.example.naver.dto.GneSchulDTO;
 import egovframework.example.naver.service.impl.NaverServiceImpl;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.HashMap;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/id-admin")
@@ -24,6 +28,9 @@ public class IdAdminPollManageController {
 
     @Resource(name = "naverServiceImpl")
     private NaverServiceImpl naverService;
+
+    @Resource(name = "schulCodeChache")
+    private SchulCodeChache schulCodeChache;
 
     @GetMapping("/reports")
     public ResponseEntity<?> selectIdAdminPollList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminPollManageVO idAdminPollManageVO) {
@@ -90,6 +97,13 @@ public class IdAdminPollManageController {
             throw new CustomException("회원정보가 없습니다.");
         }
 
-        return ResponseEntity.ok(naverService.procGneSchulInfo());
+        if(schulCodeChache.getSchulMap() == null || schulCodeChache.getSchulMap().equals("") || !schulCodeChache.getSchulMap().isSuccess()) {
+            GneInfoDto<List<GneSchulDTO>> result = naverService.procGneSchulInfo();
+
+            schulCodeChache.setSchulMap(result);
+            return ResponseEntity.ok(result);
+        }
+
+        return ResponseEntity.ok(schulCodeChache.getSchulMap());
     }
 }

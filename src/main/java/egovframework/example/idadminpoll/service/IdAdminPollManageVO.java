@@ -81,7 +81,7 @@ public class IdAdminPollManageVO extends PaginationVO {
     /**
      * 생년월일
      */
-    private String brthy;
+    private String brthdy;
 
     /**
      * 이메일 주소

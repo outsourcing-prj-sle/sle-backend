@@ -54,6 +54,7 @@
 
     <select id="selectIdAdminUserInfoList" parameterType="idAdminUserVO" resultType="idAdminUserDTO">
         select
+            UNIQ_ID,
             USER_ID,
             USER_SE_CODE,
             USER_NM,
@@ -64,29 +65,29 @@
         from
             IDADMINMBER
         WHERE 1=1
-          <if test="not empty searchBeginDate">
+          <if test="searchBeginDate != null and searchBeginDate != ''">
               and CAST(FRST_REGIST_PNTTM AS DATE) <![CDATA[>=]]> CAST(#{searchBeginDate} as DATE)
           </if>
-          <if test="not empty searchEndDate">
+          <if test="searchEndDate != null and searchEndDate != ''">
             and CAST(FRST_REGIST_PNTTM AS DATE) <![CDATA[<=]]> CAST(#{searchEndDate} as DATE)
           </if>
           <if test="searchType eq '01'">
-              and USER_SE_CODE like concat('%', ${searchKeyword}, '%')
+              and USER_SE_CODE like concat('%', #{searchKeyword}, '%')
           </if>
           <if test="searchType eq '02'">
-              and USER_SPACE_INFO like concat('%', ${searchKeyword}, '%')
+              and USER_SPACE_INFO like concat('%', #{searchKeyword}, '%')
           </if>
           <if test="searchType eq '03'">
-              and USER_NM like concat('%', ${searchKeyword}, '%')
+              and USER_NM like concat('%', #{searchKeyword}, '%')
           </if>
           <if test="searchType eq '04'">
-              and USER_ID like concat('%', ${searchKeyword}, '%')
+              and USER_ID like concat('%', #{searchKeyword}, '%')
           </if>
           <if test="searchType eq '05'">
-              and PHONE_NUMBER like concat('%', ${searchKeyword}, '%')
+              and PHONE_NUMBER like concat('%', #{searchKeyword}, '%')
           </if>
           <if test="searchType eq '06'">
-              and EMAIL_ADRES like concat('%', ${searchKeyword}, '%')
+              and EMAIL_ADRES like concat('%', #{searchKeyword}, '%')
           </if>
         ORDER BY FRST_REGIST_PNTTM DESC
         limit #{recordCount}
@@ -108,8 +109,7 @@
 
     <select id="selectIdAdminUserUniqId" parameterType="idAdminUserVO" resultType="hashmap">
         select
-            UNIQ_ID as authorization,
-
+            UNIQ_ID as authorization
         from IDADMINMBER
         where USER_ID = #{userId}
         and PASSWORD = #{password}
@@ -126,7 +126,7 @@
             case when count(*) > 0 then 1 else 0 end
         from IDADMINMBER
         where USER_ID = #{userId}
-          and PASSWORD = #{password}
+        and PASSWORD = #{password}
     </select>
 
     <select id="isAuthorizedUser" parameterType="idAdminUserVO" resultType="boolean">

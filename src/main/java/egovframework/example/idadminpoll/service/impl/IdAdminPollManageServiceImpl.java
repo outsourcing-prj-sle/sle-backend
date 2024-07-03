@@ -77,7 +77,7 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
         for(IdAdminPollManageVO vo : list) {
             dto.add(IdAdminPollDtlDTO.builder()
                     .schulNm(vo.getSchulNm())
-                    .brthy(vo.getBrthy())
+                    .brthy(vo.getBrthdy())
                     .answer(makeAnswerList(idAdminPollManageVO.getPollId(), vo.getQesitmSnList(), vo.getQesitmAnswerList(), vo.getQesitmAnswerImageList()))
                     .emailAdres(vo.getEmailAdres())
                     .sexdstn(vo.getSexdstn())
@@ -117,6 +117,10 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
      */
     ArrayList<String> makePollTargetList(String[] list) {
         ArrayList<String> result = new ArrayList<>();
+
+        if(list == null || list.length == 0) {
+            return result;
+        }
 
         for(String target : list) {
             String[] arr = target.split("__");
