@@ -6,6 +6,7 @@ import java.util.Map;
 import java.util.Properties;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.DefaultPaginationManager;
 import org.egovframe.rte.ptl.mvc.tags.ui.pagination.PaginationRenderer;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.filter.OrderedCharacterEncodingFilter;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
+
+import egovframework.example.admin.service.impl.AdminLogInterceptor;
 import egovframework.example.cmmn.web.EgovBindingInitializer;
 import egovframework.example.cmmn.web.EgovImgPaginationRenderer;
 
@@ -79,16 +82,6 @@ public class EgovWebMvcConfiguration extends WebMvcConfigurationSupport {
         return interceptor;
     }
 
-    @Override
-    public void addInterceptors(InterceptorRegistry registry) {
-        registry.addInterceptor(localeChangeInterceptor());
-    }
-
-    @Override
-    public void addResourceHandlers(ResourceHandlerRegistry registry) {
-    	registry.addResourceHandler("/**").addResourceLocations("/");
-    }
-
 	@Bean
 	public FilterRegistrationBean encodingFilterBean() {
 		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
@@ -99,5 +92,21 @@ public class EgovWebMvcConfiguration extends WebMvcConfigurationSupport {
 		registrationBean.addUrlPatterns("*.do");
 		return registrationBean;
 	}
+	
+	
+    @Autowired
+    private AdminLogInterceptor adminLogInterceptor;
+
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+    	registry.addInterceptor(adminLogInterceptor).addPathPatterns("/**").excludePathPatterns("/api/admin/login");
+        registry.addInterceptor(localeChangeInterceptor());
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+    	registry.addResourceHandler("/**").addResourceLocations("/");
+    }
+
 
 }

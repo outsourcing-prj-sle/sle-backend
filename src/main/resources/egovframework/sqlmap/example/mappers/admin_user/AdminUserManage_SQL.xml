@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.admin.service.impl.AdminManageMapper">
+	
+    <insert id="insertUser" parameterType="adminLoginVO">
+        INSERT INTO ADMIN_USER_TABLE (USER_ID, USER_SE_CODE, USER_NAME, USER_PW, USER_ROLE, PHONE_NUMBER, EMAIL_ADDRESS, USER_POSITION, GRADE, CLASS, CREATED_AT, UPDATED_AT)
+        VALUES (#{uniqId}, #{id}, #{name}, #{password}, #{userRole}, #{phoneNumber}, #{userEmail}, #{userSpaceOrgInfo}, #{gradeNm}, #{classNm}, now(), now())
+    </insert>
+
+    <select id="selectUser" parameterType="hashmap" resultType="adminLoginVO">
+        SELECT 
+        USER_ID as uniqId,
+        USER_SE_CODE as id,
+        USER_NAME as name,
+        USER_PW as password,
+        USER_ROLE as userRole,
+        PHONE_NUMBER as phoneNumber,
+        EMAIL_ADDRESS as userEmail,
+        USER_POSITION as userSpaceOrgInfo,
+        GRADE as gradeNm,
+        CLASS as classNm,
+        UPDATED_AT as updateAt
+        FROM ADMIN_USER_TABLE 
+        WHERE USER_ID = #{uniqId}
+    </select>
+    
+    <select id="selectUserAll" parameterType="String" resultType="adminLoginVO">
+        SELECT
+        USER_ID as uniqId,
+        USER_SE_CODE as id,
+        USER_NAME as name,
+        USER_PW as password,
+        USER_ROLE as userRole,
+        PHONE_NUMBER as phoneNumber,
+        EMAIL_ADDRESS as userEmail,
+        USER_POSITION as userSpaceOrgInfo,
+        GRADE as gradeNm,
+        CLASS as classNm,
+        UPDATED_AT as updateAt
+        FROM ADMIN_USER_TABLE 
+        WHERE USER_ROLE = #{role}
+    </select>
+    
+    <select id="authorizationUser" parameterType="String" resultType="boolean">
+       	select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from ADMIN_USER_TABLE
+	    where USER_ID = #{uniqId}
+    </select>
+
+    <update id="updateUser" parameterType="adminLoginVO">
+        UPDATE ADMIN_USER_TABLE
+        SET USER_SE_CODE = #{id},
+            USER_NAME = #{name},
+            USER_PW = #{password},
+            USER_ROLE = #{userRole},
+            PHONE_NUMBER = #{phoneNumber},
+            EMAIL_ADDRESS = #{userEmail},
+            USER_POSITION = #{userSpaceOrgInfo},
+            GRADE = #{gradeNm},
+            CLASS = #{classNm},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE USER_ID = #{uniqId}
+    </update>
+
+    <delete id="deleteUser" parameterType="String">
+        DELETE FROM ADMIN_USER_TABLE WHERE USER_ID = #{uniqId}
+    </delete>
+
+    <select id="checkUserById" parameterType="String" resultType="boolean">
+	    select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from ADMIN_USER_TABLE
+	    where USER_SE_CODE = #{id}
+	</select>
+	<select id="checkUserByUniqId" parameterType="String" resultType="boolean">
+	    select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from ADMIN_USER_TABLE
+	    where USER_ID = #{uniqId}
+	</select>
+	
+</mapper>

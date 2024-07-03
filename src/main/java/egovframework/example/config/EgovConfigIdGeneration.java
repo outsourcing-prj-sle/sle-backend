@@ -49,4 +49,24 @@ public class EgovConfigIdGeneration {
 		egovTableIdGnrServiceImpl.setTableName("USER");
 		return egovTableIdGnrServiceImpl;
 	}
+	
+	@Bean
+	public EgovIdGnrStrategyImpl adminUserIdPrefix() {
+		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
+		egovIdGnrStrategyImpl.setPrefix("sel_");
+		egovIdGnrStrategyImpl.setCipers(8);
+		egovIdGnrStrategyImpl.setFillChar('0');
+		return egovIdGnrStrategyImpl;
+	}
+
+	@Bean(destroyMethod = "destroy")
+	public EgovTableIdGnrServiceImpl adminUserIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
+		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
+		egovTableIdGnrServiceImpl.setDataSource(dataSource);
+		egovTableIdGnrServiceImpl.setStrategy(adminUserIdPrefix());
+		egovTableIdGnrServiceImpl.setBlockSize(7);
+		egovTableIdGnrServiceImpl.setTable("IDS");
+		egovTableIdGnrServiceImpl.setTableName("USER");
+		return egovTableIdGnrServiceImpl;
+	}
 }

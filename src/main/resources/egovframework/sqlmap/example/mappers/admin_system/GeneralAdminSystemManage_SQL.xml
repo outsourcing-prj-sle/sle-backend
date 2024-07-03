@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="egovframework.example.admin.system.service.impl.AdminSystemMapper">
+
+    <select id="authorizationUser" parameterType="String" resultType="boolean">
+       	select
+	        CASE 
+	            WHEN count(*) > 0 THEN true
+	            ELSE false
+	        END as userExists
+	    from ADMIN_USER_TABLE
+	    where USER_ID = #{uniqId}
+    </select>
+
+    <!-- Site Management -->
+    <insert id="insertSite" parameterType="SiteManageDTO">
+        INSERT INTO ADMIN_SITE_MANAGEMENT 
+        (SITE_ID, SITE_NAME, SITE_DOMAIN, CREATED_AT, UPDATED_AT, TOP_LOGO_IMAGE, BOTTOM_LOGO_IMAGE, MAIN_IMAGE, SITE_DESCRIPTION, MOUSE_SECURITY, KEYBOARD_SECURITY, CREATED_BY)
+        VALUES 
+        (#{siteId}, #{siteName}, #{siteDomain}, #{createdAt}, #{updatedAt}, #{topLogoImage}, #{bottomLogoImage}, #{mainImage}, #{siteDescription}, #{mouseSecurity}, #{keyboardSecurity}, #{createdBy})
+    </insert>
+
+    <select id="selectSiteById" parameterType="String" resultType="SiteManageDTO">
+        SELECT 
+		*
+        FROM ADMIN_SITE_MANAGEMENT WHERE SITE_ID = #{id}
+    </select>
+    
+    <select id="checkSiteByUrl" parameterType="String" resultType="boolean">
+        SELECT        
+            CASE 
+                WHEN count(*) > 0 THEN true
+                ELSE false
+            END as exists
+        FROM ADMIN_SITE_MANAGEMENT WHERE SITE_DOMAIN = #{siteDomain}
+    </select>
+    
+    <update id="updateSite" parameterType="SiteManageDTO">
+        UPDATE ADMIN_SITE_MANAGEMENT
+        SET SITE_NAME = #{siteName},
+            SITE_DOMAIN = #{siteDomain},
+            UPDATED_AT = CURRENT_TIMESTAMP,
+            TOP_LOGO_IMAGE = #{topLogoImage},
+            BOTTOM_LOGO_IMAGE = #{bottomLogoImage},
+            MAIN_IMAGE = #{mainImage},
+            SITE_DESCRIPTION = #{siteDescription},
+            MOUSE_SECURITY = #{mouseSecurity},
+            KEYBOARD_SECURITY = #{keyboardSecurity},
+            CREATED_BY = #{createdBy}
+        WHERE SITE_ID = #{siteId}
+    </update>
+
+    <delete id="deleteSite" parameterType="String">
+        DELETE FROM ADMIN_SITE_MANAGEMENT WHERE SITE_ID = #{siteId}
+    </delete>
+
+    <select id="selectSitesAll" resultType="SiteManageDTO">
+        SELECT * FROM ADMIN_SITE_MANAGEMENT
+    </select>
+
+    <!-- Terms Management -->
+    <insert id="insertTerms" parameterType="TermsManageDTO">
+        INSERT INTO ADMIN_TERMS_MANAGEMENT (TERMS_ID, STUDENT_TERMS_CONTENT, STAFF_TERMS_CONTENT, CREATED_AT, UPDATED_AT, EFFECTIVE_DATE, CREATED_BY)
+        VALUES (#{termsId}, #{studentTerms}, #{staffTerms}, #{createdAt}, #{updatedAt}, #{effectiveDate}, #{createdBy})
+    </insert>
+
+    <select id="selectTermsById" parameterType="String" resultType="TermsManageDTO">
+        SELECT * FROM ADMIN_TERMS_MANAGEMENT WHERE TERMS_ID = #{termsId}
+    </select>
+
+    <update id="updateTerms" parameterType="TermsManageDTO">
+        UPDATE ADMIN_TERMS_MANAGEMENT
+        SET STUDENT_TERMS_CONTENT = #{studentTerms},
+            STAFF_TERMS_CONTENT = #{staffTerms},
+            UPDATED_AT = CURRENT_TIMESTAMP,
+            EFFECTIVE_DATE = #{effectiveDate},
+            CREATED_BY = #{createdBy}
+        WHERE TERMS_ID = #{termsId}
+    </update>
+
+    <delete id="deleteTerms" parameterType="String">
+        DELETE FROM ADMIN_TERMS_MANAGEMENT WHERE TERMS_ID = #{termsId}
+    </delete>
+
+    <select id="selectTermsByConditions" parameterType="map" resultType="TermsManageDTO">
+        SELECT * FROM ADMIN_TERMS_MANAGEMENT
+        <where>
+            <if test="termsId != null"> AND TERMS_ID = #{termsId}</if>
+            <if test="effectiveDate != null"> AND EFFECTIVE_DATE = #{effectiveDate}</if>
+        </where>
+    </select>
+
+    <!-- Common Codes -->
+    <insert id="insertCommonCode" parameterType="CommonCodesDTO">
+        INSERT INTO ADMIN_COMMON_CODES (CODE_ID, CATEGORY_CODE, CODE_NAME, CODE_DESCRIPTION, IS_ACTIVE, CREATED_AT, UPDATED_AT, CREATED_BY)
+        VALUES (#{codeId}, #{categoryCode}, #{codeName}, #{codeDescription}, #{active}, #{createdAt}, #{updatedAt}, #{createdBy})
+    </insert>
+
+    <select id="selectCommonCodeById" parameterType="String" resultType="CommonCodesDTO">
+        SELECT * FROM ADMIN_COMMON_CODES WHERE CODE_ID = #{codeId}
+    </select>
+
+    <select id="checkCommonCodeById" parameterType="String" resultType="boolean">
+        SELECT
+            CASE 
+                WHEN count(*) > 0 THEN true
+                ELSE false
+            END as exists
+        FROM ADMIN_COMMON_CODES WHERE CODE_ID = #{codeId}
+    </select>
+
+    <update id="updateCommonCode" parameterType="CommonCodesDTO">
+        UPDATE ADMIN_COMMON_CODES
+        SET CATEGORY_CODE = #{categoryCode},
+            CODE_NAME = #{codeName},
+            CODE_DESCRIPTION = #{codeDescription},
+            IS_ACTIVE = #{active},
+            UPDATED_AT = CURRENT_TIMESTAMP,
+            CREATED_BY = #{createdBy}
+        WHERE CODE_ID = #{codeId}
+    </update>
+
+    <delete id="deleteCommonCode" parameterType="String">
+        DELETE FROM ADMIN_COMMON_CODES WHERE CODE_ID = #{codeId}
+    </delete>
+
+    <select id="selectCommonCodesByConditions" parameterType="hashmap" resultType="CommonCodesDTO">
+        SELECT * FROM ADMIN_COMMON_CODES
+        <where>
+            <if test="codeId != null"> AND CODE_ID = #{codeId}</if>
+            <if test="categoryCode != null"> AND CATEGORY_CODE = #{categoryCode}</if>
+        </where>
+    </select>
+
+    <!-- Sub Common Codes -->
+    <insert id="insertSubCommonCode" parameterType="SubCommonCodesDTO">
+        INSERT INTO ADMIN_SUB_COMMON_CODES (SUB_CODE_ID, COMMON_CODE_ID, SUB_CODE_NAME, CODE_DESCRIPTION, CREATED_AT, UPDATED_AT, CREATED_BY)
+        VALUES (#{subCodeId}, #{codeId}, #{subCodeName}, #{codeDescription}, #{createdAt}, #{updatedAt}, #{createdBy})
+    </insert>
+
+    <select id="selectSubCommonCodeById" parameterType="String" resultType="SubCommonCodesDTO">
+        SELECT * FROM ADMIN_SUB_COMMON_CODES WHERE SUB_CODE_ID = #{subCodeId}
+    </select>
+    
+    <select id="checkSubCommonCodeById" parameterType="String" resultType="boolean">
+        SELECT
+            CASE 
+                WHEN count(*) > 0 THEN true
+                ELSE false
+            END as exists
+        FROM ADMIN_SUB_COMMON_CODES WHERE SUB_CODE_ID = #{subCodeId}
+    </select>
+
+    <update id="updateSubCommonCode" parameterType="SubCommonCodesDTO">
+        UPDATE ADMIN_SUB_COMMON_CODES
+        SET COMMON_CODE_ID = #{codeId},
+            SUB_CODE_NAME = #{subCodeName},
+            CODE_DESCRIPTION = #{codeDescription},
+            UPDATED_AT = CURRENT_TIMESTAMP,
+            CREATED_BY = #{createdBy}
+        WHERE SUB_CODE_ID = #{subCodeId}
+    </update>
+
+    <delete id="deleteSubCommonCode" parameterType="String">
+        DELETE FROM ADMIN_SUB_COMMON_CODES WHERE SUB_CODE_ID = #{subCodeId}
+    </delete>
+
+    <select id="selectSubCommonCodesByConditions" parameterType="map" resultType="SubCommonCodesDTO">
+        SELECT * FROM ADMIN_SUB_COMMON_CODES
+        <where>
+            <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
+            <if test="codeId != null"> AND COMMON_CODE_ID = #{codeId}</if>
+            <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
+        </where>
+    </select>
+
+    <!-- IP Table -->
+    <insert id="insertIp" parameterType="IpTableDTO">
+        INSERT INTO ADMIN_IP_TABLE (ALLOWED_IP, ADMIN_ID, IS_ACTIVE, CREATED_AT, UPDATED_AT, CREATED_BY)
+        VALUES (#{allowedIp}, #{adminId}, #{active}, #{createdAt}, #{updatedAt}, #{createdBy})
+    </insert>
+
+    <select id="selectIpById" parameterType="String" resultType="IpTableDTO">
+        SELECT * FROM ADMIN_IP_TABLE WHERE ALLOWED_IP = #{allowedIp}
+    </select>
+
+    <update id="updateIp" parameterType="IpTableDTO">
+        UPDATE ADMIN_IP_TABLE
+        SET ADMIN_ID = #{adminId},
+            IS_ACTIVE = #{active},
+            UPDATED_AT = CURRENT_TIMESTAMP,
+            CREATED_BY = #{createdBy}
+        WHERE ALLOWED_IP = #{allowedIp}
+    </update>
+
+    <delete id="deleteIp" parameterType="String">
+        DELETE FROM ADMIN_IP_TABLE WHERE ALLOWED_IP = #{allowedIp}
+    </delete>
+
+    <select id="selectIpsAll" resultType="IpTableDTO">
+        SELECT * FROM ADMIN_IP_TABLE
+    </select>
+
+</mapper>
