@@ -1,6 +1,7 @@
 package egovframework.example.admin.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import javax.annotation.Resource;
 
@@ -42,8 +43,8 @@ public class AdminManageServiceImpl implements AdminManageService {
 	}
 	
 	@Override
-	public List<AdminLoginVO> selectUserAll(String role){
-		return mapper.selectUserAll(role);
+	public List<AdminLoginVO> selectUserAll(Map<String, String> conditional){
+		return mapper.selectUserAll(conditional);
 	}
 	
 	@Override

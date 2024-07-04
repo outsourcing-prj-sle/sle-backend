@@ -29,7 +29,7 @@ public interface AdminSystemManageService {
     TermsManageDTO selectTermsById(String termsId);
     void updateTerms(TermsManageDTO terms);
     void deleteTerms(String termsId);
-    List<TermsManageDTO> selectTermsByConditions(Map<String, String> search);
+    List<TermsManageDTO> selectTermsAll();
 
 	/*
 	 * 공통코드 관리

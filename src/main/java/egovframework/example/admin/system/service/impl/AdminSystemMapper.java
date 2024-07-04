@@ -32,7 +32,7 @@ public interface AdminSystemMapper {
     TermsManageDTO selectTermsById(String termsId);
     void updateTerms(TermsManageDTO terms);
     void deleteTerms(String termsId);
-    List<TermsManageDTO> selectTermsByConditions(Map<String, String> conditions);
+    List<TermsManageDTO> selectTermsAll();
 
 	/*
 	 * 공통코드 관리

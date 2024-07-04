@@ -82,8 +82,8 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<TermsManageDTO> selectTermsByConditions(Map<String, String> conditions) {
-		return mapper.selectTermsByConditions(conditions);
+	public List<TermsManageDTO> selectTermsAll() {
+		return mapper.selectTermsAll();
 	}
 
 	/**

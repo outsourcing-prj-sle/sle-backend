@@ -1,6 +1,7 @@
 package egovframework.example.admin.service.impl;
 
 import java.util.List;
+import java.util.Map;
 
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
@@ -13,7 +14,7 @@ public interface AdminManageMapper {
 	
 	AdminLoginVO selectUser(AdminLoginVO AdminLoginVO);
 	
-	List<AdminLoginVO> selectUserAll(String role);
+	List<AdminLoginVO> selectUserAll(Map<String, String> conditional);
 	
 	void updateUser(AdminLoginVO AdminLoginVO);
 	

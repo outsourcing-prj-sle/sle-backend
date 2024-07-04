@@ -36,12 +36,14 @@ public class AdminManageController {
 	}
 	/**
 	 * 권한에 따른 회원 리스트 조회
-	 * OgzAdmin, EduAdmin, SuperAdmin, SchoolAdmin, Student, Teacher, NormalUser
+	 * (OgzAdmin, SuperAdmin, SchoolAdmin) →　Admin, OfficeOfEdu, Student, Teacher, NormalUser
+	 * Query로 검색가능 예) OgzAdmin?name=홍길동
 	 * @return
 	 */
 	@GetMapping("/users/{role}")
-	ResponseEntity<?> selectAdminManagement(@RequestHeader HttpHeaders header, @PathVariable String role, @RequestParam(required=false) Map<String,String> rule){
-		List<AdminLoginVO> users = adminManageService.selectUserAll(role);
+	ResponseEntity<?> selectAdminManagement(@RequestHeader HttpHeaders header, @PathVariable String role, @RequestParam(required=false) Map<String,String> conditional){
+		conditional.put("userRole", role);
+		List<AdminLoginVO> users = adminManageService.selectUserAll(conditional);
 		return ResponseEntity.ok(users);
 	}
 	

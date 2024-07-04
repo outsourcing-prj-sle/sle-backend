@@ -26,6 +26,7 @@ import egovframework.example.admin.system.model.SubCommonCodesDTO;
 import egovframework.example.admin.system.model.TermsManageDTO;
 import egovframework.example.admin.system.service.AdminSystemManageService;
 import egovframework.example.cmmn.service.AdminLoginVO;
+import egovframework.example.cmmn.service.ResultVO;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
@@ -38,13 +39,12 @@ public class AdminSystemManageController {
 	
 	/**
 	 * Insert 및 Update (하위코드제외)
-	 * @param header
 	 * @param data
 	 * @param entity
 	 * @return
 	 */
 	@PostMapping("/{entity}/register")
-	ResponseEntity<?> insertSite(@RequestHeader HttpHeaders header,@RequestBody Object data,@PathVariable String entity) {
+	ResponseEntity<?> insertSite(@RequestBody Object data, @PathVariable String entity) {
        switch (entity.toLowerCase()) {
 	       case "site":
 	    	   adminSystemService.insertSite((SiteManageDTO) data);
@@ -59,12 +59,12 @@ public class AdminSystemManageController {
 	    	   adminSystemService.insertIp((IpTableDTO) data);
 	    	   return ResponseEntity.ok().build();
 	       default:
-	           throw new IllegalArgumentException("Unknown entity: " + entity);
+	    	   return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Unknown entity: " + entity));
        }
     }
 	
 	@PutMapping("/{entity}/update")
-	ResponseEntity<?> updateSite(@RequestHeader HttpHeaders header,@RequestBody Object data,@PathVariable String entity) {
+	ResponseEntity<?> updateSite(@RequestBody Object data, @PathVariable String entity) {
        switch (entity.toLowerCase()) {
 	       case "site":
 	    	   adminSystemService.updateSite((SiteManageDTO) data);
@@ -79,7 +79,7 @@ public class AdminSystemManageController {
 	    	   adminSystemService.updateIp((IpTableDTO) data);
 	    	   return ResponseEntity.ok().build();
 	       default:
-	           throw new IllegalArgumentException("Unknown entity: " + entity);
+	    	   return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Unknown entity: " + entity));
        }
     }
 	/**
@@ -90,7 +90,7 @@ public class AdminSystemManageController {
 	 * @return
 	 */
 	@GetMapping("/{entity}/{id}")
-    ResponseEntity<?> selectEntity(@RequestHeader HttpHeaders header,@PathVariable String entity, @PathVariable String id) {
+    ResponseEntity<?> selectEntity(@PathVariable String entity, @PathVariable String id) {
 	    switch (entity.toLowerCase()) {
 	       case "site":
 	    	   log.info("aa");
@@ -106,7 +106,7 @@ public class AdminSystemManageController {
 	    	   IpTableDTO ipAddr = adminSystemService.selectIpById(id);
 	    	   return ResponseEntity.ok(ipAddr);
 	       default:
-	           throw new IllegalArgumentException("Unknown entity: " + entity);
+	    	   return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Unknown entity: " + entity));
        }	
     }
     
@@ -117,24 +117,25 @@ public class AdminSystemManageController {
 	 * @param id
 	 * @return
 	 */
-	@DeleteMapping("/{entity}/delete/{id}")
-    ResponseEntity<?> deleteSite(@RequestHeader HttpHeaders header,@PathVariable String entity,@PathVariable String id) {
+	@DeleteMapping("/{entity}/{id}")
+    ResponseEntity<?> deleteSite(@PathVariable String entity, @PathVariable String id) {
 	    switch (entity.toLowerCase()) {
 	       case "site":
 	    	   adminSystemService.deleteSite(id);
-	   		   return ResponseEntity.ok().build();
+	    	   break;
 	       case "terms":
 	    	   adminSystemService.deleteTerms(id);
-	   		   return ResponseEntity.ok().build();
+	    	   break;
 	       case "cmmn_code":
 	    	   adminSystemService.deleteCommonCode(id);
-	   		   return ResponseEntity.ok().build();
+	    	   break;
 	       case "ip":
 	    	   adminSystemService.deleteIp(id);
-	   		   return ResponseEntity.ok().build();
+	    	   break;
 	       default:
-	           throw new IllegalArgumentException("Unknown entity: " + entity);
+	    	   return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Unknown entity: " + entity));
        }
+	    return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, entity + "Record ID : " + id + "is delete Successful"));
     }
     
 	/**
@@ -145,13 +146,13 @@ public class AdminSystemManageController {
 	 * @return
 	 */
 	@GetMapping("/{entity}")
-    ResponseEntity<?> selectSitesAll(@RequestHeader HttpHeaders header,@PathVariable String entity, @RequestParam(required = false) Map<String,String> search){
+    ResponseEntity<?> selectSitesAll(@PathVariable String entity, @RequestParam(required = false) Map<String,String> search){
 	    switch (entity.toLowerCase()) {
 	       case "site":
 	    	   List<SiteManageDTO> site = adminSystemService.selectSitesAll();
 	   		   return ResponseEntity.ok(site);
 	       case "terms":
-	    	   List<TermsManageDTO> terms = adminSystemService.selectTermsByConditions(search);
+	    	   List<TermsManageDTO> terms = adminSystemService.selectTermsAll();
 	    	   return ResponseEntity.ok(terms);
 	       case "cmmn_code":
 	    	   List<CommonCodesDTO> cmmnCode = adminSystemService.selectCommonCodesByConditions(search);
@@ -160,24 +161,57 @@ public class AdminSystemManageController {
 	    	   List<IpTableDTO> ipAddr = adminSystemService.selectIpsAll();
 	    	   return ResponseEntity.ok(ipAddr);
 	       default:
-	           throw new IllegalArgumentException("Unknown entity: " + entity);
+	    	   return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Unknown entity: " + entity));
        }
     }
 
-	/*
+	/**
 	 * 하위 공통 코드 관리
 	 */
-    ResponseEntity<?> insertSubCommonCode(SubCommonCodesDTO subCommonCode) {
+	@PostMapping("/cmmn_code/{codeId}/sub_code/register")
+    ResponseEntity<?> insertSubCommonCode(@PathVariable String codeId, @RequestBody SubCommonCodesDTO subCommonCode) {
+		if(adminSystemService.selectCommonCodeById(codeId) == null) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
+		}
+		subCommonCode.setCodeId(codeId);
+		adminSystemService.insertSubCommonCode(subCommonCode);
+    	return ResponseEntity.ok(subCommonCode);
+    }
+	
+	@PutMapping("/cmmn_code/{codeId}/sub_code/update")
+	ResponseEntity<?> updateSubCommonCode(@PathVariable String codeId, @RequestBody SubCommonCodesDTO subCommonCode) {
+		if(adminSystemService.selectCommonCodeById(codeId) == null) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
+		}
+		adminSystemService.updateSubCommonCode(subCommonCode);
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/cmmn_code/{codeId}/sub_code/{subCodeId}")
+    ResponseEntity<?> selectSubCommonCodeById(@PathVariable String codeId, @PathVariable String subCodeId) {
+		if(adminSystemService.selectCommonCodeById(codeId) == null) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
+		}
+		SubCommonCodesDTO subCommonCode = adminSystemService.selectSubCommonCodeById(subCodeId);
+    	return ResponseEntity.ok(subCommonCode);
+    }
+	
+	@DeleteMapping("/cmmn_code/{codeId}/sub_code/{subCodeId}")
+    ResponseEntity<?> deleteSubCommonCode(@PathVariable String codeId, @PathVariable String subCodeId) {
+		if(adminSystemService.selectCommonCodeById(codeId) == null) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
+		}
     	return ResponseEntity.ok().build();
     }
-    ResponseEntity<?> selectSubCommonCodeById(String subCodeId) {
-    	return ResponseEntity.ok().build();
-    }
-    ResponseEntity<?> deleteSubCommonCode(String subCodeId) {
-    	return ResponseEntity.ok().build();
-    }
-    ResponseEntity<?> selectSubCommonCodesByConditions(Map<String, Object> conditions){
-    	return ResponseEntity.ok().build();
+	
+	@GetMapping("/cmmn_code/{codeId}/sub_codes")
+    ResponseEntity<?> selectSubCommonCodesByConditions(@PathVariable String codeId, @RequestParam(required = false) Map<String, String> conditions){
+		if(adminSystemService.selectCommonCodeById(codeId) == null) {
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
+		}
+		conditions.put("codeId", codeId);
+		List<SubCommonCodesDTO> subCommonCodes = adminSystemService.selectSubCommonCodesByConditions(conditions);
+    	return ResponseEntity.ok(subCommonCodes);
     }
 
 }

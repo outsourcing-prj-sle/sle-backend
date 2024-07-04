@@ -82,7 +82,7 @@
         DELETE FROM ADMIN_TERMS_MANAGEMENT WHERE TERMS_ID = #{termsId}
     </delete>
 
-    <select id="selectTermsByConditions" resultType="TermsManageDTO">
+    <select id="selectTermsAll" resultType="TermsManageDTO">
         SELECT * FROM ADMIN_TERMS_MANAGEMENT
     </select>
 

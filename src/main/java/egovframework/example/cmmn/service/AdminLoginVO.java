@@ -63,21 +63,15 @@ public class AdminLoginVO {
 	 * 전화번호
 	 */
 	private String phoneNumber;
+	
+	/**
+	 * 등록 시간
+	 */
+	private String createAt;
+	
 	/**
 	 * 업데이트 시간
 	 */
 	private String updateAt;
-	/**
-	 * 역할 배정
-	 
-	public void isRole() {
-		if(this.userType.equals("Y")) {
-			this.setUserRole("ROLE_TEACHER");
-		}
-		
-		if(this.userType.equals("N")) {
-			this.setUserRole("ROLE_STUDENT");
-		}
-	}
-	*/
+	
 }
