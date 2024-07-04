@@ -82,7 +82,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<TermsManageDTO> selectTermsByConditions(Map<String, Object> conditions) {
+	public List<TermsManageDTO> selectTermsByConditions(Map<String, String> conditions) {
 		return mapper.selectTermsByConditions(conditions);
 	}
 
@@ -110,7 +110,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<CommonCodesDTO> selectCommonCodesByConditions(Map<String, Object> conditions) {
+	public List<CommonCodesDTO> selectCommonCodesByConditions(Map<String, String> conditions) {
 		return mapper.selectCommonCodesByConditions(conditions);
 	}
 
@@ -137,7 +137,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<SubCommonCodesDTO> selectSubCommonCodesByConditions(Map<String, Object> conditions) {
+	public List<SubCommonCodesDTO> selectSubCommonCodesByConditions(Map<String, String> conditions) {
 		return mapper.selectSubCommonCodesByConditions(conditions);
 	}
 	

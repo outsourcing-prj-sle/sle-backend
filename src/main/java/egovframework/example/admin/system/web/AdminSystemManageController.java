@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.admin.system.model.CommonCodesDTO;
@@ -144,19 +145,19 @@ public class AdminSystemManageController {
 	 * @return
 	 */
 	@GetMapping("/{entity}")
-    ResponseEntity<?> selectSitesAll(@RequestHeader HttpHeaders header,@PathVariable String entity,@PathVariable String id){
+    ResponseEntity<?> selectSitesAll(@RequestHeader HttpHeaders header,@PathVariable String entity, @RequestParam(required = false) Map<String,String> search){
 	    switch (entity.toLowerCase()) {
 	       case "site":
-	    	   SiteManageDTO site = adminSystemService.selectSiteById(id);
+	    	   List<SiteManageDTO> site = adminSystemService.selectSitesAll();
 	   		   return ResponseEntity.ok(site);
 	       case "terms":
-	    	   TermsManageDTO terms = adminSystemService.selectTermsById(id);
+	    	   List<TermsManageDTO> terms = adminSystemService.selectTermsByConditions(search);
 	    	   return ResponseEntity.ok(terms);
 	       case "cmmn_code":
-	    	   CommonCodesDTO cmmnCode = adminSystemService.selectCommonCodeById(id);
+	    	   List<CommonCodesDTO> cmmnCode = adminSystemService.selectCommonCodesByConditions(search);
 	    	   return ResponseEntity.ok(cmmnCode);
 	       case "ip":
-	    	   IpTableDTO ipAddr = adminSystemService.selectIpById(id);
+	    	   List<IpTableDTO> ipAddr = adminSystemService.selectIpsAll();
 	    	   return ResponseEntity.ok(ipAddr);
 	       default:
 	           throw new IllegalArgumentException("Unknown entity: " + entity);

@@ -29,7 +29,7 @@ public interface AdminSystemManageService {
     TermsManageDTO selectTermsById(String termsId);
     void updateTerms(TermsManageDTO terms);
     void deleteTerms(String termsId);
-    List<TermsManageDTO> selectTermsByConditions(Map<String, Object> conditions);
+    List<TermsManageDTO> selectTermsByConditions(Map<String, String> search);
 
 	/*
 	 * 공통코드 관리
@@ -38,7 +38,7 @@ public interface AdminSystemManageService {
     CommonCodesDTO selectCommonCodeById(String codeId);
     void updateCommonCode(CommonCodesDTO commonCode);
     void deleteCommonCode(String codeId);
-    List<CommonCodesDTO> selectCommonCodesByConditions(Map<String, Object> conditions);
+    List<CommonCodesDTO> selectCommonCodesByConditions(Map<String, String> conditions);
 
 	/*
 	 * 하위 공통 코드 관리
@@ -47,7 +47,7 @@ public interface AdminSystemManageService {
     SubCommonCodesDTO selectSubCommonCodeById(String subCodeId);
     void updateSubCommonCode(SubCommonCodesDTO subCommonCode);
     void deleteSubCommonCode(String subCodeId);
-    List<SubCommonCodesDTO> selectSubCommonCodesByConditions(Map<String, Object> conditions);
+    List<SubCommonCodesDTO> selectSubCommonCodesByConditions(Map<String, String> conditions);
 
 	/*
 	 * IP 관리

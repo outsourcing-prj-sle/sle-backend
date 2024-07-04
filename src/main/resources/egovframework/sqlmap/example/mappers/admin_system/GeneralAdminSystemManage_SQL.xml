@@ -82,12 +82,8 @@
         DELETE FROM ADMIN_TERMS_MANAGEMENT WHERE TERMS_ID = #{termsId}
     </delete>
 
-    <select id="selectTermsByConditions" parameterType="map" resultType="TermsManageDTO">
+    <select id="selectTermsByConditions" resultType="TermsManageDTO">
         SELECT * FROM ADMIN_TERMS_MANAGEMENT
-        <where>
-            <if test="termsId != null"> AND TERMS_ID = #{termsId}</if>
-            <if test="effectiveDate != null"> AND EFFECTIVE_DATE = #{effectiveDate}</if>
-        </where>
     </select>
 
     <!-- Common Codes -->
@@ -127,8 +123,8 @@
     <select id="selectCommonCodesByConditions" parameterType="hashmap" resultType="CommonCodesDTO">
         SELECT * FROM ADMIN_COMMON_CODES
         <where>
-            <if test="codeId != null"> AND CODE_ID = #{codeId}</if>
-            <if test="categoryCode != null"> AND CATEGORY_CODE = #{categoryCode}</if>
+            <if test="code_id != null"> AND CODE_ID LIKE CONCAT('%',#{code_id},'%')</if>
+            <if test="code_name != null"> AND CODE_NAME LIKE CONCAT('%',#{code_name},'%')</if>
         </where>
     </select>
 
