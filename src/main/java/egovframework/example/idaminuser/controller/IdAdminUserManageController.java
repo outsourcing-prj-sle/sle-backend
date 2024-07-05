@@ -36,7 +36,7 @@ public class IdAdminUserManageController {
     }
 
     @GetMapping("/users")
-    public ResponseEntity<?> selectIdAdminUserInfoList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminUserManageVO idAdminUserManageVO) {
+    public ResponseEntity<?> selectIdAdminUserInfoList(@RequestHeader HashMap<String, String> req, @ModelAttribute IdAdminUserManageVO idAdminUserManageVO) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {

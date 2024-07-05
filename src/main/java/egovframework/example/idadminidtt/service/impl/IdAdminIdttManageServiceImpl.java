@@ -1,5 +1,6 @@
 package egovframework.example.idadminidtt.service.impl;
 
+import egovframework.example.idadminidtt.dto.IdAdminIdttDTO;
 import egovframework.example.idadminidtt.dto.IdAdminIdttResultDTO;
 import egovframework.example.idadminidtt.service.IdAdminIdttManageService;
 import egovframework.example.idadminidtt.service.IdAdminIdttManageVO;
@@ -7,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 @Service("idAdminIdttManageService")
 public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
@@ -15,9 +17,9 @@ public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
     private IdAdminIdttManageMapper mapper;
 
     @Override
-    public ArrayList<IdAdminIdttResultDTO> selectReportsList(IdAdminIdttManageVO idAdminIdttManageVO) {
+    public IdAdminIdttResultDTO<IdAdminIdttDTO> selectReportsList(IdAdminIdttManageVO idAdminIdttManageVO) {
         ArrayList<IdAdminIdttManageVO> listVO = mapper.selectReportsList(idAdminIdttManageVO);
-        ArrayList<IdAdminIdttResultDTO> result = new ArrayList<>();
+        ArrayList<IdAdminIdttDTO> listDto = new ArrayList<>();
 
         for(IdAdminIdttManageVO vo : listVO) {
             ArrayList<String> qesAnswerMap = new ArrayList<>();
@@ -28,7 +30,7 @@ public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
                 }
             }
 
-            result.add(IdAdminIdttResultDTO.builder()
+            listDto.add(IdAdminIdttDTO.builder()
                     .schulNm(vo.getSchulNm())
                     .qesAnswer(qesAnswerMap)
                     .userNm(vo.getUserNm())
@@ -36,6 +38,11 @@ public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
                     .build());
         }
 
-        return result;
+        return IdAdminIdttResultDTO.<IdAdminIdttDTO>builder()
+                .idttList(listDto)
+                .pageNo(idAdminIdttManageVO.getPageNo())
+                .recordCount(idAdminIdttManageVO.getRecordCount())
+                .totalCount(mapper.selectReportsListCount(idAdminIdttManageVO))
+                .build();
     }
 }

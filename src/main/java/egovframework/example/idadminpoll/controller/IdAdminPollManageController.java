@@ -33,7 +33,7 @@ public class IdAdminPollManageController {
     private SchulCodeChache schulCodeChache;
 
     @GetMapping("/reports")
-    public ResponseEntity<?> selectIdAdminPollList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminPollManageVO idAdminPollManageVO) {
+    public ResponseEntity<?> selectIdAdminPollList(@RequestHeader HashMap<String, String> req, @ModelAttribute IdAdminPollManageVO idAdminPollManageVO) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
@@ -44,7 +44,7 @@ public class IdAdminPollManageController {
     }
 
     @GetMapping("/reports/{pollId}")
-    public ResponseEntity<?> selectIdAdminPollInfo(@RequestHeader HashMap<String, String> req, @PathVariable String pollId, @RequestBody IdAdminPollManageVO idAdminPollManageVO) {
+    public ResponseEntity<?> selectIdAdminPollInfo(@RequestHeader HashMap<String, String> req, @PathVariable String pollId, @ModelAttribute IdAdminPollManageVO idAdminPollManageVO) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {

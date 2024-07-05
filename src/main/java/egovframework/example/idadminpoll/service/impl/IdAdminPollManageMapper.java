@@ -30,6 +30,13 @@ public interface IdAdminPollManageMapper {
     List<IdAdminPollManageVO> selectIdAdminPollDtl(IdAdminPollManageVO idAdminPollManageVO);
 
     /**
+     * ID ADMIN 설문 상세 총 수
+     * @param idAdminPollManageVO
+     * @return
+     */
+    int selectIdAdminPollDtlCount(IdAdminPollManageVO idAdminPollManageVO);
+
+    /**
      * ID ADMIN 설문 대상 목록 조회
      * @param pollId
      */
