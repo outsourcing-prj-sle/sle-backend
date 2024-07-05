@@ -1,14 +1,15 @@
 package egovframework.example.poll.utils;
 
+import egovframework.example.cmmn.service.Constant;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.idadminpoll.service.IdAdminPollManageService;
 import egovframework.example.idadminpoll.service.IdAdminPollManageVO;
 import egovframework.example.user.service.UserManageService;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
 
 import javax.annotation.Resource;
-import java.util.ArrayList;
 
+@Component
 public class pollManageUtils {
     @Resource(name = "idAdminPollManageService")
     private IdAdminPollManageService pollManageService;
@@ -40,7 +41,7 @@ public class pollManageUtils {
              * 학년급, 학년 비교
              */
             if(list[1].equals(userInfo.getSchulGradeCode())) {
-                if(list[2].equals("null") || list[2].equals(userInfo.getClassCode())) {
+                if(list[2].equals("null") || list[2].equals(Constant.grade.get(userInfo.getClassCode()))) {
                     return true;
                 }
             }

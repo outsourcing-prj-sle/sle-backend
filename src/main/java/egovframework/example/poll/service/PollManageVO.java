@@ -105,14 +105,26 @@ public class PollManageVO {
 	private String qesitmSj;
 
 	public String[] getQesitmSnList() {
+		if(StringUtils.isEmpty(qesitmSn)) {
+			return new String[0];
+		}
+
 		return qesitmSn.split(",");
 	}
 
 	public String[] getQesitmAnswerList() {
+		if(StringUtils.isEmpty(qesitmAnswer)) {
+			return new String[0];
+		}
+
 		return qesitmAnswer.split(",");
 	}
 
 	public String[] getQesitmAnswerImageList() {
+		if(StringUtils.isEmpty(qesitmAnswerImage)) {
+			return new String[0];
+		}
+
 		return qesitmAnswerImage.split(",");
 	}
 }

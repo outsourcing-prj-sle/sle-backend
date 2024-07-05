@@ -19,6 +19,7 @@
 			TEACHER_SE_CODE as userRole,
 			SCHUL_NM as userSpaceInfo,
 			SCHUL_CODE as schulCode,
+			SCHUL_GRADE_CODE as schulGradeCode,
 			CONCAT(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo
 		from COMTNMBER
 		where 1=1
@@ -123,7 +124,7 @@
 			mstr.POLL_BGNDE as startDate,
 			mstr.POLL_ENDDE as endDate,
 			case when sub.POLL_STATUS is null then 'todo' else sub.POLL_STATUS end as status,
-			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<=]]> cast(now() as date) then false else true end as expired
+			case when cast(mstr.POLL_ENDDE as date) <![CDATA[<=]]> cast(now() as date) then 1 else 0 end as expired
 		FROM COMTNBBSPOLL mstr
 		left join sub
 		on mstr.POLL_ID = sub.POLL_ID
