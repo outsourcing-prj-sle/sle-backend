@@ -95,14 +95,4 @@
         WHERE
             POLL_ID = #{pollId};
     </select>
-
-    <select id="selectSchulName" parameterType="String" resultType="String">
-        SELECT
-            SCHUL_NM
-        FROM
-            COMTNMBER
-        WHERE
-            SCHUL_CODE = #{schulCode}
-        GROUP BY SCHUL_NM
-    </select>
 </mapper>

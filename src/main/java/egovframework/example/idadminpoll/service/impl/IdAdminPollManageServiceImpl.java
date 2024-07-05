@@ -1,12 +1,18 @@
 package egovframework.example.idadminpoll.service.impl;
 
+import egovframework.example.cmmn.service.SchulCodeChache;
 import egovframework.example.idadminpoll.dto.IdAdminPollDTO;
 import egovframework.example.idadminpoll.dto.IdAdminPollDtlDTO;
 import egovframework.example.idadminpoll.dto.IdAdminPollDtlResultDTO;
 import egovframework.example.idadminpoll.dto.IdAdminPollResultDTO;
 import egovframework.example.idadminpoll.service.IdAdminPollManageService;
 import egovframework.example.idadminpoll.service.IdAdminPollManageVO;
+import egovframework.example.naver.dto.GneInfoDto;
+import egovframework.example.naver.dto.GneSchulDTO;
+import egovframework.example.naver.service.NaverService;
+import egovframework.example.naver.service.impl.NaverServiceImpl;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -17,7 +23,6 @@ import java.util.List;
 
 @Service("idAdminPollManageService")
 public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
-
     private static HashMap<String, String> schulGradeCode = new HashMap<String, String>() {{
         put("SCH_01", "유치원");
         put("SCH_02", "초등학교");
@@ -36,12 +41,15 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
         put("GRADE06", "6학년");
     }};
 
+    @Resource(name = "idAdminPollManageMapper")
+    private IdAdminPollManageMapper mapper;
+
+    @Autowired
+    private SchulCodeChache schulCodeChache;
+
     private static ArrayList<String> hasImageAnswerPollIdList = new ArrayList<String>() {{
        add("QES00000000000000006");
     }};
-
-    @Resource(name = "idAdminPollManageMapper")
-    private IdAdminPollManageMapper mapper;
 
     @Override
     public IdAdminPollResultDTO<IdAdminPollDTO> selectIdAdminPollList(IdAdminPollManageVO idAdminPollManageVO) {
@@ -139,8 +147,14 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
             if(arr[0].equals("null")) {
                 sb.append("null__");
             } else {
-                sb.append(mapper.selectSchulName(arr[0]))
-                        .append("__");
+                GneInfoDto<List<GneSchulDTO>> gneInfoDto = schulCodeChache.getSchulMap();
+
+                for(GneSchulDTO dto : gneInfoDto.getData()) {
+                    if(dto.getSchulCode().equals(arr[0])) {
+                        sb.append(dto.getSchulNm()).append("__");
+                        break;
+                    }
+                }
             }
 
             sb.append(StringUtils.isEmpty(schulGradeCode.get(arr[1]))

@@ -97,13 +97,6 @@ public class IdAdminPollManageController {
             throw new CustomException("회원정보가 없습니다.");
         }
 
-        if(schulCodeChache.getSchulMap() == null || schulCodeChache.getSchulMap().equals("") || !schulCodeChache.getSchulMap().isSuccess()) {
-            GneInfoDto<List<GneSchulDTO>> result = naverService.procGneSchulInfo();
-
-            schulCodeChache.setSchulMap(result);
-            return ResponseEntity.ok(result);
-        }
-
         return ResponseEntity.ok(schulCodeChache.getSchulMap());
     }
 }

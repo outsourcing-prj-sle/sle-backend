@@ -42,6 +42,13 @@ public interface IdAdminUserManageMapper {
     IdAdminUserDTO selectIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO);
 
     /**
+     * ID ADMIN 사용자 비밀번호 조회
+     * @param uniqId
+     * @return
+     */
+    String selectIdAdminUserPassword(String uniqId);
+
+    /**
      * ID ADMIN 사용자 uniqId 조회
      * @param idAdminUserManageVO
      * @return

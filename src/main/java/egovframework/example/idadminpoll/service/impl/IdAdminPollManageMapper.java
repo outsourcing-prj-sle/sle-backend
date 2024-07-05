@@ -47,11 +47,4 @@ public interface IdAdminPollManageMapper {
      * @param idAdminPollManageVO
      */
     void updateIdAdminPollTargetInfo(IdAdminPollManageVO idAdminPollManageVO);
-
-    /**
-     * ID ADMIN 학교명 조회
-     * @param schulCode
-     * @return
-     */
-    String selectSchulName(String schulCode);
 }
