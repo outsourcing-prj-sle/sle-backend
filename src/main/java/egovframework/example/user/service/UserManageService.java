@@ -6,6 +6,7 @@ import egovframework.example.user.dto.IdttLTResultDTO;
 import egovframework.example.user.dto.StudentsDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserManageService {
 	
@@ -78,4 +79,10 @@ public interface UserManageService {
 	 * @return
 	 */
 	IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id);
+	
+	
+	/**
+	 * 유저 전체/검색 조회
+	 */
+	List<LoginVO> selectUserByConditions(Map<String, String> conditions);
 }

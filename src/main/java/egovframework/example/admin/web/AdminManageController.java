@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.admin.service.AdminManageService;
 import egovframework.example.cmmn.service.AdminLoginVO;
+import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.user.service.UserManageService;
 
 @RestController
 @RequestMapping("/api/admin")
@@ -29,35 +31,58 @@ public class AdminManageController {
 	@Resource(name = "adminManageService")
 	private AdminManageService adminManageService;
 	
-	@GetMapping("/users")
-	ResponseEntity<?> selectUser(HttpServletRequest request){
-			AdminLoginVO user = adminManageService.selectUser((AdminLoginVO)request.getAttribute("user"));
-			return ResponseEntity.ok(user);
+	@Resource(name = "userManageService")
+	private UserManageService userManageService;
+	
+	@GetMapping("/users/{role}/{id}")
+	ResponseEntity<?> myInfo(@PathVariable String role, @PathVariable String id){
+		if(role.equals("teacher") || role.equals("student")) {
+			LoginVO user = LoginVO.builder().authorization(id).build();
+			LoginVO whaleUsers = userManageService.selectUserInfo(user);
+			return ResponseEntity.ok(whaleUsers);
+		}
+		AdminLoginVO user = AdminLoginVO.builder()
+								.uniqId(id).build();
+		AdminLoginVO res = adminManageService.selectUser(user);
+		return ResponseEntity.ok(res);
 	}
 	/**
 	 * 권한에 따른 회원 리스트 조회
-	 * (OgzAdmin, SuperAdmin, SchoolAdmin) →　Admin, OfficeOfEdu, Student, Teacher, NormalUser
+	 * (OgzAdmin, SuperAdmin, SchoolAdmin)→Admin, OfficeOfEdu, Student, Teacher, NormalUser
 	 * Query로 검색가능 예) OgzAdmin?name=홍길동
 	 * @return
 	 */
 	@GetMapping("/users/{role}")
-	ResponseEntity<?> selectAdminManagement(@RequestHeader HttpHeaders header, @PathVariable String role, @RequestParam(required=false) Map<String,String> conditional){
-		conditional.put("userRole", role);
-		List<AdminLoginVO> users = adminManageService.selectUserAll(conditional);
+	ResponseEntity<?> selectAdminManagement(@PathVariable String role, @RequestParam(required=false) Map<String,String> conditions){
+		conditions.put("userRole", role);
+		if(conditions.get("userRole").equals("teacher") || conditions.get("userRole").equals("student")) {
+			List<LoginVO> whaleUsers = userManageService.selectUserByConditions(conditions);
+			return ResponseEntity.ok(whaleUsers);
+		}
+		List<AdminLoginVO> users = adminManageService.selectUserAll(conditions);
 		return ResponseEntity.ok(users);
 	}
 	
-	@PutMapping("/users/register")
-	ResponseEntity<?> insertUser(@RequestHeader HttpHeaders header,@RequestBody AdminLoginVO AdminLoginVO){
-		AdminLoginVO.setUniqId(adminManageService.insertUser(AdminLoginVO));
-		AdminLoginVO res = adminManageService.selectUser(AdminLoginVO);
+	@PutMapping("/users/{role}/register")
+	ResponseEntity<?> insertUser(@PathVariable String role, @RequestBody Object loginVO){
+		if(role.equals("teacher") || role.equals("student")) {
+			LoginVO whaleUsers = userManageService.insertUserInfo((LoginVO)loginVO);
+			return ResponseEntity.ok(whaleUsers);
+		}
+		AdminLoginVO adminLoginVO = (AdminLoginVO)loginVO;
+		adminLoginVO.setUniqId(adminManageService.insertUser(adminLoginVO));
+		AdminLoginVO res = adminManageService.selectUser(adminLoginVO);
 		return ResponseEntity.ok(res);
 	}
 	
-	@DeleteMapping("/users/delete")
-	ResponseEntity<?> deleteUser(@RequestHeader HttpHeaders header, @RequestBody String deleteId){
-			String msg = adminManageService.deleteUser(deleteId);
-			return ResponseEntity.ok(msg);
+	@DeleteMapping("/users/{role}/{id}")
+	ResponseEntity<?> deleteUser(@PathVariable String role, @PathVariable String id){
+		if(role.equals("teacher") || role.equals("student")) {
+			//List<LoginVO> whaleUsers = userManageService;
+			return ResponseEntity.ok().build();
+		}
+		String msg = adminManageService.deleteUser(id);
+		return ResponseEntity.ok(msg);
 	}
 	
 }

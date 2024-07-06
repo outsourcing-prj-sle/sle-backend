@@ -44,7 +44,7 @@ public class AdminSystemManageController {
 	 * @return
 	 */
 	@PostMapping("/{entity}/register")
-	ResponseEntity<?> insertSite(@RequestBody Object data, @PathVariable String entity) {
+	ResponseEntity<?> insertEntity(@RequestBody Object data, @PathVariable String entity) {
        switch (entity.toLowerCase()) {
 	       case "site":
 	    	   adminSystemService.insertSite((SiteManageDTO) data);
@@ -64,7 +64,7 @@ public class AdminSystemManageController {
     }
 	
 	@PutMapping("/{entity}/update")
-	ResponseEntity<?> updateSite(@RequestBody Object data, @PathVariable String entity) {
+	ResponseEntity<?> updateEntity(@RequestBody Object data, @PathVariable String entity) {
        switch (entity.toLowerCase()) {
 	       case "site":
 	    	   adminSystemService.updateSite((SiteManageDTO) data);
@@ -118,7 +118,7 @@ public class AdminSystemManageController {
 	 * @return
 	 */
 	@DeleteMapping("/{entity}/{id}")
-    ResponseEntity<?> deleteSite(@PathVariable String entity, @PathVariable String id) {
+    ResponseEntity<?> deleteEntity(@PathVariable String entity, @PathVariable String id) {
 	    switch (entity.toLowerCase()) {
 	       case "site":
 	    	   adminSystemService.deleteSite(id);
@@ -146,7 +146,7 @@ public class AdminSystemManageController {
 	 * @return
 	 */
 	@GetMapping("/{entity}")
-    ResponseEntity<?> selectSitesAll(@PathVariable String entity, @RequestParam(required = false) Map<String,String> search){
+    ResponseEntity<?> selectEntityAll(@PathVariable String entity, @RequestParam(required = false) Map<String,String> search){
 	    switch (entity.toLowerCase()) {
 	       case "site":
 	    	   List<SiteManageDTO> site = adminSystemService.selectSitesAll();
@@ -168,7 +168,7 @@ public class AdminSystemManageController {
 	/**
 	 * 하위 공통 코드 관리
 	 */
-	@PostMapping("/cmmn_code/{codeId}/sub_code/register")
+	@PostMapping("/cmmn_code/{codeId}/sub_code_register")
     ResponseEntity<?> insertSubCommonCode(@PathVariable String codeId, @RequestBody SubCommonCodesDTO subCommonCode) {
 		if(adminSystemService.selectCommonCodeById(codeId) == null) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
@@ -178,7 +178,7 @@ public class AdminSystemManageController {
     	return ResponseEntity.ok(subCommonCode);
     }
 	
-	@PutMapping("/cmmn_code/{codeId}/sub_code/update")
+	@PutMapping("/cmmn_code/{codeId}/sub_code_update")
 	ResponseEntity<?> updateSubCommonCode(@PathVariable String codeId, @RequestBody SubCommonCodesDTO subCommonCode) {
 		if(adminSystemService.selectCommonCodeById(codeId) == null) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
@@ -187,7 +187,7 @@ public class AdminSystemManageController {
 		return ResponseEntity.ok().build();
 	}
 
-	@GetMapping("/cmmn_code/{codeId}/sub_code/{subCodeId}")
+	@GetMapping("/cmmn_code/{codeId}/{subCodeId}")
     ResponseEntity<?> selectSubCommonCodeById(@PathVariable String codeId, @PathVariable String subCodeId) {
 		if(adminSystemService.selectCommonCodeById(codeId) == null) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
@@ -196,7 +196,7 @@ public class AdminSystemManageController {
     	return ResponseEntity.ok(subCommonCode);
     }
 	
-	@DeleteMapping("/cmmn_code/{codeId}/sub_code/{subCodeId}")
+	@DeleteMapping("/cmmn_code/{codeId}/{subCodeId}")
     ResponseEntity<?> deleteSubCommonCode(@PathVariable String codeId, @PathVariable String subCodeId) {
 		if(adminSystemService.selectCommonCodeById(codeId) == null) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
@@ -213,5 +213,4 @@ public class AdminSystemManageController {
 		List<SubCommonCodesDTO> subCommonCodes = adminSystemService.selectSubCommonCodesByConditions(conditions);
     	return ResponseEntity.ok(subCommonCodes);
     }
-
 }

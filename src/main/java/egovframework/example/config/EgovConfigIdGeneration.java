@@ -69,4 +69,44 @@ public class EgovConfigIdGeneration {
 		egovTableIdGnrServiceImpl.setTableName("USER");
 		return egovTableIdGnrServiceImpl;
 	}
+	
+	@Bean
+	public EgovIdGnrStrategyImpl adminSiteIdPrefix() {
+		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
+		egovIdGnrStrategyImpl.setPrefix("site_");
+		egovIdGnrStrategyImpl.setCipers(8);
+		egovIdGnrStrategyImpl.setFillChar('0');
+		return egovIdGnrStrategyImpl;
+	}
+
+	@Bean(destroyMethod = "destroy")
+	public EgovTableIdGnrServiceImpl adminSiteIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
+		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
+		egovTableIdGnrServiceImpl.setDataSource(dataSource);
+		egovTableIdGnrServiceImpl.setStrategy(adminSiteIdPrefix());
+		egovTableIdGnrServiceImpl.setBlockSize(7);
+		egovTableIdGnrServiceImpl.setTable("IDS");
+		egovTableIdGnrServiceImpl.setTableName("SITE");
+		return egovTableIdGnrServiceImpl;
+	}
+	
+	@Bean
+	public EgovIdGnrStrategyImpl adminTermsIdPrefix() {
+		EgovIdGnrStrategyImpl egovIdGnrStrategyImpl = new EgovIdGnrStrategyImpl();
+		egovIdGnrStrategyImpl.setPrefix("TERMS_");
+		egovIdGnrStrategyImpl.setCipers(8);
+		egovIdGnrStrategyImpl.setFillChar('0');
+		return egovIdGnrStrategyImpl;
+	}
+
+	@Bean(destroyMethod = "destroy")
+	public EgovTableIdGnrServiceImpl adminTermsIdGnrService(@Qualifier("dataSource") DataSource dataSource) {
+		EgovTableIdGnrServiceImpl egovTableIdGnrServiceImpl = new EgovTableIdGnrServiceImpl();
+		egovTableIdGnrServiceImpl.setDataSource(dataSource);
+		egovTableIdGnrServiceImpl.setStrategy(adminUserIdPrefix());
+		egovTableIdGnrServiceImpl.setBlockSize(7);
+		egovTableIdGnrServiceImpl.setTable("IDS");
+		egovTableIdGnrServiceImpl.setTableName("TERMS");
+		return egovTableIdGnrServiceImpl;
+	}
 }

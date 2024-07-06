@@ -283,4 +283,31 @@
 			LAST_UPDUSR_ID = #{authorization}
 		WHERE USER_ID = #{authorization}
 	</update>
+	
+	
+	<select id="selectUserByConditions" parameterType="hashmap" resultType="loginVO">
+		select
+			USER_ID as authorization,
+			USER_SE_CODE as userType,
+			USER_NM as name,
+			EMAIL_ADRES as userEmail,
+			BRTHDY,
+			ST_YEAR as stYear,
+			ST_GRADE as gradeNm,
+			ST_CLASS as classCode,
+			ST_CLASS_NM as classNm,
+			ST_NUMBER as stNumber,
+			SEXDSTN as sex,
+			PHOTO_STRE_FILE_NM as profileImageId,
+			TEACHER_SE_CODE as userRole,
+			SCHUL_NM as userSpaceInfo,
+			SCHUL_CODE as schulCode,
+			CONCAT(ST_GRADE, '학년 ', ST_CLASS, '반') as userSpaceOrgInfo
+		from COMTNMBER
+		where TEACHER_SE_CODE = #{userRole}
+        <if test="id != null"> AND USER_ID LIKE CONCAT('%', #{id}, '%') </if>
+        <if test="userSpaceOrgInfo != null"> AND SCHUL_NM LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
+        <if test="name != null"> AND USER_NM LIKE CONCAT('%', #{name}, '%') </if>
+        <if test="userEmail != null"> AND EMAIL_ADRES LIKE CONCAT('%', #{userEmail}, '%') </if>
+	</select>
 </mapper>

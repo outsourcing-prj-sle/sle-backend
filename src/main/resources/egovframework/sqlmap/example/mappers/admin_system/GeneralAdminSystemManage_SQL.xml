@@ -165,7 +165,6 @@
         SELECT * FROM ADMIN_SUB_COMMON_CODES
         <where>
             <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
-            <if test="codeId != null"> AND COMMON_CODE_ID = #{codeId}</if>
             <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
         </where>
     </select>
