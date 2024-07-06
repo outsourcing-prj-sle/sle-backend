@@ -49,11 +49,11 @@ public class AdminManageServiceImpl implements AdminManageService {
 	
 	@Override
 	public String deleteUser(String id){
-		if(mapper.checkUserById(id)) {
+		if(mapper.checkUserByUniqId(id)) {
 			mapper.deleteUser(id);
 			return id;
 		}
-		return "없는 유저 입니다";
+		return "UserNotFound";
 	}
 
 	@Override

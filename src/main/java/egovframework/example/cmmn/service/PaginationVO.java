@@ -1,5 +1,6 @@
 package egovframework.example.cmmn.service;
 
+import egovframework.example.admin.system.model.SiteManageDTO;
 import lombok.*;
 
 @Getter

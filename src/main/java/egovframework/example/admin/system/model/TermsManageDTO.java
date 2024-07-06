@@ -1,11 +1,17 @@
 package egovframework.example.admin.system.model;
 
-import java.time.LocalDateTime;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import lombok.Data;
-
-@Data
-public class TermsManageDTO {
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class TermsManageDTO{
     private String termsId;
     private String studentTerms;
     private String staffTerms;

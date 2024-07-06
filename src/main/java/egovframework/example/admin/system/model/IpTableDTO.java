@@ -1,9 +1,18 @@
 package egovframework.example.admin.system.model;
 
-import lombok.Data;
+import egovframework.example.cmmn.service.PaginationVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-@Data
-public class IpTableDTO {
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class IpTableDTO extends PaginationVO{
     private String allowedIp;
     private String adminId;
     private char active;

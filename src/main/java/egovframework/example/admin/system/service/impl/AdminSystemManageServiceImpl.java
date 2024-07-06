@@ -1,18 +1,30 @@
 package egovframework.example.admin.system.service.impl;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import egovframework.example.admin.system.model.CommonCodeListDTO;
 import egovframework.example.admin.system.model.CommonCodesDTO;
 import egovframework.example.admin.system.model.IpTableDTO;
+import egovframework.example.admin.system.model.IpTableListDTO;
+import egovframework.example.admin.system.model.SiteListDTO;
 import egovframework.example.admin.system.model.SiteManageDTO;
+import egovframework.example.admin.system.model.SubCommonCodeListDTO;
 import egovframework.example.admin.system.model.SubCommonCodesDTO;
+import egovframework.example.admin.system.model.TermsListDTO;
 import egovframework.example.admin.system.model.TermsManageDTO;
 import egovframework.example.admin.system.service.AdminSystemManageService;
+import egovframework.example.cmmn.service.PaginationVO;
+import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
 
 @Service("adminSystemManageService")
 public class AdminSystemManageServiceImpl implements AdminSystemManageService{
@@ -39,8 +51,12 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public void updateSite(SiteManageDTO site) {
-		mapper.updateSite(site);
+	public boolean updateSite(SiteManageDTO site) {
+		if(mapper.selectSiteById(site.getSiteId()) != null || site.getSiteId() != null) {
+			mapper.updateSite(site);
+			return true;
+		}
+		return false;
 	}
 
 	@Override
@@ -49,8 +65,13 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<SiteManageDTO> selectSitesAll() {
-		return mapper.selectSitesAll();
+	public SiteListDTO selectSitesAll(SiteManageDTO data) {
+        return SiteListDTO.builder()
+                .siteInfoList(mapper.selectSitesAll(data))
+                .pageNo(data.getPageNo())
+                .recordCount(data.getRecordCount())
+                .totalCount(1)
+                .build();
 	}
 	
 	@Override
@@ -58,6 +79,43 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 		return mapper.checkSiteByUrl(url);
 	}
 
+	
+	/**
+	 * 파일 저장
+	 * @param siteManageDTO
+	 * @param topLogoImage
+	 * @param bottomLogoImage
+	 * @param mainImage
+	 * @throws IOException
+	 */
+	@Override
+    public void saveSiteManage(SiteManageDTO siteManageDTO, MultipartFile topLogoImage, MultipartFile bottomLogoImage, MultipartFile mainImage) throws IOException {
+        if (topLogoImage != null && !topLogoImage.isEmpty()) {
+            String topLogoImagePath = saveFile(topLogoImage, "top");
+            siteManageDTO.setTopLogoImage(topLogoImagePath);
+        }
+        if (bottomLogoImage != null && !bottomLogoImage.isEmpty()) {
+            String bottomLogoImagePath = saveFile(bottomLogoImage, "bottom");
+            siteManageDTO.setBottomLogoImage(bottomLogoImagePath);
+        }
+        if (mainImage != null && !mainImage.isEmpty()) {
+            String mainImagePath = saveFile(mainImage, "main");
+            siteManageDTO.setMainImage(mainImagePath);
+        }
+        insertSite(siteManageDTO);
+    }
+
+    private String saveFile(MultipartFile file, String folder) throws IOException {
+    	String uploadDir = "src/main/webapp/api/" + folder;
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        String fileName = file.getOriginalFilename();
+        Path filePath = uploadPath.resolve(fileName);
+        file.transferTo(filePath);
+        return "api/" + folder + "/" + fileName;
+    }
 	/**
 	 * 약관 관리
 	 */
@@ -82,8 +140,8 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<TermsManageDTO> selectTermsAll() {
-		return mapper.selectTermsAll();
+	public List<TermsManageDTO> selectTermsAll(TermsManageDTO data) {
+		return mapper.selectTermsAll(data);
 	}
 
 	/**
@@ -110,8 +168,13 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<CommonCodesDTO> selectCommonCodesByConditions(Map<String, String> conditions) {
-		return mapper.selectCommonCodesByConditions(conditions);
+	public CommonCodeListDTO selectCommonCodesByConditions(CommonCodesDTO data) {
+        return CommonCodeListDTO.builder()
+                .userInfoList(mapper.selectCommonCodesByConditions(data))
+                .pageNo(data.getPageNo())
+                .recordCount(data.getRecordCount())
+                .totalCount(1)
+                .build();
 	}
 
 	@Override
@@ -137,8 +200,13 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<SubCommonCodesDTO> selectSubCommonCodesByConditions(Map<String, String> conditions) {
-		return mapper.selectSubCommonCodesByConditions(conditions);
+	public SubCommonCodeListDTO selectSubCommonCodesByConditions(SubCommonCodesDTO data) {
+        return SubCommonCodeListDTO.builder()
+                .userInfoList(mapper.selectSubCommonCodesByConditions(data))
+                .pageNo(data.getPageNo())
+                .recordCount(data.getRecordCount())
+                .totalCount(1)
+                .build();
 	}
 	
 	/**
@@ -166,7 +234,23 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public List<IpTableDTO> selectIpsAll() {
-		return mapper.selectIpsAll();
+	public IpTableListDTO selectIpsAll(IpTableDTO data) {
+        return IpTableListDTO.builder()
+                .userInfoList(mapper.selectIpsAll(data))
+                .pageNo(data.getPageNo())
+                .recordCount(data.getRecordCount())
+                .totalCount(1)
+                .build();
+	}
+	
+	@Override
+	public boolean checkCommonCodeById(String codeId) {
+		// TODO Auto-generated method stub
+		return mapper.checkCommonCodeById(codeId);
+	}
+	@Override
+	public boolean checkSubCommonCodeById(String codeId) {
+		// TODO Auto-generated method stub
+		return mapper.checkSubCommonCodeById(codeId);
 	}
 }

@@ -46,8 +46,6 @@ public class AdminLogInterceptor implements HandlerInterceptor {
 	        		.build();
 
         AdminLogService.saveLog(log);
-        
-        request.setAttribute("user", adminLoginVO);
         return true;
     }
 }

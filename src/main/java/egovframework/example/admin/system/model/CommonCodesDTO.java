@@ -1,9 +1,19 @@
 package egovframework.example.admin.system.model;
 
-import lombok.Data;
+import egovframework.example.cmmn.service.PaginationVO;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 
-@Data
-public class CommonCodesDTO {
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class CommonCodesDTO extends PaginationVO{
     private String codeId;
     private String categoryCode;
     private String codeName;

@@ -64,15 +64,33 @@ public class AdminManageController {
 	}
 	
 	@PutMapping("/users/{role}/register")
-	ResponseEntity<?> insertUser(@PathVariable String role, @RequestBody Object loginVO){
-		if(role.equals("teacher") || role.equals("student")) {
-			LoginVO whaleUsers = userManageService.insertUserInfo((LoginVO)loginVO);
-			return ResponseEntity.ok(whaleUsers);
+	ResponseEntity<?> insertUser(@PathVariable String role, AdminLoginVO loginVO){
+		switch(role.toLowerCase()) {
+			case "student": 
+			case "teacher": 
+				LoginVO whaleUser = LoginVO.builder()
+									.authorization(loginVO.getId())
+									.name(loginVO.getName())
+									.password(loginVO.getPassword())
+									.userRole(role)
+									.gradeNm(loginVO.getGradeNm())
+									.classNm(loginVO.getClassNm())
+									.userSpaceInfo(loginVO.getUserSpaceOrgInfo())
+									.userEmail(loginVO.getUserEmail())
+									.build();
+				userManageService.insertUserInfo(whaleUser);
+				return ResponseEntity.ok().build();
+			case "ogzadmin":
+			case "schooladmin":
+			case "admin":
+				loginVO.setUniqId(adminManageService.insertUser(loginVO));
+				AdminLoginVO res = adminManageService.selectUser(loginVO);
+				return ResponseEntity.ok(res);
+			default:
+				return ResponseEntity.ok("Register Failed");
+				
 		}
-		AdminLoginVO adminLoginVO = (AdminLoginVO)loginVO;
-		adminLoginVO.setUniqId(adminManageService.insertUser(adminLoginVO));
-		AdminLoginVO res = adminManageService.selectUser(adminLoginVO);
-		return ResponseEntity.ok(res);
+
 	}
 	
 	@DeleteMapping("/users/{role}/{id}")
@@ -84,5 +102,4 @@ public class AdminManageController {
 		String msg = adminManageService.deleteUser(id);
 		return ResponseEntity.ok(msg);
 	}
-	
 }

@@ -51,9 +51,7 @@ public class AdminLoginController {
 		HashMap<String, Object> result = new HashMap<String, Object>();
 		
 		result.put("token", user.getUniqId());
-		result.put("id", account.getId());
-		result.put("role", user.getUserRole());
-		result.put("position", user.getUserSpaceOrgInfo());
+		result.put("name", user.getName());
 		
 		return ResponseEntity.ok(result);
 	}

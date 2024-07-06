@@ -31,8 +31,9 @@
             CASE 
                 WHEN count(*) > 0 THEN true
                 ELSE false
-            END as exists
-        FROM ADMIN_SITE_MANAGEMENT WHERE SITE_DOMAIN = #{siteDomain}
+            END
+        FROM ADMIN_SITE_MANAGEMENT 
+        WHERE SITE_DOMAIN = #{url}
     </select>
     
     <update id="updateSite" parameterType="SiteManageDTO">
@@ -54,8 +55,11 @@
         DELETE FROM ADMIN_SITE_MANAGEMENT WHERE SITE_ID = #{siteId}
     </delete>
 
-    <select id="selectSitesAll" resultType="SiteManageDTO">
+    <select id="selectSitesAll" parameterType="SiteManageDTO" resultType="SiteManageDTO">
         SELECT * FROM ADMIN_SITE_MANAGEMENT
+        ORDER BY CREATED_AT DESC
+        limit #{recordCount}
+        offset #{firstIndex}
     </select>
 
     <!-- Terms Management -->
@@ -82,7 +86,7 @@
         DELETE FROM ADMIN_TERMS_MANAGEMENT WHERE TERMS_ID = #{termsId}
     </delete>
 
-    <select id="selectTermsAll" resultType="TermsManageDTO">
+    <select id="selectTermsAll" parameterType="TermsManageDTO" resultType="TermsManageDTO">
         SELECT * FROM ADMIN_TERMS_MANAGEMENT
     </select>
 
@@ -97,12 +101,13 @@
     </select>
 
     <select id="checkCommonCodeById" parameterType="String" resultType="boolean">
-        SELECT
+        SELECT        
             CASE 
                 WHEN count(*) > 0 THEN true
                 ELSE false
-            END as exists
-        FROM ADMIN_COMMON_CODES WHERE CODE_ID = #{codeId}
+            END
+        FROM ADMIN_COMMON_CODES 
+        WHERE CODE_ID LIKE CONCAT('%',#{id},'%')
     </select>
 
     <update id="updateCommonCode" parameterType="CommonCodesDTO">
@@ -120,17 +125,20 @@
         DELETE FROM ADMIN_COMMON_CODES WHERE CODE_ID = #{codeId}
     </delete>
 
-    <select id="selectCommonCodesByConditions" parameterType="hashmap" resultType="CommonCodesDTO">
+    <select id="selectCommonCodesByConditions" parameterType="CommonCodesDTO" resultType="CommonCodesDTO">
         SELECT * FROM ADMIN_COMMON_CODES
         <where>
-            <if test="code_id != null"> AND CODE_ID LIKE CONCAT('%',#{code_id},'%')</if>
-            <if test="code_name != null"> AND CODE_NAME LIKE CONCAT('%',#{code_name},'%')</if>
+            <if test="codeId != null"> AND CODE_ID LIKE CONCAT('%',#{codeId},'%')</if>
+            <if test="codeName != null"> AND CODE_NAME LIKE CONCAT('%',#{codeName},'%')</if>
         </where>
+       	ORDER BY CREATED_AT DESC
+        limit #{recordCount}
+        offset #{firstIndex}
     </select>
 
     <!-- Sub Common Codes -->
     <insert id="insertSubCommonCode" parameterType="SubCommonCodesDTO">
-        INSERT INTO ADMIN_SUB_COMMON_CODES (SUB_CODE_ID, COMMON_CODE_ID, SUB_CODE_NAME, CODE_DESCRIPTION, CREATED_AT, UPDATED_AT, CREATED_BY)
+        INSERT INTO ADMIN_SUB_COMMON_CODES (SUB_CODE_ID, CODE_ID, SUB_CODE_NAME, CODE_DESCRIPTION, CREATED_AT, UPDATED_AT, CREATED_BY)
         VALUES (#{subCodeId}, #{codeId}, #{subCodeName}, #{codeDescription}, #{createdAt}, #{updatedAt}, #{createdBy})
     </insert>
 
@@ -143,13 +151,13 @@
             CASE 
                 WHEN count(*) > 0 THEN true
                 ELSE false
-            END as exists
-        FROM ADMIN_SUB_COMMON_CODES WHERE SUB_CODE_ID = #{subCodeId}
+            END
+        FROM ADMIN_SUB_COMMON_CODES WHERE SUB_CODE_ID LIKE CONCAT('%',#{id},'%')
     </select>
 
     <update id="updateSubCommonCode" parameterType="SubCommonCodesDTO">
         UPDATE ADMIN_SUB_COMMON_CODES
-        SET COMMON_CODE_ID = #{codeId},
+        SET CODE_ID = #{codeId},
             SUB_CODE_NAME = #{subCodeName},
             CODE_DESCRIPTION = #{codeDescription},
             UPDATED_AT = CURRENT_TIMESTAMP,
@@ -161,12 +169,16 @@
         DELETE FROM ADMIN_SUB_COMMON_CODES WHERE SUB_CODE_ID = #{subCodeId}
     </delete>
 
-    <select id="selectSubCommonCodesByConditions" parameterType="map" resultType="SubCommonCodesDTO">
+    <select id="selectSubCommonCodesByConditions" parameterType="SubCommonCodesDTO" resultType="SubCommonCodesDTO">
         SELECT * FROM ADMIN_SUB_COMMON_CODES
+        WHERE CODE_ID = #{codeId}
         <where>
             <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
             <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
         </where>
+        ORDER BY CREATED_AT DESC
+        limit #{recordCount}
+        offset #{firstIndex}
     </select>
 
     <!-- IP Table -->
@@ -192,8 +204,11 @@
         DELETE FROM ADMIN_IP_TABLE WHERE ALLOWED_IP = #{allowedIp}
     </delete>
 
-    <select id="selectIpsAll" resultType="IpTableDTO">
+    <select id="selectIpsAll" parameterType="IpTableDTO" resultType="IpTableDTO">
         SELECT * FROM ADMIN_IP_TABLE
+        ORDER BY CREATED_AT DESC
+        limit #{recordCount}
+        offset #{firstIndex}
     </select>
 
 </mapper>

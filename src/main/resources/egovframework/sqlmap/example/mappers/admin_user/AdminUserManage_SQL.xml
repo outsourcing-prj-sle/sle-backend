@@ -41,7 +41,12 @@
         UPDATED_AT as updateAt
         FROM ADMIN_USER_TABLE 
         WHERE USER_ROLE LIKE CONCAT('%', #{userRole}, '%')
-        <if test="startDate != null and endDate != null"> AND CREATE_AT BETWEEN #{startDate} AND #{endDate} </if>
+        <if test="startDate != null and startDate != ''">
+              and CAST(CREATE_AT) <![CDATA[>=]]> CAST(#{startDate})
+        </if>
+        <if test="endDate != null and endDate != ''">
+            and CAST(CREATE_AT) <![CDATA[<=]]> CAST(#{endDate})
+        </if>
         <if test="id != null"> AND USER_SE_CODE LIKE CONCAT('%', #{id}, '%') </if>
         <if test="uniqId != null"> AND USER_ID LIKE CONCAT('%', #{uniqId}, '%') </if>
         <if test="userSpaceOrgInfo != null"> AND USER_POSITION LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
@@ -84,7 +89,7 @@
 	        CASE 
 	            WHEN count(*) > 0 THEN true
 	            ELSE false
-	        END as userExists
+	        END
 	    from ADMIN_USER_TABLE
 	    where USER_SE_CODE = #{id}
 	</select>
@@ -93,7 +98,7 @@
 	        CASE 
 	            WHEN count(*) > 0 THEN true
 	            ELSE false
-	        END as userExists
+	        END
 	    from ADMIN_USER_TABLE
 	    where USER_ID = #{uniqId}
 	</select>
