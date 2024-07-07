@@ -15,7 +15,7 @@ import lombok.Setter;
 public class IpTableDTO extends PaginationVO{
     private String allowedIp;
     private String adminId;
-    private char active;
+    private boolean isActive;
     private String createdAt;
     private String updatedAt;
     private String createdBy;

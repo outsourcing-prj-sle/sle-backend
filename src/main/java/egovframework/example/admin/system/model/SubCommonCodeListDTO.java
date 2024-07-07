@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class SubCommonCodeListDTO {
-    private List<SubCommonCodesDTO> userInfoList;
+    private List<SubCommonCodesDTO> subCodeList;
     private int pageNo = 1;
     private int limit = 10;
     private int totalCount;

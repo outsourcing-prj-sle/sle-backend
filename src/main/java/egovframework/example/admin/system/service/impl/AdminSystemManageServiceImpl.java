@@ -15,6 +15,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.example.admin.system.model.CommonCodeListDTO;
 import egovframework.example.admin.system.model.CommonCodesDTO;
+import egovframework.example.admin.system.model.IpLogListDTO;
 import egovframework.example.admin.system.model.IpTableDTO;
 import egovframework.example.admin.system.model.IpTableListDTO;
 import egovframework.example.admin.system.model.SiteListDTO;
@@ -24,6 +25,7 @@ import egovframework.example.admin.system.model.SubCommonCodesDTO;
 import egovframework.example.admin.system.model.TermsListDTO;
 import egovframework.example.admin.system.model.TermsManageDTO;
 import egovframework.example.admin.system.service.AdminSystemManageService;
+import egovframework.example.cmmn.service.ApiLog;
 import egovframework.example.cmmn.service.PaginationVO;
 import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
 
@@ -195,7 +197,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	@Override
 	public CommonCodeListDTO selectCommonCodesByConditions(CommonCodesDTO data) {
         return CommonCodeListDTO.builder()
-                .userInfoList(mapper.selectCommonCodesByConditions(data))
+                .codeInfoList(mapper.selectCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
                 .limit(data.getLimit())
                 .totalCount(1)
@@ -227,7 +229,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	@Override
 	public SubCommonCodeListDTO selectSubCommonCodesByConditions(SubCommonCodesDTO data) {
         return SubCommonCodeListDTO.builder()
-                .userInfoList(mapper.selectSubCommonCodesByConditions(data))
+                .subCodeList(mapper.selectSubCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
                 .limit(data.getLimit())
                 .totalCount(1)
@@ -261,10 +263,10 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	@Override
 	public IpTableListDTO selectIpsAll(IpTableDTO data) {
         return IpTableListDTO.builder()
-                .userInfoList(mapper.selectIpsAll(data))
+                .ipInfoList(mapper.selectIpsAll(data))
                 .pageNo(data.getPageNo())
+                .totalCount(mapper.selectIpCount())
                 .limit(data.getLimit())
-                .totalCount(1)
                 .build();
 	}
 	
@@ -277,5 +279,15 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	public boolean checkSubCommonCodeById(String codeId) {
 		// TODO Auto-generated method stub
 		return mapper.checkSubCommonCodeById(codeId);
+	}
+	
+	@Override
+	public IpLogListDTO selectIpLogAll(ApiLog log){
+		return IpLogListDTO.builder()
+				.logList(mapper.selectIpLogAll(log))
+				.pageNo(log.getPageNo())
+				.recordCount(log.getLimit())
+				.totalCount(mapper.selectIpLogCount())
+				.build();
 	}
 }

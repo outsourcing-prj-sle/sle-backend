@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CommonCodeListDTO {
-    private List<CommonCodesDTO> userInfoList;
+    private List<CommonCodesDTO> codeInfoList;
     private int pageNo = 1;
     private int limit = 10;
     private int totalCount;

@@ -79,7 +79,6 @@
         UPDATE ADMIN_USER_TABLE
         SET USER_SE_CODE = #{id},
             USER_NAME = #{name},
-            USER_PW = #{password},
             USER_ROLE = #{userRole},
             PHONE_NUMBER = #{phoneNumber},
             EMAIL_ADDRESS = #{userEmail},
