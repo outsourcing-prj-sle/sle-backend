@@ -8,6 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import egovframework.example.admin.system.model.CommonCodeListDTO;
 import egovframework.example.admin.system.model.CommonCodesDTO;
+import egovframework.example.admin.system.model.IpLogListDTO;
 import egovframework.example.admin.system.model.IpTableDTO;
 import egovframework.example.admin.system.model.IpTableListDTO;
 import egovframework.example.admin.system.model.SiteListDTO;
@@ -16,6 +17,7 @@ import egovframework.example.admin.system.model.SubCommonCodeListDTO;
 import egovframework.example.admin.system.model.SubCommonCodesDTO;
 import egovframework.example.admin.system.model.TermsListDTO;
 import egovframework.example.admin.system.model.TermsManageDTO;
+import egovframework.example.cmmn.service.ApiLog;
 import egovframework.example.cmmn.service.PaginationVO;
 
 public interface AdminSystemManageService {
@@ -70,4 +72,6 @@ public interface AdminSystemManageService {
     void updateIp(IpTableDTO ipTable);
     void deleteIp(String allowedIp);
     IpTableListDTO selectIpsAll(IpTableDTO data);
+    
+    IpLogListDTO selectIpLogAll(ApiLog log);
 }

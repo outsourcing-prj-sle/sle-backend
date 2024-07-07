@@ -57,8 +57,8 @@
 
     <select id="selectSitesAll" parameterType="SiteManageDTO" resultType="SiteManageDTO">
         SELECT * FROM ADMIN_SITE_MANAGEMENT
-        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         limit #{limit}
         offset #{firstIndex}
     </select>
@@ -191,7 +191,7 @@
     <!-- IP Table -->
     <insert id="insertIp" parameterType="IpTableDTO">
         INSERT INTO ADMIN_IP_TABLE (ALLOWED_IP, ADMIN_ID, IS_ACTIVE, CREATED_AT, UPDATED_AT, CREATED_BY)
-        VALUES (#{allowedIp}, #{adminId}, #{active}, #{createdAt}, #{updatedAt}, #{createdBy})
+        VALUES (#{allowedIp}, #{adminId}, #{isActive}, #{createdAt}, #{updatedAt}, #{createdBy)
     </insert>
 
     <select id="selectIpById" parameterType="String" resultType="IpTableDTO">
@@ -205,6 +205,7 @@
             UPDATED_AT = CURRENT_TIMESTAMP,
             CREATED_BY = #{createdBy}
         WHERE ALLOWED_IP = #{allowedIp}
+        AND ADMIN
     </update>
 
     <delete id="deleteIp" parameterType="String">
@@ -215,8 +216,31 @@
         SELECT * FROM ADMIN_IP_TABLE
         <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
         <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
-        limit #{recordCount}
+        limit #{limit}
         offset #{firstIndex}
     </select>
-
+    
+    <select id="selectIpCount" resultType="int">
+    select count(*) from ADMIN_IP_TABLE
+    </select>
+    
+    <select id="selectIpLogAll" parameterType="apiLog" resultType="apiLog">
+    	SELECT * FROM ADMIN_LOG
+    	<if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        <where>
+        	<if test="id != null">AND USER_SE_CODE LIKE CONCAT('%',#{id},'%')</if>
+        	<if test="userName != null">AND USER_NAME LIKE CONCAT('%',#{userName},'%')</if>
+        	<if test="apiUrl != null">AND API_URL LIKE CONCAT('%',#{apiUrl},'%')</if>
+        	<if test="ipAddress != null">AND IP_ADDRESS LIKE CONCAT('%',#{ipAddress},'%')</if>
+        	<if test="accessTime != null">AND ACCESS_TIME LIKE CONCAT('%',#{accessTime},'%')</if>
+        </where>
+        limit #{limit}
+        offset #{firstIndex}
+    		
+    </select>
+    
+    <select id="selectIpLogCount" resultType="int">
+    	select count(*) from ADMIN_LOG
+    </select>
 </mapper>

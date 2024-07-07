@@ -1,13 +1,17 @@
 package egovframework.example.cmmn.service;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
 @Setter
 @Builder
-public class ApiLog {
+@NoArgsConstructor
+@AllArgsConstructor
+public class ApiLog extends PaginationVO{
     private Long logId;
     private String uniqId;
     private String id;

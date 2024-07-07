@@ -38,6 +38,7 @@
 		<typeAlias alias="commonCodesDTO" type="egovframework.example.admin.system.model.CommonCodesDTO"/>
 		<typeAlias alias="subCommonCodesDTO" type="egovframework.example.admin.system.model.SubCommonCodesDTO"/>
 		<typeAlias alias="ipTableDTO" type="egovframework.example.admin.system.model.IpTableDTO"/>
+		<typeAlias alias="apiLog" type="egovframework.example.cmmn.service.ApiLog"/>
 
 	</typeAliases>
 </configuration>

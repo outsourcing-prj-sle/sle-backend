@@ -15,6 +15,7 @@ import egovframework.example.admin.system.model.SubCommonCodeListDTO;
 import egovframework.example.admin.system.model.SubCommonCodesDTO;
 import egovframework.example.admin.system.model.TermsListDTO;
 import egovframework.example.admin.system.model.TermsManageDTO;
+import egovframework.example.cmmn.service.ApiLog;
 import egovframework.example.cmmn.service.PaginationVO;
 
 @Mapper("adminSystemMapper")
@@ -69,4 +70,8 @@ public interface AdminSystemMapper {
     void updateIp(IpTableDTO ipTable);
     void deleteIp(String allowedIp);
     List<IpTableDTO> selectIpsAll(IpTableDTO data);
+    int selectIpCount();
+
+    int selectIpLogCount();
+	List<ApiLog> selectIpLogAll(ApiLog log);
 }

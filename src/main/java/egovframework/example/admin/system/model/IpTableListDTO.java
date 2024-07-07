@@ -10,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IpTableListDTO {
-    private List<IpTableDTO> userInfoList;
+    private List<IpTableDTO> ipInfoList;
     private int pageNo = 1;
     private int recordCount = 10;
     private int totalCount;
