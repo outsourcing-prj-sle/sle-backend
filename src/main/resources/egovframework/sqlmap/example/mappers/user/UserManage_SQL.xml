@@ -309,8 +309,19 @@
         <if test="userSpaceOrgInfo != null"> AND SCHUL_NM LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
         <if test="name != null"> AND USER_NM LIKE CONCAT('%', #{name}, '%') </if>
         <if test="userEmail != null"> AND EMAIL_ADRES LIKE CONCAT('%', #{userEmail}, '%') </if>
-        ORDER BY FRST_REGIST_PNTTM DESC
+        <if test="orderBy == 'desc'">ORDER BY FRST_REGIST_PNTTM DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY FRST_REGIST_PNTTM ASC</if>
         limit #{limit}
         offset #{firstIndex}
 	</select>
+	
+	<select id="selectUserCount" parameterType="hashmap" resultType="loginVO">
+		select * from COMTNMBER
+		where TEACHER_SE_CODE = #{userRole}
+		<if test="id != null"> AND USER_ID LIKE CONCAT('%', #{id}, '%') </if>
+        <if test="userSpaceOrgInfo != null"> AND SCHUL_NM LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
+        <if test="name != null"> AND USER_NM LIKE CONCAT('%', #{name}, '%') </if>
+        <if test="userEmail != null"> AND EMAIL_ADRES LIKE CONCAT('%', #{userEmail}, '%') </if>
+	</select>
+	
 </mapper>

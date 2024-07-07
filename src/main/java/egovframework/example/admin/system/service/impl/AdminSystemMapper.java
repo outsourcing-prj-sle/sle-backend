@@ -31,7 +31,7 @@ public interface AdminSystemMapper {
     void deleteSite(String siteId);
     List<SiteManageDTO> selectSitesAll(SiteManageDTO data);
     boolean checkSiteByUrl(String url);
-    int checkSiteCount();
+    int checkSiteCount(SiteManageDTO data);
 
 	/*
 	 * 약관 관리
@@ -51,6 +51,7 @@ public interface AdminSystemMapper {
     void deleteCommonCode(String codeId);
     List<CommonCodesDTO> selectCommonCodesByConditions(CommonCodesDTO data);
     boolean checkCommonCodeById(String codeId);
+    int selectCommonCodeCount(CommonCodesDTO data);
 
 	/*
 	 * 하위 공통 코드 관리
@@ -61,6 +62,7 @@ public interface AdminSystemMapper {
     void deleteSubCommonCode(String subCodeId);
     List<SubCommonCodesDTO> selectSubCommonCodesByConditions(SubCommonCodesDTO data);
     boolean checkSubCommonCodeById(String codeId);
+    int selectSubCommonCodeCount(SubCommonCodesDTO data);
 
 	/*
 	 * IP 관리
@@ -68,10 +70,10 @@ public interface AdminSystemMapper {
     void insertIp(IpTableDTO ipTable);
     IpTableDTO selectIpById(String allowedIp);
     void updateIp(IpTableDTO ipTable);
-    void deleteIp(String allowedIp);
+    void deleteIp(int id);
     List<IpTableDTO> selectIpsAll(IpTableDTO data);
     int selectIpCount();
 
-    int selectIpLogCount();
+    int selectIpLogCount(ApiLog log);
 	List<ApiLog> selectIpLogAll(ApiLog log);
 }

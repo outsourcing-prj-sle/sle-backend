@@ -68,21 +68,21 @@ public class AdminIpTableController {
 		}
     }
 
-	@GetMapping("/ip/{ip}")
-    ResponseEntity<?> selectEntity(@PathVariable String ip) {
+	@GetMapping("/ip/{id}")
+    ResponseEntity<?> selectEntity(@PathVariable String id) {
 		try {
-			IpTableDTO res = adminSystemService.selectIpById(ip);
+			IpTableDTO res = adminSystemService.selectIpById(id);
 	        return ResponseEntity.ok(res);
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));
 		}
     }
     
-	@DeleteMapping("/ip/{ip}")
-    ResponseEntity<?> deleteEntity(@PathVariable String entity, @PathVariable String ip) {
+	@DeleteMapping("/ip/{id}")
+    ResponseEntity<?> deleteEntity(@PathVariable int id) {
 		try {
-			adminSystemService.deleteSite(ip);
-			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "SITE ID : " + ip + "delete Success"));
+			adminSystemService.deleteIp(id);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "IP ID : " + id + "delete Success"));
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));
 		}

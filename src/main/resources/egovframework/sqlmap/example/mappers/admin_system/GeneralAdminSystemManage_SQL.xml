@@ -138,10 +138,17 @@
             <if test="codeId != null"> AND CODE_ID LIKE CONCAT('%',#{codeId},'%')</if>
             <if test="codeName != null"> AND CODE_NAME LIKE CONCAT('%',#{codeName},'%')</if>
         </where>
-        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         limit #{limit}
         offset #{firstIndex}
+    </select>
+    <select id="selectCommonCodesCount" parameterType="SubCommonCodesDTO" resultType="int">
+        SELECT count(*) FROM ADMIN_COMMON_CODES
+        <where>
+            <if test="codeId != null"> AND CODE_ID LIKE CONCAT('%',#{codeId},'%')</if>
+            <if test="codeName != null"> AND CODE_NAME LIKE CONCAT('%',#{codeName},'%')</if>
+        </where>
     </select>
 
     <!-- Sub Common Codes -->
@@ -184,40 +191,49 @@
             <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
             <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
         </where>
-        ORDER BY CREATED_AT DESC
-        limit #{recordCount}
+        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         limit #{limit}
         offset #{firstIndex}
     </select>
-
+    
+    <select id="selectSubCommonCodesCount" parameterType="SubCommonCodesDTO" resultType="int">
+        SELECT count(*) FROM ADMIN_SUB_COMMON_CODES
+        WHERE CODE_ID = #{codeId}
+        <where>
+            <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
+            <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
+        </where>
+    </select>
+	
     <!-- IP Table -->
     <insert id="insertIp" parameterType="IpTableDTO">
         INSERT INTO ADMIN_IP_TABLE (ALLOWED_IP, ADMIN_ID, IS_ACTIVE, CREATED_AT, UPDATED_AT, CREATED_BY)
-        VALUES (#{allowedIp}, #{adminId}, #{isActive}, #{createdAt}, #{updatedAt}, #{createdBy)
+        VALUES (#{allowedIp}, #{adminId}, #{isActive}, now(), now(), #{createdBy)
     </insert>
 
     <select id="selectIpById" parameterType="String" resultType="IpTableDTO">
-        SELECT * FROM ADMIN_IP_TABLE WHERE ALLOWED_IP = #{allowedIp}
+        SELECT * FROM ADMIN_IP_TABLE WHERE IP_ID = #{id}
     </select>
 
     <update id="updateIp" parameterType="IpTableDTO">
         UPDATE ADMIN_IP_TABLE
-        SET ADMIN_ID = #{adminId},
+        SET ALLOWED_IP = #{allowedIp},
+        	ADMIN_ID = #{adminId},
             IS_ACTIVE = #{active},
             UPDATED_AT = CURRENT_TIMESTAMP,
             CREATED_BY = #{createdBy}
-        WHERE ALLOWED_IP = #{allowedIp}
-        AND ADMIN
+        WHERE IP_ID = #{id}
     </update>
 
-    <delete id="deleteIp" parameterType="String">
-        DELETE FROM ADMIN_IP_TABLE WHERE ALLOWED_IP = #{allowedIp}
+    <delete id="deleteIp" parameterType="int">
+        DELETE FROM ADMIN_IP_TABLE WHERE IP_ID = #{id}
     </delete>
 
     <select id="selectIpsAll" parameterType="IpTableDTO" resultType="IpTableDTO">
         SELECT * FROM ADMIN_IP_TABLE
-        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         limit #{limit}
         offset #{firstIndex}
     </select>
@@ -227,22 +243,30 @@
     </select>
     
     <select id="selectIpLogAll" parameterType="apiLog" resultType="apiLog">
-    	SELECT * FROM ADMIN_LOG
-    	<if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+    	SELECT
+    	USER_ID as uniqId,
+    	USER_SE_CODE as id,
+    	USER_NAME as userName,
+    	IP_ADDRESS as ipAddr,
+    	ACCESS_TIME as accessTime,
+    	API_URL as apiUrl    	
+    	FROM ADMIN_LOG
+        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         <where>
         	<if test="id != null">AND USER_SE_CODE LIKE CONCAT('%',#{id},'%')</if>
-        	<if test="userName != null">AND USER_NAME LIKE CONCAT('%',#{userName},'%')</if>
         	<if test="apiUrl != null">AND API_URL LIKE CONCAT('%',#{apiUrl},'%')</if>
-        	<if test="ipAddress != null">AND IP_ADDRESS LIKE CONCAT('%',#{ipAddress},'%')</if>
-        	<if test="accessTime != null">AND ACCESS_TIME LIKE CONCAT('%',#{accessTime},'%')</if>
         </where>
         limit #{limit}
         offset #{firstIndex}
     		
     </select>
     
-    <select id="selectIpLogCount" resultType="int">
+    <select id="selectIpLogCount" parameterType="apiLog" resultType="int">
     	select count(*) from ADMIN_LOG
+    	<where>
+        	<if test="id != null">AND USER_SE_CODE LIKE CONCAT('%',#{id},'%')</if>
+        	<if test="apiUrl != null">AND API_URL LIKE CONCAT('%',#{apiUrl},'%')</if>
+        </where>
     </select>
 </mapper>

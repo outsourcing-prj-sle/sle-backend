@@ -40,7 +40,7 @@ public class AdminLogInterceptor implements HandlerInterceptor {
         ApiLog log = ApiLog.builder()
 	        		.uniqId(adminLoginVO.getUniqId())
 	        		.id(adminLoginVO.getId())
-	        		.userName(adminLoginVO.getName())
+	        		.userName(adminLoginVO.getUserSpaceOrgInfo())
 	        		.ipAddress(ipAddress)
 	        		.apiUrl(apiUrl)
 	        		.build();

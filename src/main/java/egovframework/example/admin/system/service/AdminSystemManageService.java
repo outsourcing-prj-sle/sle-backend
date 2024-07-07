@@ -70,7 +70,7 @@ public interface AdminSystemManageService {
     void insertIp(IpTableDTO ipTable);
     IpTableDTO selectIpById(String allowedIp);
     void updateIp(IpTableDTO ipTable);
-    void deleteIp(String allowedIp);
+    void deleteIp(int id);
     IpTableListDTO selectIpsAll(IpTableDTO data);
     
     IpLogListDTO selectIpLogAll(ApiLog log);

@@ -86,7 +86,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
                 .siteInfoList(mapper.selectSitesAll(data))
                 .pageNo(data.getPageNo())
                 .limit(data.getLimit())
-                .totalCount(mapper.checkSiteCount())
+                .totalCount(mapper.checkSiteCount(data))
                 .build();
 	}
 	
@@ -200,7 +200,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
                 .codeInfoList(mapper.selectCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
                 .limit(data.getLimit())
-                .totalCount(1)
+                .totalCount(mapper.selectCommonCodeCount(data))
                 .build();
 	}
 
@@ -232,7 +232,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
                 .subCodeList(mapper.selectSubCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
                 .limit(data.getLimit())
-                .totalCount(1)
+                .totalCount(mapper.selectSubCommonCodeCount(data))
                 .build();
 	}
 	
@@ -256,8 +256,8 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public void deleteIp(String allowedIp) {
-		mapper.deleteIp(allowedIp);
+	public void deleteIp(int id) {
+		mapper.deleteIp(id);
 	}
 
 	@Override
@@ -287,7 +287,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 				.logList(mapper.selectIpLogAll(log))
 				.pageNo(log.getPageNo())
 				.recordCount(log.getLimit())
-				.totalCount(mapper.selectIpLogCount())
+				.totalCount(mapper.selectIpLogCount(log))
 				.build();
 	}
 }
