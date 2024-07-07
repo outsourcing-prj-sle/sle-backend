@@ -18,7 +18,7 @@ public class CommonCodesDTO extends PaginationVO{
     private String categoryCode;
     private String codeName;
     private String codeDescription;
-    private char active;
+    private boolean isActive;
     private String createdAt;
     private String updatedAt;
     private String createdBy;

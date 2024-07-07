@@ -13,6 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class IpTableDTO extends PaginationVO{
+	private String id;
     private String allowedIp;
     private String adminId;
     private boolean isActive;

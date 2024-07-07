@@ -100,7 +100,7 @@
     <!-- Common Codes -->
     <insert id="insertCommonCode" parameterType="CommonCodesDTO">
         INSERT INTO ADMIN_COMMON_CODES (CODE_ID, CATEGORY_CODE, CODE_NAME, CODE_DESCRIPTION, IS_ACTIVE, CREATED_AT, UPDATED_AT, CREATED_BY)
-        VALUES (#{codeId}, #{categoryCode}, #{codeName}, #{codeDescription}, #{active}, #{createdAt}, #{updatedAt}, #{createdBy})
+        VALUES (#{codeId}, #{categoryCode}, #{codeName}, #{codeDescription}, #{isActive}, #{createdAt}, #{updatedAt}, #{createdBy})
     </insert>
 
     <select id="selectCommonCodeById" parameterType="String" resultType="CommonCodesDTO">
@@ -122,7 +122,7 @@
         SET CATEGORY_CODE = #{categoryCode},
             CODE_NAME = #{codeName},
             CODE_DESCRIPTION = #{codeDescription},
-            IS_ACTIVE = #{active},
+            IS_ACTIVE = #{isActive},
             UPDATED_AT = CURRENT_TIMESTAMP,
             CREATED_BY = #{createdBy}
         WHERE CODE_ID = #{codeId}
@@ -138,8 +138,9 @@
             <if test="codeId != null"> AND CODE_ID LIKE CONCAT('%',#{codeId},'%')</if>
             <if test="codeName != null"> AND CODE_NAME LIKE CONCAT('%',#{codeName},'%')</if>
         </where>
-       	ORDER BY CREATED_AT DESC
-        limit #{recordCount}
+        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        limit #{limit}
         offset #{firstIndex}
     </select>
 
