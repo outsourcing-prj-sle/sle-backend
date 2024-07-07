@@ -52,8 +52,8 @@ public class AdminTermsManageController {
 	@PostMapping("/terms/register")
 	ResponseEntity<?> insertEntity(TermsManageDTO data) {
 		try {
-			adminSystemService.insertTerms(data);
-	        return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success"));
+			String res = adminSystemService.insertTerms(data);
+	        return ResponseEntity.ok(res);
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));
 		}
@@ -62,8 +62,8 @@ public class AdminTermsManageController {
 	@PutMapping("/terms/update")
 	ResponseEntity<?> updateEntity(TermsManageDTO data) {
 		try {
-			adminSystemService.updateTerms(data);
-	        return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success"));
+			String res = adminSystemService.updateTerms(data);
+	        return ResponseEntity.ok(res);
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));
 		}

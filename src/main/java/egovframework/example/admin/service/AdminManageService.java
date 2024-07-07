@@ -11,7 +11,7 @@ public interface AdminManageService {
 	
 	AdminLoginVO selectUser(AdminLoginVO AdminLoginVO);
 	
-	List<AdminLoginVO> selectUserAll(Map<String, String> conditional);
+	AdminUserListDTO selectUserAll(AdminUserVO adminUserVO);
 	
 	String deleteUser(String id);
 	

@@ -9,6 +9,7 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 
+import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -32,6 +33,12 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	@Resource(name = "adminSystemMapper")
 	private AdminSystemMapper mapper;
 	
+	@Resource(name = "adminSiteIdGnrService")
+	private EgovIdGnrService adminSiteIdGnrService;
+	
+	@Resource(name = "adminTermsIdGnrService")
+	private EgovIdGnrService adminTermsIdGnrService;
+	
 	
 	@Override
 	public boolean authorizationUser(String id) {
@@ -41,8 +48,15 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	 * 사이트 관리
 	 */
 	@Override
-	public void insertSite(SiteManageDTO site) {
-		mapper.insertSite(site);
+	public String insertSite(SiteManageDTO site) {
+		try {
+			site.setSiteId(adminSiteIdGnrService.getNextStringId());
+			mapper.insertSite(site);
+			return "success";
+		}catch(Exception e) {
+			return "Site Not Found";
+		}
+
 	}
 
 	@Override
@@ -69,8 +83,8 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return SiteListDTO.builder()
                 .siteInfoList(mapper.selectSitesAll(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getRecordCount())
-                .totalCount(1)
+                .recordCount(data.getLimit())
+                .totalCount(mapper.checkSiteCount())
                 .build();
 	}
 	
@@ -120,8 +134,15 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	 * 약관 관리
 	 */
 	@Override
-	public void insertTerms(TermsManageDTO terms) {
-		mapper.insertTerms(terms);
+	public String insertTerms(TermsManageDTO terms) {
+		try {
+			terms.setTermsId(adminTermsIdGnrService.getNextStringId());
+			mapper.insertTerms(terms);
+			return "success";
+		}catch(Exception e) {
+			return "SQL Error";
+		}
+		
 	}
 
 	@Override
@@ -130,8 +151,12 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public void updateTerms(TermsManageDTO terms) {
-		mapper.updateTerms(terms);
+	public String updateTerms(TermsManageDTO terms) {
+		if(mapper.selectTermsById(terms.getTermsId()) != null || terms.getTermsId() != null) {
+			mapper.updateTerms(terms);
+			return "success";
+		}
+		return "Terms Not Found";
 	}
 
 	@Override
@@ -172,7 +197,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return CommonCodeListDTO.builder()
                 .userInfoList(mapper.selectCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getRecordCount())
+                .recordCount(data.getLimit())
                 .totalCount(1)
                 .build();
 	}
@@ -204,7 +229,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return SubCommonCodeListDTO.builder()
                 .userInfoList(mapper.selectSubCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getRecordCount())
+                .recordCount(data.getLimit())
                 .totalCount(1)
                 .build();
 	}
@@ -238,7 +263,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return IpTableListDTO.builder()
                 .userInfoList(mapper.selectIpsAll(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getRecordCount())
+                .recordCount(data.getLimit())
                 .totalCount(1)
                 .build();
 	}

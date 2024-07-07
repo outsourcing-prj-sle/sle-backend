@@ -1,6 +1,5 @@
 package egovframework.example.cmmn.service;
 
-import egovframework.example.admin.system.model.SiteManageDTO;
 import lombok.*;
 
 @Getter
@@ -14,7 +13,7 @@ public class PaginationVO {
     /**
      * 한 페이지에 보여줄 데이터 수
      */
-    private int recordCount = 10;
+    private int limit = 10;
 
     /**
      * 전체 데이터 수
@@ -25,9 +24,11 @@ public class PaginationVO {
      * 현재 페이지 첫번쨰 수
      */
     private int firstIndex;
+    
+    private String orderBy;
 
     public int getFirstIndex() {
 
-        return (this.pageNo - 1) * this.recordCount;
+        return (this.pageNo - 1) * this.limit;
     }
 }

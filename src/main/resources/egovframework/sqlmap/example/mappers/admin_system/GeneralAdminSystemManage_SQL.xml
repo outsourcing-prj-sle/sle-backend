@@ -57,11 +57,16 @@
 
     <select id="selectSitesAll" parameterType="SiteManageDTO" resultType="SiteManageDTO">
         SELECT * FROM ADMIN_SITE_MANAGEMENT
-        ORDER BY CREATED_AT DESC
-        limit #{recordCount}
+        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        limit #{limit}
         offset #{firstIndex}
     </select>
-
+    
+	<select id="checkSiteCount" resultType="int">
+		SELECT count(*) FROM ADMIN_SITE_MANAGEMENT
+	</select>
+	
     <!-- Terms Management -->
     <insert id="insertTerms" parameterType="TermsManageDTO">
         INSERT INTO ADMIN_TERMS_MANAGEMENT (TERMS_ID, STUDENT_TERMS_CONTENT, STAFF_TERMS_CONTENT, CREATED_AT, UPDATED_AT, EFFECTIVE_DATE, CREATED_BY)
@@ -88,6 +93,8 @@
 
     <select id="selectTermsAll" parameterType="TermsManageDTO" resultType="TermsManageDTO">
         SELECT * FROM ADMIN_TERMS_MANAGEMENT
+        ORDER BY CREATED_BY ASC
+        limit 10
     </select>
 
     <!-- Common Codes -->
@@ -206,7 +213,8 @@
 
     <select id="selectIpsAll" parameterType="IpTableDTO" resultType="IpTableDTO">
         SELECT * FROM ADMIN_IP_TABLE
-        ORDER BY CREATED_AT DESC
+        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
         limit #{recordCount}
         offset #{firstIndex}
     </select>

@@ -24,19 +24,20 @@ public interface AdminSystemMapper {
 	/*
 	 * 사이트 관리
 	 */
-    void insertSite(SiteManageDTO site);
+	String insertSite(SiteManageDTO site);
     SiteManageDTO selectSiteById(String siteId);
     boolean updateSite(SiteManageDTO site);
     void deleteSite(String siteId);
     List<SiteManageDTO> selectSitesAll(SiteManageDTO data);
     boolean checkSiteByUrl(String url);
+    int checkSiteCount();
 
 	/*
 	 * 약관 관리
 	 */
-    void insertTerms(TermsManageDTO terms);
+    String insertTerms(TermsManageDTO terms);
     TermsManageDTO selectTermsById(String termsId);
-    void updateTerms(TermsManageDTO terms);
+    String updateTerms(TermsManageDTO terms);
     void deleteTerms(String termsId);
     List<TermsManageDTO> selectTermsAll(TermsManageDTO data);
 

@@ -70,7 +70,7 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
         return IdAdminUserListDTO.builder()
                 .userInfoList(mapper.selectIdAdminUserInfoList(idAdminUserManageVO))
                 .pageNo(idAdminUserManageVO.getPageNo())
-                .recordCount(idAdminUserManageVO.getRecordCount())
+                .recordCount(idAdminUserManageVO.getLimit())
                 .totalCount(mapper.selectIdAdminUserInfoCount())
                 .build();
     }

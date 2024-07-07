@@ -1,5 +1,7 @@
 package egovframework.example.user.service.impl;
 
+import egovframework.example.admin.service.AdminUserVO;
+import egovframework.example.cmmn.service.AdminLoginVO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
@@ -94,5 +96,5 @@ public interface UserManageMapper {
 	/**
 	 * 유저 전체/검색 조회
 	 */
-	List<LoginVO> selectUserByConditions(Map<String, String> conditions);
+	List<LoginVO> selectUserByConditions(AdminUserVO loginVO);
 }

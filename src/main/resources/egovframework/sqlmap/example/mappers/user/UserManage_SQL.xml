@@ -284,7 +284,6 @@
 		WHERE USER_ID = #{authorization}
 	</update>
 	
-	
 	<select id="selectUserByConditions" parameterType="hashmap" resultType="loginVO">
 		select
 			USER_ID as authorization,
@@ -309,5 +308,8 @@
         <if test="userSpaceOrgInfo != null"> AND SCHUL_NM LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
         <if test="name != null"> AND USER_NM LIKE CONCAT('%', #{name}, '%') </if>
         <if test="userEmail != null"> AND EMAIL_ADRES LIKE CONCAT('%', #{userEmail}, '%') </if>
+        ORDER BY FRST_REGIST_PNTTM DESC
+        limit #{recordCount}
+        offset #{firstIndex}
 	</select>
 </mapper>

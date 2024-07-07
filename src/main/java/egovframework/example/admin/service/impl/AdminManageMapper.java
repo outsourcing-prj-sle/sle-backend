@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
+import egovframework.example.admin.service.AdminUserVO;
 import egovframework.example.cmmn.service.AdminLoginVO;
 
 @Mapper("adminManageMapper")
@@ -14,7 +15,7 @@ public interface AdminManageMapper {
 	
 	AdminLoginVO selectUser(AdminLoginVO AdminLoginVO);
 	
-	List<AdminLoginVO> selectUserAll(Map<String, String> conditional);
+	List<AdminLoginVO> selectUserAll(AdminUserVO adminUserVO);
 	
 	void updateUser(AdminLoginVO AdminLoginVO);
 	
@@ -25,4 +26,6 @@ public interface AdminManageMapper {
 	boolean checkUserByUniqId(String uniqId);
 
 	boolean authorizationUser(String id);
+	
+	int selectAdminUserInfoCount(String role);
 }

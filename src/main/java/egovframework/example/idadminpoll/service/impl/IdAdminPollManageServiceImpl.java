@@ -55,7 +55,7 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
                     .pollBgnde(vo.getPollBgnde())
                     .pageNo(idAdminPollManageVO.getPageNo())
                     .pollTarget(makePollTargetList(vo.getPollTargetList()))
-                    .recordCount(idAdminPollManageVO.getRecordCount())
+                    .recordCount(idAdminPollManageVO.getLimit())
                     .totalCount(mapper.selectIdAdminPollListCount(idAdminPollManageVO))
                     .build()
             );

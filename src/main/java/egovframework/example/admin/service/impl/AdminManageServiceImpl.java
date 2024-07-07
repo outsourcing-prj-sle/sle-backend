@@ -10,6 +10,9 @@ import org.egovframe.rte.fdl.idgnr.EgovIdGnrService;
 import org.springframework.stereotype.Service;
 
 import egovframework.example.admin.service.AdminManageService;
+import egovframework.example.admin.service.AdminUserListDTO;
+import egovframework.example.admin.service.AdminUserVO;
+import egovframework.example.admin.system.model.SiteListDTO;
 import egovframework.example.cmmn.service.AdminLoginVO;
 
 @Service("adminManageService")
@@ -43,8 +46,13 @@ public class AdminManageServiceImpl implements AdminManageService {
 	}
 	
 	@Override
-	public List<AdminLoginVO> selectUserAll(Map<String, String> conditional){
-		return mapper.selectUserAll(conditional);
+	public AdminUserListDTO selectUserAll(AdminUserVO adminUserVO){
+        return AdminUserListDTO.builder()
+                .adminUserInfoList(mapper.selectUserAll(adminUserVO))
+                .pageNo(adminUserVO.getPageNo())
+                .recordCount(adminUserVO.getLimit())
+                .totalCount(mapper.selectAdminUserInfoCount(adminUserVO.getUserRole()))
+                .build();
 	}
 	
 	@Override

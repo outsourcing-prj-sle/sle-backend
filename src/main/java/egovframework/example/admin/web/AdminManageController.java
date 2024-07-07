@@ -20,10 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.admin.service.AdminManageService;
+import egovframework.example.admin.service.AdminUserListDTO;
+import egovframework.example.admin.service.AdminUserVO;
 import egovframework.example.cmmn.service.AdminLoginVO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.user.service.UserManageService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/admin")
 public class AdminManageController {
@@ -53,13 +57,24 @@ public class AdminManageController {
 	 * @return
 	 */
 	@GetMapping("/users/{role}")
-	ResponseEntity<?> selectAdminManagement(@PathVariable String role, @RequestParam(required=false) Map<String,String> conditions){
-		conditions.put("userRole", role);
-		if(conditions.get("userRole").equals("teacher") || conditions.get("userRole").equals("student")) {
-			List<LoginVO> whaleUsers = userManageService.selectUserByConditions(conditions);
+	ResponseEntity<?> selectUserAll(@PathVariable String role, AdminUserVO adminUserVO){
+		adminUserVO.setUserRole(role);
+		if(role.equals("teacher") || role.equals("student")) {
+			log.info("여긴 티쳐");
+			/*LoginVO loginVO = LoginVO.builder()
+					.authorization(adminUserVO.getId())
+					.name(adminUserVO.getName())
+					.password(adminUserVO.getPassword())
+					.userRole(role)
+					.gradeNm(adminUserVO.getGradeNm())
+					.classNm(adminUserVO.getClassNm())
+					.userSpaceInfo(adminUserVO.getUserSpaceOrgInfo())
+					.userEmail(adminUserVO.getUserEmail())
+					.build();*/
+			AdminUserListDTO whaleUsers = userManageService.selectUserByConditions(adminUserVO);
 			return ResponseEntity.ok(whaleUsers);
 		}
-		List<AdminLoginVO> users = adminManageService.selectUserAll(conditions);
+		AdminUserListDTO users = adminManageService.selectUserAll(adminUserVO);
 		return ResponseEntity.ok(users);
 	}
 	
