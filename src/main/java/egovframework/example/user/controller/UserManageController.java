@@ -4,8 +4,7 @@ package egovframework.example.user.controller;
 import egovframework.example.cmmn.CustomException;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
-import egovframework.example.user.dto.StudentsDTO;
-import egovframework.example.user.dto.TeachersDTO;
+import egovframework.example.user.dto.*;
 import egovframework.example.user.service.*;
 import egovframework.example.user.utils.UserManageUtils;
 import org.apache.commons.lang3.StringUtils;
@@ -163,6 +162,69 @@ public class UserManageController {
 	public ResponseEntity<?> selectIdttLearningTendency(@RequestHeader HashMap<String, String> req, @RequestParam String id) {
 		LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
 
-		return ResponseEntity.ok(userManageService.selectIdttLT(header, id));
+		if(!userManageService.authorizationUser(header)) {
+			throw new CustomException("유저 인증에 실패했습니다.");
+		}
+
+		if(StringUtils.isEmpty(id)) {
+			throw new CustomException("id는 필수값입니다.");
+		}
+
+//		return ResponseEntity.ok(userManageService.selectIdttLT(header, id));
+		return ResponseEntity.ok(makeDummies());
+	}
+
+	IdttLTResultDTO<ClassPersonalityDTO> makeDummies() {
+		IdttLTResultDTO<ClassPersonalityDTO> result = new IdttLTResultDTO<ClassPersonalityDTO>();
+		ArrayList<HashMap<String, String>> userPersonality = new ArrayList<HashMap<String, String>>() {{
+			add(new HashMap<String, String>() {{
+				put("자주보고 점검하기", "20");
+				put("건너뛰며 점검하기", "80");
+				put("소통하며 학습하기", "0");
+				put("독립적으로 학습하기", "100");
+				put("신속하게 과제하기", "0");
+				put("느긋하게 과제하기", "100");
+			}});
+		}};
+
+		ArrayList<ClassPersonalityDTO> classPersonality = new ArrayList<ClassPersonalityDTO>() {{
+			add(new ClassPersonalityDTO(){{
+				setType1(new ClassPersonalityDtlDTO() {{
+					setValues(new ArrayList<Integer>() {{
+						add(3);
+						add(12);
+					}});
+					setLabels(new ArrayList<String>() {{
+						add("자주보고 점검하기");
+						add("건너뛰며 점검하기");
+					}});
+				}});
+				setType2(new ClassPersonalityDtlDTO() {{
+					setValues(new ArrayList<Integer>() {{
+						add(2);
+						add(13);
+					}});
+					setLabels(new ArrayList<String>() {{
+						add("신속하게 과제하기");
+						add("느긋하게 과제하기");
+					}});
+				}});
+				setType3(new ClassPersonalityDtlDTO() {{
+					setValues(new ArrayList<Integer>() {{
+						add(8);
+						add(7);
+					}});
+					setLabels(new ArrayList<String>() {{
+						add("소통하며 학습하기");
+						add("독립적으로 학습하기");
+					}});
+				}});
+			}});
+		}};
+
+		result.setUserPersonality(userPersonality);
+		result.setClassPersonality(classPersonality);
+
+		return result;
 	}
 }

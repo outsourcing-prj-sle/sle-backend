@@ -186,6 +186,7 @@
         </where>
         ORDER BY CREATED_AT DESC
         limit #{recordCount}
+        limit #{limit}
         offset #{firstIndex}
     </select>
 

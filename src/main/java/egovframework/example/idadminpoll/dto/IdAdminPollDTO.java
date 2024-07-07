@@ -15,4 +15,5 @@ public class IdAdminPollDTO {
     private String pollBgnde;
     private String pollEndde;
     private ArrayList<String> pollTarget;
+    private String[] pollTargetCode;
 }

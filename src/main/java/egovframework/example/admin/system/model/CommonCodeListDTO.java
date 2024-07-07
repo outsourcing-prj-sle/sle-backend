@@ -12,6 +12,6 @@ import java.util.List;
 public class CommonCodeListDTO {
     private List<CommonCodesDTO> codeInfoList;
     private int pageNo = 1;
-    private int recordCount = 10;
+    private int limit = 10;
     private int totalCount;
 }

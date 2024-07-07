@@ -50,7 +50,7 @@ public class AdminManageServiceImpl implements AdminManageService {
         return AdminUserListDTO.builder()
                 .adminUserInfoList(mapper.selectUserAll(adminUserVO))
                 .pageNo(adminUserVO.getPageNo())
-                .recordCount(adminUserVO.getLimit())
+                .limit(adminUserVO.getLimit())
                 .totalCount(mapper.selectAdminUserInfoCount(adminUserVO.getUserRole()))
                 .build();
 	}

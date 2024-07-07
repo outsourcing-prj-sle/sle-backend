@@ -48,6 +48,21 @@ public class IdAdminUserManageController {
         return ResponseEntity.ok(userManageService.selectIdAdminUserInfoList(idAdminUserManageVO));
     }
 
+    @GetMapping("/users/{userId}")
+    public ResponseEntity<?> selectIdAdminUserInfoDtl(@RequestHeader HashMap<String, String> req, @PathVariable String userId) {
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
+
+        if(!userManageService.isAuthorizedUser(header)) {
+            throw new CustomException("회원정보가 없습니다.");
+        }
+
+        if(StringUtils.isEmpty(userId)) {
+            throw new CustomException("userId는 필수값입니다.");
+        }
+
+        return ResponseEntity.ok(userManageService.selectIdAdminUserInfo(IdAdminUserManageVO.builder().uniqId(userId).build()));
+    }
+
     @PutMapping("/users")
     public ResponseEntity<?> insertIdAdminUserInfo(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminUserManageVO idAdminUserManageVO) throws FdlException {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
@@ -81,6 +96,10 @@ public class IdAdminUserManageController {
             throw new CustomException("회원정보가 없습니다.");
         }
 
+        if(StringUtils.isEmpty(userId)) {
+            throw new CustomException("userId는 필수값입니다.");
+        }
+
         idAdminUserManageVO.setUserId2(header.getUniqId());
         idAdminUserManageVO.setUniqId(userId);
         userManageService.updateIdAdminUserInfo(idAdminUserManageVO);
@@ -94,6 +113,10 @@ public class IdAdminUserManageController {
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
+        }
+
+        if(StringUtils.isEmpty(userId)) {
+            throw new CustomException("userId는 필수값입니다.");
         }
 
         userManageService.deleteIdAdminUserInfo(IdAdminUserManageVO.builder().uniqId(userId).build());
