@@ -1,17 +1,17 @@
-package egovframework.example.idadminidtt.dto;
+package egovframework.example.idadminpoll.dto;
 
 import lombok.*;
 
-import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IdAdminIdttResultDTO<T> {
+public class IdAdminPollDtlResultDTO<T> {
     private int pageNo;
     private int recordCount;
     private int totalCount;
-    private ArrayList<T> idttList;
+    private List<T> pollDtlList;
 }

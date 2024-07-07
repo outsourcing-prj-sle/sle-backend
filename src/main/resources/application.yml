@@ -1,5 +1,9 @@
 server:
   port: 8080
+  servlet:
+    encoding:
+      charset: utf-8
+      force-response: true
 
 spring:
   main:
@@ -11,10 +15,3 @@ spring:
     jdbc-url: jdbc:mariadb://1.213.164.252:63306/SURVEY
     username: exdev
     password: exdevpwd!!
-  
-# 개발환경
-#  datasource:
-#    driver-class-name: org.mariadb.jdbc.Driver  
-#    jdbc-url: jdbc:mariadb://1.242.49.61:3306/survey
-#    username: root
-#    password: root

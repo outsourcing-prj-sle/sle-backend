@@ -3,15 +3,14 @@
 <mapper namespace="egovframework.example.idadminpoll.service.impl.IdAdminPollManageMapper">
     <select id="selectIdAdminPollList" parameterType="idAdminPollVO" resultType="idAdminPollVO">
         SELECT
+            POLL_ID,
             POLL_BGNDE,
             POLL_ENDDE,
             POLL_NM,
             POLL_TARGET_LIST as pollTarget
         FROM
             COMTNBBSPOLL
-        WHERE
-            POLL_ID = #{pollId}
-        LIMIT #{pageNo}
+        LIMIT #{recordCount}
         OFFSET #{firstIndex}
     </select>
 
@@ -20,8 +19,6 @@
             count(*)
         FROM
             COMTNBBSPOLL
-        WHERE
-            POLL_ID = #{pollId};
     </select>
 
     <select id="selectIdAdminPollDtl" parameterType="idAdminPollVO" resultType="idAdminPollVO">
@@ -44,7 +41,29 @@
         <if test="schulGradeCode != null and schulGradeCode != ''">
             and b.SCHUL_GRADE_CODE = #{schulGradeCode}
         </if>
+        <if test="stGrade != null and stGrade != ''">
+            and b.ST_GRADE = #{stGrade}
+        </if>
+        <if test="searchKeyword != null and searchKeyword != ''">
+            and b.SCHUL_NM like concat('%',#{searchKeyword},'%')
+        </if>
+        LIMIT #{recordCount}
+        OFFSET #{firstIndex}
+    </select>
+
+    <select id="selectIdAdminPollDtlCount" parameterType="idAdminPollVO" resultType="int">
+        SELECT
+            count(*)
+        FROM
+        COMTNBBSPOLLMANAGE a
+        left join COMTNMBER b
+        on a.USER_ID = b.USER_ID
+        WHERE
+        a.POLL_ID = #{pollId}
         <if test="schulGradeCode != null and schulGradeCode != ''">
+            and b.SCHUL_GRADE_CODE = #{schulGradeCode}
+        </if>
+        <if test="stGrade != null and stGrade != ''">
             and b.ST_GRADE = #{stGrade}
         </if>
         <if test="searchKeyword != null and searchKeyword != ''">
@@ -75,15 +94,5 @@
             COMTNBBSPOLL
         WHERE
             POLL_ID = #{pollId};
-    </select>
-
-    <select id="selectSchulName" parameterType="String" resultType="String">
-        SELECT
-            SCHUL_NM
-        FROM
-            COMTNMBER
-        WHERE
-            SCHUL_CODE = #{schulCode}
-        GROUP BY SCHUL_NM
     </select>
 </mapper>

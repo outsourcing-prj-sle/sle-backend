@@ -1,5 +1,7 @@
 package egovframework.example.idaminuser.service.impl;
 
+import egovframework.example.cmmn.CustomException;
+import egovframework.example.cmmn.utils.EncryptUtils;
 import egovframework.example.idaminuser.dto.IdAdminUserDTO;
 import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
 import egovframework.example.idaminuser.service.IdAdminUserManageService;
@@ -27,13 +29,13 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
 
 
     @Override
-    public void insertIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO) throws FdlException {
-
+    public void insertIdAdminUserInfo(IdAdminUserManageVO idAdminUserManageVO) {
         try {
             idAdminUserManageVO.setUniqId(userIdGnrService.getNextStringId());
-        } catch(FdlException e) {
+            idAdminUserManageVO.setPassword(EncryptUtils.getSHA256(idAdminUserManageVO.getPassword()));
+        } catch(Exception e) {
             LOGGER.error(e.getMessage());
-            throw new Error("사용자 고유 아이디 생성에 실패하였습니다.");
+            throw new CustomException("사용자 고유 아이디 생성에 실패하였습니다.");
         }
 
         mapper.insertIdAdminUserInfo(idAdminUserManageVO);
@@ -46,8 +48,12 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
         mapper.updateIdAdminUserInfo(IdAdminUserManageVO.builder()
                         .uniqId(idAdminUserManageVO.getUniqId())
                         .userId(idAdminUserManageVO.getUserId())
+                        .password(StringUtils.isEmpty(idAdminUserManageVO.getPassword())
+                                ? mapper.selectIdAdminUserPassword(idAdminUserManageVO.getUniqId())
+                                : EncryptUtils.getSHA256(idAdminUserManageVO.getPassword()))
                         .userNm(StringUtils.isEmpty(idAdminUserManageVO.getUserNm())
                                 ? dto.getUserNm() : idAdminUserManageVO.getUserNm())
+                        .userId2(idAdminUserManageVO.getUserId2())
                         .userSeCode(StringUtils.isEmpty(idAdminUserManageVO.getUserSeCode())
                                 ? dto.getUserSeCode() : idAdminUserManageVO.getUserSeCode())
                         .userSpaceInfo(StringUtils.isEmpty(idAdminUserManageVO.getUserSpaceInfo())
@@ -87,6 +93,7 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
 
     @Override
     public boolean isSignUpUser(IdAdminUserManageVO idAdminUserManageVO) {
+        idAdminUserManageVO.setPassword(EncryptUtils.getSHA256(idAdminUserManageVO.getPassword()));
         return mapper.isSignUpUser(idAdminUserManageVO);
     }
 

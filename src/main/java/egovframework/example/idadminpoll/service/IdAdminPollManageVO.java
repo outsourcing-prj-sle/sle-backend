@@ -126,7 +126,7 @@ public class IdAdminPollManageVO extends PaginationVO {
     public String[] getPollTargetList() {
 
         if(StringUtils.isEmpty(this.pollTarget)) {
-            return null;
+            return new String[0];
         }
 
         return pollTarget.split(",");
@@ -135,7 +135,7 @@ public class IdAdminPollManageVO extends PaginationVO {
     public String[] getQesitmSnList() {
 
         if(StringUtils.isEmpty(this.qesitmSn)) {
-            return null;
+            return new String[0];
         }
 
         return qesitmSn.split(",");
@@ -144,7 +144,7 @@ public class IdAdminPollManageVO extends PaginationVO {
     public String[] getQesitmAnswerImageList() {
 
         if(StringUtils.isEmpty(this.qesitmAnswerImage)) {
-            return null;
+            return new String[0];
         }
 
         return qesitmAnswerImage.split(",");
@@ -153,7 +153,7 @@ public class IdAdminPollManageVO extends PaginationVO {
     public String[] getQesitmAnswerList() {
 
         if(StringUtils.isEmpty(this.qesitmAnswer)) {
-            return null;
+            return new String[0];
         }
 
         return qesitmAnswer.split(",");

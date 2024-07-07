@@ -2,6 +2,8 @@ package egovframework.example.idadminpoll.service;
 
 import egovframework.example.idadminpoll.dto.IdAdminPollDTO;
 import egovframework.example.idadminpoll.dto.IdAdminPollDtlDTO;
+import egovframework.example.idadminpoll.dto.IdAdminPollDtlResultDTO;
+import egovframework.example.idadminpoll.dto.IdAdminPollResultDTO;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +14,7 @@ public interface IdAdminPollManageService {
      * @param idAdminPollManageVO
      * @return
      */
-    List<IdAdminPollDTO> selectIdAdminPollList(IdAdminPollManageVO idAdminPollManageVO);
+    IdAdminPollResultDTO<IdAdminPollDTO> selectIdAdminPollList(IdAdminPollManageVO idAdminPollManageVO);
 
     /**
      * ID ADMIN 설문 총 수
@@ -26,7 +28,7 @@ public interface IdAdminPollManageService {
      * @param idAdminPollManageVO
      * @return
      */
-    List<IdAdminPollDtlDTO> selectIdAdminPollDtl(IdAdminPollManageVO idAdminPollManageVO);
+    IdAdminPollDtlResultDTO<IdAdminPollDtlDTO> selectIdAdminPollDtl(IdAdminPollManageVO idAdminPollManageVO);
 
     /**
      * ID ADMIN 설문 대상 목록 조회

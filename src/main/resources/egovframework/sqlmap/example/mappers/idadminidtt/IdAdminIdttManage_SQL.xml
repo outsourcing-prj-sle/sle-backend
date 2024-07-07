@@ -23,4 +23,22 @@
         limit #{limit}
         offset #{firstIndex}
     </select>
+
+    <select id="selectReportsListCount" parameterType="idAdminIdttVO" resultType="int">
+        with mstr as (
+            SELECT
+                a.TEACHER_ID,
+                a.SURVEY_EVALUATION_ANSWER_LIST,
+                a.LAST_UPDUSR_PNTTM,
+                ROW_NUMBER() OVER (PARTITION BY a.TEACHER_ID ORDER BY a.LAST_UPDUSR_PNTTM DESC) as rn
+            FROM HISTSURVEYEVALUATION a
+            WHERE a.SURVEY_EVALUATION_SE_CODE = #{qesType}
+        )
+        SELECT
+            count(*)
+        FROM mstr a
+                 left join COMTNMBER sub
+                           on a.TEACHER_ID = sub.USER_ID
+        WHERE a.rn = 1
+    </select>
 </mapper>

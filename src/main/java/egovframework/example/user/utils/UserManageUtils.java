@@ -7,6 +7,7 @@ import egovframework.example.naver.service.NaverService;
 import egovframework.example.poll.dto.PollDTO;
 import egovframework.example.poll.service.PollManageService;
 import egovframework.example.poll.service.PollManageVO;
+import egovframework.example.poll.utils.pollManageUtils;
 import egovframework.example.user.dto.MySelTeacherResultDTO;
 import egovframework.example.user.dto.ReportDTO;
 import egovframework.example.user.dto.TeachersDTO;
@@ -34,6 +35,9 @@ public class UserManageUtils {
     @Qualifier(value = "naverServiceImpl")
     private NaverService naverService;
 
+    @Autowired
+    private egovframework.example.poll.utils.pollManageUtils pollManageUtils;
+
     /**
      * SEL 알기 - 교사 결과 DTO 생성 함수
      */
@@ -46,6 +50,10 @@ public class UserManageUtils {
             HashMap<String, Integer> state = new HashMap<String, Integer>();
 
             for(int j=0; j<vo.getPollIdList().length; j++) {
+                if(!pollManageUtils.isAllowedPoll(vo.getUserId(), vo.getPollIdList()[j])) {
+                    continue;
+                }
+
                 if(i == 0) {
                     reportList.add(ReportDTO.builder()
                             .pollNm(vo.getPollNmList()[j])
@@ -109,8 +117,9 @@ public class UserManageUtils {
 
         if(vo.getPollIDForfrstRegisterPnttm() != null && vo.getFrstRegisterPnttm() != null) {
             for(int i=0; i<vo.getPollIDForfrstRegisterPnttmList().length; i++) {
-
-                stateFinList.put(vo.getPollIDForfrstRegisterPnttmList()[i], vo.getFrstRegisterPnttmList()[i]);
+                if(pollManageUtils.isAllowedPoll(vo.getUserId(), vo.getPollIDForfrstRegisterPnttmList()[i])) {
+                    stateFinList.put(vo.getPollIDForfrstRegisterPnttmList()[i], vo.getFrstRegisterPnttmList()[i]);
+                }
             }
         }
 
@@ -130,21 +139,22 @@ public class UserManageUtils {
         gneUserDto.setStClass(loginVO.getClassCode());
 
         GneInfoDto<GneUserDto> gneInfoDto = new GneInfoDto<GneUserDto>();
-            gneInfoDto.setData(gneUserDto);
+        gneInfoDto.setData(gneUserDto);
+
+        HashMap<String, Integer> state = new HashMap<String, Integer>();
+
+        for(PollDTO dto : pollManageService.selectReports(PollManageVO.builder().build())) {
+            if(pollManageUtils.isAllowedPoll(loginVO.getAuthorization(), dto.getPollId())) {
+                state.put(dto.getNttNo(), 0);
+            }
+        }
 
         return (ArrayList<TeachersDTO>) naverService.procGneSchoolUserInfo(gneInfoDto).getData().stream()
                 .map(dto -> TeachersDTO.builder()
                         .name(dto.getUserNm())
                         .email(dto.getStGrade() + "학년 " + dto.getStClass() + "반 " + dto.getStNumber() + "번")
                         .classInfo(dto.getStGrade() + "학년 " + dto.getStClass() + "반")
-                        .stateList(new HashMap<String, Integer>() {{
-                            put("1", 0);
-                            put("2", 0);
-                            put("3", 0);
-                            put("4", 0);
-                            put("5", 0);
-                            put("6", 0);
-                        }})
+                        .stateList(state)
                         .stateFinList(new HashMap<>())
                         .build())
                 .collect(Collectors.toList());

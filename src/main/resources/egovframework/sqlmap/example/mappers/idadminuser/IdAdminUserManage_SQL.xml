@@ -107,6 +107,14 @@
         where UNIQ_ID = #{uniqId}
     </select>
 
+    <select id="selectIdAdminUserPassword" parameterType="String" resultType="String">
+        select
+            PASSWORD
+        from
+            IDADMINMBER
+        where UNIQ_ID = #{uniqId}
+    </select>
+
     <select id="selectIdAdminUserUniqId" parameterType="idAdminUserVO" resultType="hashmap">
         select
             UNIQ_ID as authorization

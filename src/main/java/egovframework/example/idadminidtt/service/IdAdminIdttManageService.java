@@ -1,8 +1,9 @@
 package egovframework.example.idadminidtt.service;
 
+import egovframework.example.idadminidtt.dto.IdAdminIdttDTO;
 import egovframework.example.idadminidtt.dto.IdAdminIdttResultDTO;
 
-import java.util.ArrayList;
+import java.util.HashMap;
 
 public interface IdAdminIdttManageService {
     /**
@@ -10,5 +11,5 @@ public interface IdAdminIdttManageService {
      * @param idAdminIdttManageVO
      * @return
      */
-    ArrayList<IdAdminIdttResultDTO> selectReportsList(IdAdminIdttManageVO idAdminIdttManageVO);
+    IdAdminIdttResultDTO<IdAdminIdttDTO> selectReportsList(IdAdminIdttManageVO idAdminIdttManageVO);
 }

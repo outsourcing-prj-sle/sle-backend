@@ -8,9 +8,6 @@ import lombok.*;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IdAdminUserDTO {
-    private int pageNo;
-    private int recordCount;
-    private int totalCount;
     private String uniqId;
     private String userId;
     private String userSeCode;
