@@ -1,11 +1,15 @@
 package egovframework.example.user.service;
 
+import egovframework.example.admin.service.AdminUserListDTO;
+import egovframework.example.admin.service.AdminUserVO;
+import egovframework.example.cmmn.service.AdminLoginVO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.dto.IdttLTResultDTO;
 import egovframework.example.user.dto.StudentsDTO;
 
 import java.util.List;
+import java.util.Map;
 
 public interface UserManageService {
 	
@@ -78,4 +82,10 @@ public interface UserManageService {
 	 * @return
 	 */
 	IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id);
+	
+	
+	/**
+	 * 유저 전체/검색 조회
+	 */
+	AdminUserListDTO selectUserByConditions(AdminUserVO adminUserVO);
 }

@@ -32,10 +32,12 @@
 		<typeAlias alias="idAdminPollDTO" type="egovframework.example.idadminpoll.dto.IdAdminPollDTO"/>
 		
 		<typeAlias alias="adminLoginVO" type="egovframework.example.cmmn.service.AdminLoginVO"/>
+		<typeAlias alias="adminUserVO" type="egovframework.example.admin.service.AdminUserVO"/>
 		<typeAlias alias="siteManageDTO" type="egovframework.example.admin.system.model.SiteManageDTO"/>
 		<typeAlias alias="TermsManageDTO" type="egovframework.example.admin.system.model.TermsManageDTO"/>
 		<typeAlias alias="commonCodesDTO" type="egovframework.example.admin.system.model.CommonCodesDTO"/>
 		<typeAlias alias="subCommonCodesDTO" type="egovframework.example.admin.system.model.SubCommonCodesDTO"/>
 		<typeAlias alias="ipTableDTO" type="egovframework.example.admin.system.model.IpTableDTO"/>
+
 	</typeAliases>
 </configuration>

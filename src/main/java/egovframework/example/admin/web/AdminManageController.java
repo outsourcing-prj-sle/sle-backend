@@ -20,8 +20,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import egovframework.example.admin.service.AdminManageService;
+import egovframework.example.admin.service.AdminUserListDTO;
+import egovframework.example.admin.service.AdminUserVO;
 import egovframework.example.cmmn.service.AdminLoginVO;
+import egovframework.example.cmmn.service.LoginVO;
+import egovframework.example.user.service.UserManageService;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/admin")
 public class AdminManageController {
@@ -29,33 +35,86 @@ public class AdminManageController {
 	@Resource(name = "adminManageService")
 	private AdminManageService adminManageService;
 	
-	@GetMapping("/users")
-	ResponseEntity<?> selectUser(HttpServletRequest request){
-			AdminLoginVO user = adminManageService.selectUser((AdminLoginVO)request.getAttribute("user"));
-			return ResponseEntity.ok(user);
+	@Resource(name = "userManageService")
+	private UserManageService userManageService;
+	
+	@GetMapping("/users/{role}/{id}")
+	ResponseEntity<?> myInfo(@PathVariable String role, @PathVariable String id){
+		if(role.equals("teacher") || role.equals("student")) {
+			LoginVO user = LoginVO.builder().authorization(id).build();
+			LoginVO whaleUsers = userManageService.selectUserInfo(user);
+			return ResponseEntity.ok(whaleUsers);
+		}
+		AdminLoginVO user = AdminLoginVO.builder()
+								.uniqId(id).build();
+		AdminLoginVO res = adminManageService.selectUser(user);
+		return ResponseEntity.ok(res);
 	}
 	/**
 	 * 권한에 따른 회원 리스트 조회
-	 * OgzAdmin, EduAdmin, SuperAdmin, SchoolAdmin, Student, Teacher, NormalUser
+	 * (OgzAdmin, SuperAdmin, SchoolAdmin)→Admin, OfficeOfEdu, Student, Teacher, NormalUser
+	 * Query로 검색가능 예) OgzAdmin?name=홍길동
 	 * @return
 	 */
 	@GetMapping("/users/{role}")
-	ResponseEntity<?> selectAdminManagement(@RequestHeader HttpHeaders header, @PathVariable String role, @RequestParam(required=false) Map<String,String> rule){
-		List<AdminLoginVO> users = adminManageService.selectUserAll(role);
+	ResponseEntity<?> selectUserAll(@PathVariable String role, AdminUserVO adminUserVO){
+		adminUserVO.setUserRole(role);
+		if(role.equals("teacher") || role.equals("student")) {
+			log.info("여긴 티쳐");
+			/*LoginVO loginVO = LoginVO.builder()
+					.authorization(adminUserVO.getId())
+					.name(adminUserVO.getName())
+					.password(adminUserVO.getPassword())
+					.userRole(role)
+					.gradeNm(adminUserVO.getGradeNm())
+					.classNm(adminUserVO.getClassNm())
+					.userSpaceInfo(adminUserVO.getUserSpaceOrgInfo())
+					.userEmail(adminUserVO.getUserEmail())
+					.build();*/
+			AdminUserListDTO whaleUsers = userManageService.selectUserByConditions(adminUserVO);
+			return ResponseEntity.ok(whaleUsers);
+		}
+		AdminUserListDTO users = adminManageService.selectUserAll(adminUserVO);
 		return ResponseEntity.ok(users);
 	}
 	
-	@PutMapping("/users/register")
-	ResponseEntity<?> insertUser(@RequestHeader HttpHeaders header,@RequestBody AdminLoginVO AdminLoginVO){
-		AdminLoginVO.setUniqId(adminManageService.insertUser(AdminLoginVO));
-		AdminLoginVO res = adminManageService.selectUser(AdminLoginVO);
-		return ResponseEntity.ok(res);
+	@PutMapping("/users/{role}/register")
+	ResponseEntity<?> insertUser(@PathVariable String role, AdminLoginVO loginVO){
+		switch(role.toLowerCase()) {
+			case "student": 
+			case "teacher": 
+				LoginVO whaleUser = LoginVO.builder()
+									.authorization(loginVO.getId())
+									.name(loginVO.getName())
+									.password(loginVO.getPassword())
+									.userRole(role)
+									.gradeNm(loginVO.getGradeNm())
+									.classNm(loginVO.getClassNm())
+									.userSpaceInfo(loginVO.getUserSpaceOrgInfo())
+									.userEmail(loginVO.getUserEmail())
+									.build();
+				userManageService.insertUserInfo(whaleUser);
+				return ResponseEntity.ok().build();
+			case "ogzadmin":
+			case "schooladmin":
+			case "admin":
+				loginVO.setUniqId(adminManageService.insertUser(loginVO));
+				AdminLoginVO res = adminManageService.selectUser(loginVO);
+				return ResponseEntity.ok(res);
+			default:
+				return ResponseEntity.ok("Register Failed");
+				
+		}
+
 	}
 	
-	@DeleteMapping("/users/delete")
-	ResponseEntity<?> deleteUser(@RequestHeader HttpHeaders header, @RequestBody String deleteId){
-			String msg = adminManageService.deleteUser(deleteId);
-			return ResponseEntity.ok(msg);
+	@DeleteMapping("/users/{role}/{id}")
+	ResponseEntity<?> deleteUser(@PathVariable String role, @PathVariable String id){
+		if(role.equals("teacher") || role.equals("student")) {
+			//List<LoginVO> whaleUsers = userManageService;
+			return ResponseEntity.ok().build();
+		}
+		String msg = adminManageService.deleteUser(id);
+		return ResponseEntity.ok(msg);
 	}
-	
 }

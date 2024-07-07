@@ -1,6 +1,7 @@
 package egovframework.example.admin.service;
 
 import java.util.List;
+import java.util.Map;
 
 import egovframework.example.cmmn.service.AdminLoginVO;
 
@@ -10,7 +11,7 @@ public interface AdminManageService {
 	
 	AdminLoginVO selectUser(AdminLoginVO AdminLoginVO);
 	
-	List<AdminLoginVO> selectUserAll(String role);
+	AdminUserListDTO selectUserAll(AdminUserVO adminUserVO);
 	
 	String deleteUser(String id);
 	

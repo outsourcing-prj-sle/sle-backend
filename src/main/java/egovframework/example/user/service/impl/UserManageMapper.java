@@ -1,5 +1,7 @@
 package egovframework.example.user.service.impl;
 
+import egovframework.example.admin.service.AdminUserVO;
+import egovframework.example.cmmn.service.AdminLoginVO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.user.service.IdTokTokVO;
@@ -8,6 +10,7 @@ import egovframework.example.user.dto.StudentsDTO;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper("userManageMapper")
 public interface UserManageMapper {
@@ -89,4 +92,9 @@ public interface UserManageMapper {
 	 * @param loginVO
 	 */
 	void updateGneUserInfo(LoginVO loginVO);
+	
+	/**
+	 * 유저 전체/검색 조회
+	 */
+	List<LoginVO> selectUserByConditions(AdminUserVO loginVO);
 }

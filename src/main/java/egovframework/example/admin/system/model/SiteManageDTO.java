@@ -1,11 +1,21 @@
 package egovframework.example.admin.system.model;
 
-import java.time.LocalDateTime;
+import org.springframework.web.multipart.MultipartFile;
 
-import lombok.Data;
+import egovframework.example.cmmn.service.PaginationVO;
 
-@Data
-public class SiteManageDTO {
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Getter
+@Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class SiteManageDTO extends PaginationVO{
     private String siteId;
     private String siteName;
     private String siteDomain;

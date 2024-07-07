@@ -1,19 +1,15 @@
-package egovframework.example.cmmn.service;
+package egovframework.example.admin.service;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import egovframework.example.cmmn.service.AdminLoginVO;
+import egovframework.example.cmmn.service.PaginationVO;
+import lombok.*;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class AdminLoginVO{
-	
+public class AdminUserVO extends PaginationVO{
 	/**
 	 * 사용자 id
 	 */
@@ -45,33 +41,25 @@ public class AdminLoginVO{
 	private String userEmail;
 	
 	/**
+	 * 역할
+	 */
+	private String userRole;
+	
+	/**
 	 * 학년
 	 */
 	private String gradeNm;
-	
 	/**
 	 * 반
 	 */
 	private String classNm;
 	
 	/**
-	 * 역할
-	 */
-	private String userRole;
-	
-	/**
 	 * 전화번호
 	 */
 	private String phoneNumber;
 	
-	/**
-	 * 등록 시간
-	 */
-	private String createAt;
 	
-	/**
-	 * 업데이트 시간
-	 */
-	private String updateAt;
-	
+	private String startDate;
+	private String endDate;
 }

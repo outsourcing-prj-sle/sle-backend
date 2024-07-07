@@ -5,6 +5,10 @@ import com.fasterxml.jackson.core.json.JsonReadFeature;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import egovframework.example.admin.service.AdminUserListDTO;
+import egovframework.example.admin.service.AdminUserVO;
+import egovframework.example.cmmn.service.AdminLoginVO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.naver.dto.GneInfoDto;
@@ -33,6 +37,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service("userManageService")
 public class UserManageServiceImpl implements UserManageService {
@@ -286,5 +291,18 @@ public class UserManageServiceImpl implements UserManageService {
 			LOGGER.error(e.getMessage());
 			throw new RuntimeException("URI 생성에 실패하셨습니다.", e);
 		}
+	}
+	
+	/**
+	 * 유저 전체/검색 조회
+	 */
+	@Override
+	public AdminUserListDTO selectUserByConditions(AdminUserVO adminUserVO){
+		return AdminUserListDTO.builder()
+				.userInfoList(mapper.selectUserByConditions(adminUserVO))
+				.pageNo(adminUserVO.getPageNo())
+				.recordCount(adminUserVO.getLimit())
+				.totalCount(adminUserVO.getTotalCount())
+				.build();
 	}
 }

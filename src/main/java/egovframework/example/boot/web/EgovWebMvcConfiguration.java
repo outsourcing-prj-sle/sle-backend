@@ -99,7 +99,7 @@ public class EgovWebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
-    	registry.addInterceptor(adminLogInterceptor).addPathPatterns("/api/admin/**").excludePathPatterns("/api/admin/login");
+    	registry.addInterceptor(adminLogInterceptor).addPathPatterns("/api/admin/**").excludePathPatterns("/api/admin/login","/api/top/*.jpg","/api/bottom/*","/api/main/*.jpg");
         registry.addInterceptor(localeChangeInterceptor());
     }
 
