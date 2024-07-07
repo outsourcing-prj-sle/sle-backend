@@ -58,6 +58,14 @@ public class AdminManageController {
 	 */
 	@GetMapping("/users/{role}")
 	ResponseEntity<?> selectUserAll(@PathVariable String role, AdminUserVO adminUserVO){
+		switch(role.toLowerCase()) {
+			case "school": 
+				role = "학교";
+				break;
+			case "admin":  
+				role = "관리자";
+				break;
+		}
 		adminUserVO.setUserRole(role);
 		if(role.equals("teacher") || role.equals("student")) {
 			log.info("여긴 티쳐");
@@ -79,7 +87,7 @@ public class AdminManageController {
 	}
 	
 	@PutMapping("/users/{role}/register")
-	ResponseEntity<?> insertUser(@PathVariable String role, AdminLoginVO loginVO){
+	ResponseEntity<?> insertUser(@PathVariable String role,@RequestBody AdminLoginVO loginVO){
 		switch(role.toLowerCase()) {
 			case "student": 
 			case "teacher": 
@@ -95,15 +103,14 @@ public class AdminManageController {
 									.build();
 				userManageService.insertUserInfo(whaleUser);
 				return ResponseEntity.ok().build();
-			case "ogzadmin":
-			case "schooladmin":
+			case "school":
 			case "admin":
+				log.info(loginVO.toString());
 				loginVO.setUniqId(adminManageService.insertUser(loginVO));
 				AdminLoginVO res = adminManageService.selectUser(loginVO);
 				return ResponseEntity.ok(res);
 			default:
 				return ResponseEntity.ok("Register Failed");
-				
 		}
 
 	}

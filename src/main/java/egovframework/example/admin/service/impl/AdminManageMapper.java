@@ -27,5 +27,5 @@ public interface AdminManageMapper {
 
 	boolean authorizationUser(String id);
 	
-	int selectAdminUserInfoCount(String role);
+	int selectAdminUserInfoCount(AdminUserVO user);
 }

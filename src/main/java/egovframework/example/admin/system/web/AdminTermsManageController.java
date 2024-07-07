@@ -82,7 +82,7 @@ public class AdminTermsManageController {
 	@DeleteMapping("/terms/{id}")
     ResponseEntity<?> deleteEntity(@PathVariable String id) {
 		try {
-			adminSystemService.deleteSite(id);
+			adminSystemService.deleteTerms(id);
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK, "TERMS ID : " + id + "delete Success"));
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));

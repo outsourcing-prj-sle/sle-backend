@@ -25,7 +25,7 @@ public class SiteManageDTO extends PaginationVO{
     private String bottomLogoImage;
     private String mainImage;
     private String siteDescription;
-    private char mouseSecurity;
-    private char keyboardSecurity;
+    private boolean mouseSecurity;
+    private boolean keyboardSecurity;
     private String createdBy;
 }

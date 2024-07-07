@@ -91,9 +91,9 @@ public class AdminCommonCodeManageController {
     }
 	
 	@GetMapping("/cmmn_code")
-    ResponseEntity<?> selectEntityAll(CommonCodesDTO site){
+    ResponseEntity<?> selectEntityAll(CommonCodesDTO code){
 		try {
-			CommonCodeListDTO codes = adminSystemService.selectCommonCodesByConditions(site);
+			CommonCodeListDTO codes = adminSystemService.selectCommonCodesByConditions(code);
 			return ResponseEntity.ok(codes);
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));

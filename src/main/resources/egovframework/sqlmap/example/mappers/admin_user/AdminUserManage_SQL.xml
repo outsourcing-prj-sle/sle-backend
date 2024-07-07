@@ -42,27 +42,38 @@
         FROM ADMIN_USER_TABLE 
         WHERE USER_ROLE LIKE CONCAT('%', #{userRole}, '%')
         <if test="startDate != null and startDate != ''">
-              and CAST(CREATE_AT as DATE) <![CDATA[>=]]> CAST(#{startDate} as DATE)
+              and CAST(CREATED_AT as DATE) <![CDATA[>=]]> CAST(#{startDate} as DATE)
         </if>
         <if test="endDate != null and endDate != ''">
-            and CAST(CREATE_AT as DATE) <![CDATA[<=]]> CAST(#{endDate} as DATE)
+            and CAST(CREATED_AT as DATE) <![CDATA[<=]]> CAST(#{endDate} as DATE)
         </if>
         <if test="id != null"> AND USER_SE_CODE LIKE CONCAT('%', #{id}, '%') </if>
         <if test="uniqId != null"> AND USER_ID LIKE CONCAT('%', #{uniqId}, '%') </if>
         <if test="userSpaceOrgInfo != null"> AND USER_POSITION LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
         <if test="name != null"> AND USER_NAME LIKE CONCAT('%', #{name}, '%') </if>
         <if test="userEmail != null"> AND EMAIL_ADDRESS LIKE CONCAT('%', #{userEmail}, '%') </if>
-        <if test="orderBy == 'DESC'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'ASC'">ORDER BY CREATED_AT ASC</if>
+        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         limit #{limit}
         offset #{firstIndex}
     </select>
     
-    <select id="selectAdminUserInfoCount" parameterType="String" resultType="int">
+    <select id="selectAdminUserInfoCount" parameterType="adminUserVO" resultType="int">
         select
             count(*)
         from ADMIN_USER_TABLE
         WHERE USER_ROLE LIKE CONCAT('%', #{userRole}, '%')
+        <if test="startDate != null and startDate != ''">
+              and CAST(CREATED_AT as DATE) <![CDATA[>=]]> CAST(#{startDate} as DATE)
+        </if>
+        <if test="endDate != null and endDate != ''">
+            and CAST(CREATED_AT as DATE) <![CDATA[<=]]> CAST(#{endDate} as DATE)
+        </if>
+        <if test="id != null"> AND USER_SE_CODE LIKE CONCAT('%', #{id}, '%') </if>
+        <if test="uniqId != null"> AND USER_ID LIKE CONCAT('%', #{uniqId}, '%') </if>
+        <if test="userSpaceOrgInfo != null"> AND USER_POSITION LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>
+        <if test="name != null"> AND USER_NAME LIKE CONCAT('%', #{name}, '%') </if>
+        <if test="userEmail != null"> AND EMAIL_ADDRESS LIKE CONCAT('%', #{userEmail}, '%') </if>
     </select>
     
     <select id="authorizationUser" parameterType="String" resultType="boolean">
