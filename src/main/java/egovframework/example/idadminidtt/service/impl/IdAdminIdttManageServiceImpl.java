@@ -41,7 +41,7 @@ public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
         return IdAdminIdttResultDTO.<IdAdminIdttDTO>builder()
                 .idttList(listDto)
                 .pageNo(idAdminIdttManageVO.getPageNo())
-                .recordCount(idAdminIdttManageVO.getRecordCount())
+                .limit(idAdminIdttManageVO.getLimit())
                 .totalCount(mapper.selectReportsListCount(idAdminIdttManageVO))
                 .build();
     }

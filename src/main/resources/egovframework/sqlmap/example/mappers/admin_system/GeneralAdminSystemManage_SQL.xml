@@ -139,7 +139,7 @@
             <if test="codeName != null"> AND CODE_NAME LIKE CONCAT('%',#{codeName},'%')</if>
         </where>
        	ORDER BY CREATED_AT DESC
-        limit #{recordCount}
+        limit #{limit}
         offset #{firstIndex}
     </select>
 
@@ -184,7 +184,7 @@
             <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
         </where>
         ORDER BY CREATED_AT DESC
-        limit #{recordCount}
+        limit #{limit}
         offset #{firstIndex}
     </select>
 

@@ -41,4 +41,12 @@ public class IdAdminIdttManageVO extends PaginationVO {
      * 설문조사 답변 배열
      */
     private String[] qesAnswerList;
+
+    public String[] getQesAnswerList() {
+        if(StringUtils.isEmpty(qesAnswer)) {
+            return new String[0];
+        }
+
+        return qesAnswer.split("/");
+    }
 }

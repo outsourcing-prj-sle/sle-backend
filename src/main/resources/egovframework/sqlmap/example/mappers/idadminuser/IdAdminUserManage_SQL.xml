@@ -96,12 +96,14 @@
 
     <select id="selectIdAdminUserInfo" parameterType="idAdminUserVO" resultType="idAdminUserDTO">
         select
+            UNIQ_ID,
             USER_ID,
             USER_SE_CODE,
             USER_NM,
             EMAIL_ADRES,
             PHONE_NUMBER,
-            USER_SPACE_INFO
+            USER_SPACE_INFO,
+            FRST_REGIST_PNTTM
         from
             IDADMINMBER
         where UNIQ_ID = #{uniqId}
@@ -117,7 +119,8 @@
 
     <select id="selectIdAdminUserUniqId" parameterType="idAdminUserVO" resultType="hashmap">
         select
-            UNIQ_ID as authorization
+            UNIQ_ID as authorization,
+            USER_NM as userNm
         from IDADMINMBER
         where USER_ID = #{userId}
         and PASSWORD = #{password}

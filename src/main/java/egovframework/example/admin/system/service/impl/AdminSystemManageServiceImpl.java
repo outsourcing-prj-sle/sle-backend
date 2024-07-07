@@ -85,7 +85,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return SiteListDTO.builder()
                 .siteInfoList(mapper.selectSitesAll(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getLimit())
+                .limit(data.getLimit())
                 .totalCount(mapper.checkSiteCount())
                 .build();
 	}
@@ -199,7 +199,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return CommonCodeListDTO.builder()
                 .codeInfoList(mapper.selectCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getLimit())
+                .limit(data.getLimit())
                 .totalCount(1)
                 .build();
 	}
@@ -231,7 +231,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return SubCommonCodeListDTO.builder()
                 .subCodeList(mapper.selectSubCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getLimit())
+                .limit(data.getLimit())
                 .totalCount(1)
                 .build();
 	}
@@ -265,8 +265,8 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         return IpTableListDTO.builder()
                 .ipInfoList(mapper.selectIpsAll(data))
                 .pageNo(data.getPageNo())
-                .recordCount(data.getLimit())
                 .totalCount(mapper.selectIpCount())
+                .limit(data.getLimit())
                 .build();
 	}
 	

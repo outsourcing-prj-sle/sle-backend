@@ -8,13 +8,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.example.admin.service.AdminUserListDTO;
 import egovframework.example.admin.service.AdminUserVO;
-import egovframework.example.cmmn.service.AdminLoginVO;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.naver.dto.GneInfoDto;
 import egovframework.example.naver.dto.GneUserDto;
 import egovframework.example.naver.dto.NaverUserDto;
 import egovframework.example.naver.service.NaverService;
+import egovframework.example.user.dto.ClassPersonalityDTO;
 import egovframework.example.user.dto.IdttLTResultDTO;
 import egovframework.example.user.service.IdTokTokVO;
 import egovframework.example.user.service.MySelVO;
@@ -22,7 +22,6 @@ import egovframework.example.user.dto.StudentsDTO;
 import egovframework.example.user.service.UserManageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -37,7 +36,6 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Service("userManageService")
 public class UserManageServiceImpl implements UserManageService {
@@ -200,7 +198,7 @@ public class UserManageServiceImpl implements UserManageService {
 	 * @return
 	 */
 	@Override
-	public IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id) {
+	public IdttLTResultDTO<ClassPersonalityDTO> selectIdttLT(LoginVO loginVO, String id) {
 
 		LoginVO vo = mapper.selectUserInfo(loginVO);
 
@@ -240,7 +238,7 @@ public class UserManageServiceImpl implements UserManageService {
 			HttpHeaders headers = new HttpHeaders();
 			HttpEntity<String> entity = new HttpEntity<>(headers);
 
-			IdttLTResultDTO dto = new IdttLTResultDTO();
+			IdttLTResultDTO<ClassPersonalityDTO> dto = new IdttLTResultDTO();
 
 			ResponseEntity<String> responseEntityUser = restTemplate.exchange(uriUserPersonality, HttpMethod.GET, entity, String.class);
 			if (responseEntityUser.getStatusCode() == HttpStatus.OK) {
@@ -250,9 +248,9 @@ public class UserManageServiceImpl implements UserManageService {
 				mapper.enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature());
 
 				try {
-					ArrayList<HashMap<String, Object>> userPersonalityList = mapper.readValue(
+					ArrayList<HashMap<String, String>> userPersonalityList = mapper.readValue(
 							responseEntityUser.getBody(),
-							new TypeReference<ArrayList<HashMap<String, Object>>>() {}
+							new TypeReference<ArrayList<HashMap<String, String>>>() {}
 					);
 					dto.setUserPersonality(userPersonalityList);
 				} catch (JsonProcessingException e) {
@@ -272,9 +270,9 @@ public class UserManageServiceImpl implements UserManageService {
 				mapper.enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature());
 
 				try {
-					ArrayList<HashMap<String, Object>> classPersonalityList = mapper.readValue(
+					ArrayList<ClassPersonalityDTO> classPersonalityList = mapper.readValue(
 							responseEntityClass.getBody(),
-							new TypeReference<ArrayList<HashMap<String, Object>>>() {}
+							new TypeReference<ArrayList<ClassPersonalityDTO>>() {}
 					);
 					dto.setClassPersonality(classPersonalityList);
 				} catch (JsonProcessingException e) {
@@ -301,7 +299,7 @@ public class UserManageServiceImpl implements UserManageService {
 		return AdminUserListDTO.builder()
 				.userInfoList(mapper.selectUserByConditions(adminUserVO))
 				.pageNo(adminUserVO.getPageNo())
-				.recordCount(adminUserVO.getLimit())
+				.limit(adminUserVO.getLimit())
 				.totalCount(adminUserVO.getTotalCount())
 				.build();
 	}

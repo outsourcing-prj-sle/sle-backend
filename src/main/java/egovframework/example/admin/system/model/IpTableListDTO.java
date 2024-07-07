@@ -12,6 +12,6 @@ import java.util.List;
 public class IpTableListDTO {
     private List<IpTableDTO> ipInfoList;
     private int pageNo = 1;
-    private int recordCount = 10;
+    private int limit = 10;
     private int totalCount;
 }
