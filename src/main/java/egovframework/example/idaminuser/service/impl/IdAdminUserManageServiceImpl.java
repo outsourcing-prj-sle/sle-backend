@@ -77,7 +77,7 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
                 .userInfoList(mapper.selectIdAdminUserInfoList(idAdminUserManageVO))
                 .pageNo(idAdminUserManageVO.getPageNo())
                 .limit(idAdminUserManageVO.getLimit())
-                .totalCount(mapper.selectIdAdminUserInfoCount())
+                .totalCount(mapper.selectIdAdminUserInfoCount(idAdminUserManageVO))
                 .build();
     }
 
@@ -100,10 +100,5 @@ public class IdAdminUserManageServiceImpl implements IdAdminUserManageService {
     @Override
     public boolean isAuthorizedUser(IdAdminUserManageVO idAdminUserManageVO) {
         return mapper.isAuthorizedUser(idAdminUserManageVO);
-    }
-
-    @Override
-    public int selectIdAdminUserInfoCount() {
-        return mapper.selectIdAdminUserInfoCount();
     }
 }

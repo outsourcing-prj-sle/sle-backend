@@ -7,8 +7,11 @@
                 a.TEACHER_ID,
                 a.SURVEY_EVALUATION_ANSWER_LIST,
                 a.LAST_UPDUSR_PNTTM,
+                b.SCHUL_CODE,
                 ROW_NUMBER() OVER (PARTITION BY a.TEACHER_ID ORDER BY a.LAST_UPDUSR_PNTTM DESC) as rn
             FROM HISTSURVEYEVALUATION a
+            LEFT JOIN COMTNMBER b
+            ON a.TEACHER_ID = b.USER_ID
             WHERE a.SURVEY_EVALUATION_SE_CODE = #{qesType}
         )
         SELECT
@@ -20,6 +23,15 @@
                  left join COMTNMBER sub
                            on a.TEACHER_ID = sub.USER_ID
         WHERE a.rn = 1
+        <if test="schulCode != null and schulCode != ''">
+            AND a.SCHUL_CODE = #{schulCode}
+        </if>
+        <if test="orderBy == 'desc'">
+            ORDER BY a.LAST_UPDUSR_PNTTM desc
+        </if>
+        <if test="orderBy == 'asc'">
+            ORDER BY a.LAST_UPDUSR_PNTTM asc
+        </if>
         limit #{limit}
         offset #{firstIndex}
     </select>
@@ -40,5 +52,13 @@
                  left join COMTNMBER sub
                            on a.TEACHER_ID = sub.USER_ID
         WHERE a.rn = 1
+    </select>
+
+    <select id="selectSchulList" resultType="hashmap">
+        select
+            a.SCHUL_CODE as schulCode,
+            a.SCHUL_NM as schulNm
+        from COMTNMBER a
+        group by a.SCHUL_CODE
     </select>
 </mapper>

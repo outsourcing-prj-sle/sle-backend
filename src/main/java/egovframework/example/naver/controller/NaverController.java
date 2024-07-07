@@ -12,14 +12,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.xml.ws.Response;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 
 /**
  * @Class Name : NaverController.java
@@ -93,5 +92,25 @@ public class NaverController {
         }
 
         return ResponseEntity.ok(userManageService.insertUserInfo(loginVO));
+    }
+
+    @GetMapping("/api/users/schulUserInfo")
+    public ResponseEntity<?> selectSchulUserInfoList(@RequestHeader HashMap<String, String> req) {
+        LoginVO header = LoginVO.builder().authorization(req.get("authorization")).build();
+
+        if(!userManageService.authorizationUser(header)) {
+            throw new CustomException("유저 인증에 실패했습니다.");
+        }
+
+        LoginVO info = userManageService.selectUserInfo(header);
+
+        GneInfoDto<GneUserDto> dto = new GneInfoDto<GneUserDto>();
+
+        GneUserDto userDto = new GneUserDto();
+        userDto.setSchulCode(info.getSchulCode());
+        userDto.setStGrade(info.getGradeNm());
+        dto.setData(userDto);
+
+        return ResponseEntity.ok(naverService.procGneSchoolTeacherInfo(dto).getData());
     }
 }

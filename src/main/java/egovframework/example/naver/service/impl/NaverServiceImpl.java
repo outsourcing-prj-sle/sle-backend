@@ -228,7 +228,7 @@ public class NaverServiceImpl implements NaverService {
         // PARAM
         String schulCode = gneUserDto.getData().getSchulCode(); // 학교코드
         String stGrade   = gneUserDto.getData().getStGrade(); // 학년
-        String stClass   = gneUserDto.getData().getStClass(); // 학년
+        String stClass   = gneUserDto.getData().getStClass(); // 반
 
         RestTemplate restTemplate = new RestTemplate();
         // 에러 핸들링
@@ -330,6 +330,59 @@ public class NaverServiceImpl implements NaverService {
         else {
             log.error("{}", responseEntity.getBody());
             throw new CustomException("경남교육청 API 통신에 실패했습니다.");
+        }
+    }
+
+    @Override
+    public GneListDto<GneSchoolUserDto> procGneSchoolTeacherInfo(GneInfoDto<GneUserDto> gneUserDto) {
+        // PARAM
+        String schulCode = gneUserDto.getData().getSchulCode(); // 학교코드
+        String stGrade   = gneUserDto.getData().getStGrade(); // 학년
+        String stClass   = gneUserDto.getData().getStClass(); // 반
+
+        RestTemplate restTemplate = new RestTemplate();
+        // 에러 핸들링
+        restTemplate.setRequestFactory(new HttpComponentsClientHttpRequestFactory());
+        restTemplate.setErrorHandler(new DefaultResponseErrorHandler() {
+            public boolean hasError(ClientHttpResponse response) throws IOException {
+                HttpStatus statusCode = response.getStatusCode();
+                return statusCode.series() == HttpStatus.Series.SERVER_ERROR;
+            }
+        });
+
+        // 요청 헤더 설정
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.set("api-key", API_KEY);
+
+        String url = "https://devnewtab.itt.link".concat("/api/user/schulUserList.do").concat("?schulCode=").concat(schulCode).concat("&userSeCode=").concat("08").concat("&stGrade=").concat(stGrade);
+        HttpEntity request = new HttpEntity(null, headers);
+        ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
+        if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            log.info("{}", responseEntity.getBody());
+
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.configure(DeserializationFeature.ACCEPT_SINGLE_VALUE_AS_ARRAY, true);
+            mapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false); // 이 설정을 통해 JSON의 모든 데이터를 파싱하는 것이 아닌 내가 필요로 하는 데이터, 즉 내가 필드로 선언한 데이터들만 파싱할 수 있다.
+            mapper.configure(DeserializationFeature.ACCEPT_EMPTY_STRING_AS_NULL_OBJECT, true); // String "" -> null
+            mapper.enable(JsonReadFeature.ALLOW_NON_NUMERIC_NUMBERS.mappedFeature());
+
+            GneListDto<GneSchoolUserDto> gneDto = null;
+            try {
+                gneDto = mapper.readValue(responseEntity.getBody(), new TypeReference<GneListDto<GneSchoolUserDto>>() {
+                    @Override
+                    public Type getType() {
+                        return super.getType();
+                    }
+                });
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            return gneDto;
+        }
+        else {
+            log.error("{}", responseEntity.getBody());
+            throw new CustomException("no_userlist");
         }
     }
 }

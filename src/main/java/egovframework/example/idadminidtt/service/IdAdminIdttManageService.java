@@ -4,6 +4,7 @@ import egovframework.example.idadminidtt.dto.IdAdminIdttDTO;
 import egovframework.example.idadminidtt.dto.IdAdminIdttResultDTO;
 
 import java.util.HashMap;
+import java.util.List;
 
 public interface IdAdminIdttManageService {
     /**
@@ -12,4 +13,10 @@ public interface IdAdminIdttManageService {
      * @return
      */
     IdAdminIdttResultDTO<IdAdminIdttDTO> selectReportsList(IdAdminIdttManageVO idAdminIdttManageVO);
+
+    /**
+     * DB 내 학교 목록 조회
+     * @return
+     */
+    List<HashMap<String, String>> selectSchulList();
 }

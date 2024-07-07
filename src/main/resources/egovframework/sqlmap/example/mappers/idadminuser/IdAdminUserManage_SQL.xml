@@ -130,6 +130,31 @@
         select
             count(*)
         from IDADMINMBER
+        WHERE 1=1
+        <if test="searchBeginDate != null and searchBeginDate != ''">
+            and CAST(FRST_REGIST_PNTTM AS DATE) <![CDATA[>=]]> CAST(#{searchBeginDate} as DATE)
+        </if>
+        <if test="searchEndDate != null and searchEndDate != ''">
+            and CAST(FRST_REGIST_PNTTM AS DATE) <![CDATA[<=]]> CAST(#{searchEndDate} as DATE)
+        </if>
+        <if test="searchType eq '01'">
+            and USER_SE_CODE like concat('%', #{searchKeyword}, '%')
+        </if>
+        <if test="searchType eq '02'">
+            and USER_SPACE_INFO like concat('%', #{searchKeyword}, '%')
+        </if>
+        <if test="searchType eq '03'">
+            and USER_NM like concat('%', #{searchKeyword}, '%')
+        </if>
+        <if test="searchType eq '04'">
+            and USER_ID like concat('%', #{searchKeyword}, '%')
+        </if>
+        <if test="searchType eq '05'">
+            and PHONE_NUMBER like concat('%', #{searchKeyword}, '%')
+        </if>
+        <if test="searchType eq '06'">
+            and EMAIL_ADRES like concat('%', #{searchKeyword}, '%')
+        </if>
     </select>
 
     <select id="isSignUpUser" parameterType="idAdminUserVO" resultType="boolean">

@@ -42,6 +42,16 @@ public class IdAdminIdttManageVO extends PaginationVO {
      */
     private String[] qesAnswerList;
 
+    /**
+     * 학교코드
+     */
+    private String schulCode;
+
+    /**
+     * 정렬 방법
+     */
+    private String orderBy;
+
     public String[] getQesAnswerList() {
         if(StringUtils.isEmpty(qesAnswer)) {
             return new String[0];

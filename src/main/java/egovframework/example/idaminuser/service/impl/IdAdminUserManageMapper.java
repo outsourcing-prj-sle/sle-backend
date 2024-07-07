@@ -73,5 +73,5 @@ public interface IdAdminUserManageMapper {
      * ID ADMIN 사용자 목록 총 수
      * @return
      */
-    int selectIdAdminUserInfoCount();
+    int selectIdAdminUserInfoCount(IdAdminUserManageVO idAdminUserManageVO);
 }

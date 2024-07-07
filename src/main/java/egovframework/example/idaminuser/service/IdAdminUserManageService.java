@@ -59,10 +59,4 @@ public interface IdAdminUserManageService {
      * @return
      */
     boolean isAuthorizedUser(IdAdminUserManageVO idAdminUserManageVO);
-
-    /**
-     * ID ADMIn 사용자 목록 총 수
-     * @return
-     */
-    int selectIdAdminUserInfoCount();
 }

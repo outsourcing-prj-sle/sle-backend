@@ -65,4 +65,12 @@ public interface NaverService {
      * @return
      */
     GneInfoDto<List<GneSchulDTO>> procGneSchulInfo();
+
+
+    /**
+     * 네이버 사용자정보로 경남교육청 학교별 사용자 목록 조회
+     * @param gneUserDto
+     * @return
+     */
+    GneListDto<GneSchoolUserDto> procGneSchoolTeacherInfo(GneInfoDto<GneUserDto> gneUserDto);
 }
