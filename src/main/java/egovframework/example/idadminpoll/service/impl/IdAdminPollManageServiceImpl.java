@@ -45,8 +45,7 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
                     .pollEndde(vo.getPollEndde())
                     .pollBgnde(vo.getPollBgnde())
                     .pollTarget(makePollTargetList(vo.getPollTargetList()))
-                    .recordCount(idAdminPollManageVO.getLimit())
-                    .totalCount(mapper.selectIdAdminPollListCount(idAdminPollManageVO))
+                    .pollTargetCode(vo.getPollTargetList())
                     .build()
             );
         }
@@ -54,7 +53,7 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
         return IdAdminPollResultDTO.<IdAdminPollDTO>builder()
                 .pollList(result)
                 .pageNo(idAdminPollManageVO.getPageNo())
-                .recordCount(idAdminPollManageVO.getRecordCount())
+                .limit(idAdminPollManageVO.getLimit())
                 .totalCount(mapper.selectIdAdminPollListCount(idAdminPollManageVO))
                 .build();
     }
@@ -83,7 +82,7 @@ public class IdAdminPollManageServiceImpl implements IdAdminPollManageService {
 
         return IdAdminPollDtlResultDTO.<IdAdminPollDtlDTO>builder()
                 .pageNo(idAdminPollManageVO.getPageNo())
-                .recordCount(idAdminPollManageVO.getRecordCount())
+                .limit(idAdminPollManageVO.getLimit())
                 .totalCount(mapper.selectIdAdminPollDtlCount(idAdminPollManageVO))
                 .pollDtlList(dto)
                 .build();

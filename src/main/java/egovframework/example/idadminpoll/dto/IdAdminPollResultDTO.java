@@ -11,7 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class IdAdminPollResultDTO<T> {
     private int pageNo;
-    private int recordCount;
+    private int limit;
     private int totalCount;
     private List<IdAdminPollDTO> pollList;
 }

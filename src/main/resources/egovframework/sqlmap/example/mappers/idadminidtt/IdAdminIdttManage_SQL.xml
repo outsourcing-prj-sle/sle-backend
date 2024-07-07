@@ -20,7 +20,7 @@
                  left join COMTNMBER sub
                            on a.TEACHER_ID = sub.USER_ID
         WHERE a.rn = 1
-        limit #{recordCount}
+        limit #{limit}
         offset #{firstIndex}
     </select>
 

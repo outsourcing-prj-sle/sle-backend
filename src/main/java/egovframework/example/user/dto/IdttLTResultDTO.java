@@ -10,7 +10,7 @@ import java.util.HashMap;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IdttLTResultDTO {
-    ArrayList<HashMap<String, Object>> userPersonality;
-    ArrayList<HashMap<String, Object>> classPersonality;
+public class IdttLTResultDTO<T> {
+    ArrayList<HashMap<String, String>> userPersonality;
+    ArrayList<T> classPersonality;
 }

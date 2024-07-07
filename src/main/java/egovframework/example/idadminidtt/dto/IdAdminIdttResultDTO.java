@@ -11,7 +11,7 @@ import java.util.ArrayList;
 @NoArgsConstructor
 public class IdAdminIdttResultDTO<T> {
     private int pageNo;
-    private int recordCount;
+    private int limit;
     private int totalCount;
     private ArrayList<T> idttList;
 }

@@ -310,7 +310,7 @@
         <if test="name != null"> AND USER_NM LIKE CONCAT('%', #{name}, '%') </if>
         <if test="userEmail != null"> AND EMAIL_ADRES LIKE CONCAT('%', #{userEmail}, '%') </if>
         ORDER BY FRST_REGIST_PNTTM DESC
-        limit #{recordCount}
+        limit #{limit}
         offset #{firstIndex}
 	</select>
 </mapper>
