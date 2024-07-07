@@ -39,11 +39,11 @@ public class PollManageController {
         pollManageVO.setAuthorization(header.getAuthorization());
 
         if(userManageService.isReallyTeacher(header)) {
-
-            return ResponseEntity.ok(pollManageService.makeReportsStatus(pollManageService.selectReportsTeacher(), "teacher"));
+            header.setUserType("08");
+            return ResponseEntity.ok(pollManageService.makeReportsStatus(pollManageService.selectReportsTeacher(),header));
         } else {
-
-            return ResponseEntity.ok(pollManageService.makeReportsStatus(pollManageService.selectReports(pollManageVO), "student"));
+            header.setUserType("04");
+            return ResponseEntity.ok(pollManageService.makeReportsStatus(pollManageService.selectReports(pollManageVO), header));
         }
     }
 

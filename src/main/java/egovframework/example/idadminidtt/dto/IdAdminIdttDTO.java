@@ -9,9 +9,9 @@ import java.util.ArrayList;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class IdAdminIdttResultDTO<T> {
-    private int pageNo;
-    private int recordCount;
-    private int totalCount;
-    private ArrayList<T> idttList;
+public class IdAdminIdttDTO {
+    private String schulNm;
+    private String userNm;
+    private String userSpaceOrgInfo;
+    private ArrayList<?> qesAnswer;
 }

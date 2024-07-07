@@ -33,7 +33,7 @@ public class IdAdminPollManageController {
     private SchulCodeChache schulCodeChache;
 
     @GetMapping("/reports")
-    public ResponseEntity<?> selectIdAdminPollList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminPollManageVO idAdminPollManageVO) {
+    public ResponseEntity<?> selectIdAdminPollList(@RequestHeader HashMap<String, String> req, @ModelAttribute IdAdminPollManageVO idAdminPollManageVO) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
@@ -44,7 +44,7 @@ public class IdAdminPollManageController {
     }
 
     @GetMapping("/reports/{pollId}")
-    public ResponseEntity<?> selectIdAdminPollInfo(@RequestHeader HashMap<String, String> req, @PathVariable String pollId, @RequestBody IdAdminPollManageVO idAdminPollManageVO) {
+    public ResponseEntity<?> selectIdAdminPollInfo(@RequestHeader HashMap<String, String> req, @PathVariable String pollId, @ModelAttribute IdAdminPollManageVO idAdminPollManageVO) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {
@@ -95,13 +95,6 @@ public class IdAdminPollManageController {
 
         if(!userManageService.isAuthorizedUser(header)) {
             throw new CustomException("회원정보가 없습니다.");
-        }
-
-        if(schulCodeChache.getSchulMap() == null || schulCodeChache.getSchulMap().equals("") || !schulCodeChache.getSchulMap().isSuccess()) {
-            GneInfoDto<List<GneSchulDTO>> result = naverService.procGneSchulInfo();
-
-            schulCodeChache.setSchulMap(result);
-            return ResponseEntity.ok(result);
         }
 
         return ResponseEntity.ok(schulCodeChache.getSchulMap());

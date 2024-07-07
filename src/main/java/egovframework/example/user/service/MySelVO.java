@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 
@@ -146,34 +147,66 @@ public class MySelVO {
 	private String[] pollIDForfrstRegisterPnttmList;
 
 	public String[] getPollIdList() {
+		if(StringUtils.isEmpty(pollId)) {
+			return new String[0];
+		}
+
 		return pollId.split(",");
 	}
 
 	public String[] getPollNmList() {
+		if(StringUtils.isEmpty(pollNm)) {
+			return new String[0];
+		}
+
 		return pollNm.split(",");
 	}
 
 	public String[] getExpiredList() {
+		if(StringUtils.isEmpty(expiredStr)) {
+			return new String[0];
+		}
+
 		return expiredStr.split(",");
 	}
 
 	public String[] getIsParticipateList() {
+		if(StringUtils.isEmpty(isParticipateStr)) {
+			return new String[0];
+		}
+
 		return isParticipateStr.split(",");
 	}
 
 	public String[] getStartDateList() {
+		if(StringUtils.isEmpty(startDate)) {
+			return new String[0];
+		}
+
 		return startDate.split(",");
 	}
 
 	public String[] getEndDateList() {
+		if(StringUtils.isEmpty(endDate)) {
+			return new String[0];
+		}
+
 		return endDate.split(",");
 	}
 
 	public String[] getFrstRegisterPnttmList() {
+		if(StringUtils.isEmpty(frstRegisterPnttm)) {
+			return new String[0];
+		}
+
 		return frstRegisterPnttm.split(",");
 	}
 
 	public String[] getPollIDForfrstRegisterPnttmList() {
+		if(StringUtils.isEmpty(pollIDForfrstRegisterPnttm)) {
+			return new String[0];
+		}
+
 		return pollIDForfrstRegisterPnttm.split(",");
 	}
 }

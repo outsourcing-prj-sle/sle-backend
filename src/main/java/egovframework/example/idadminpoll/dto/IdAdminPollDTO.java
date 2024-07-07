@@ -10,11 +10,9 @@ import java.util.ArrayList;
 @AllArgsConstructor
 @NoArgsConstructor
 public class IdAdminPollDTO {
+    private String pollId;
     private String pollNm;
     private String pollBgnde;
     private String pollEndde;
     private ArrayList<String> pollTarget;
-    private int pageNo;
-    private int recordCount;
-    private int totalCount;
 }

@@ -1,5 +1,6 @@
 package egovframework.example.poll.service;
 
+import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.poll.dto.PollDTO;
 import egovframework.example.poll.dto.PollDtlDTO;
 import egovframework.example.poll.dto.PollNoticeDTO;
@@ -81,8 +82,8 @@ public interface PollManageService {
 	/**
 	 * 보고서 목록 상태 생성
 	 * @param list
-	 * @param se
+	 * @param loginVO
 	 * @return
 	 */
-	HashMap<String, List<PollDTO>> makeReportsStatus(List<PollDTO> list, String se);
+	HashMap<String, List<PollDTO>> makeReportsStatus(List<PollDTO> list, LoginVO loginVO);
 }

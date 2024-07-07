@@ -6,6 +6,7 @@ import egovframework.example.poll.service.PollManageService;
 import egovframework.example.poll.service.PollManageVO;
 import egovframework.example.user.service.UserManageService;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
@@ -19,6 +20,9 @@ public class PollManageServiceImpl implements PollManageService {
 
 	@Resource(name = "userManageService")
 	private UserManageService userManageService;
+    @Autowired
+    private egovframework.example.poll.utils.pollManageUtils pollManageUtils;
+
 	/**
 	 * 회원 마음알기 설문 목록 조회
 	 * @param pollManageVO
@@ -179,12 +183,16 @@ public class PollManageServiceImpl implements PollManageService {
 	 * @param se
 	 * @return
 	 */
-	public HashMap<String, List<PollDTO>> makeReportsStatus(List<PollDTO> list, String se) {
+	public HashMap<String, List<PollDTO>> makeReportsStatus(List<PollDTO> list, LoginVO loginVO) {
 		List<PollDTO> todo = new ArrayList<>();
 		List<PollDTO> done = new ArrayList<>();
 
-		if(StringUtils.isNotEmpty(se) && se.equals("teacher")) {
+		if(StringUtils.isNotEmpty(loginVO.getUserRole()) && loginVO.getUserRole().equals("teacher")) {
 			for(PollDTO dto : list) {
+				if(!pollManageUtils.isAllowedPoll(loginVO.getAuthorization(), dto.getPollId())) {
+					continue;
+				}
+
 				if(dto.getExpired()) {
 					done.add(dto);
 				} else {
@@ -193,8 +201,12 @@ public class PollManageServiceImpl implements PollManageService {
 			}
 		}
 
-		if(StringUtils.isNotEmpty(se) && se.equals("student")) {
+		if(StringUtils.isNotEmpty(loginVO.getUserRole()) && loginVO.getUserRole().equals("student")) {
 			for(PollDTO dto : list) {
+				if(!pollManageUtils.isAllowedPoll(loginVO.getAuthorization(), dto.getPollId())) {
+					continue;
+				}
+
 				if(dto.getStatus().equals("done")) {
 					done.add(dto);
 				} else {

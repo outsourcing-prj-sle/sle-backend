@@ -21,7 +21,7 @@ public class IdAdminIdttManageController {
     private IdAdminUserManageService userManageService;
 
     @GetMapping("/idtt/{qesType}")
-    public ResponseEntity selectReportsList(@RequestHeader HashMap<String, String> req, @RequestBody IdAdminIdttManageVO vo, @PathVariable String qesType) {
+    public ResponseEntity selectReportsList(@RequestHeader HashMap<String, String> req, @ModelAttribute IdAdminIdttManageVO vo, @PathVariable String qesType) {
         IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
 
         if(!userManageService.isAuthorizedUser(header)) {

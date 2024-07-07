@@ -4,10 +4,12 @@ package egovframework.example.user.controller;
 import egovframework.example.cmmn.CustomException;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
+import egovframework.example.user.dto.StudentsDTO;
 import egovframework.example.user.dto.TeachersDTO;
 import egovframework.example.user.service.*;
 import egovframework.example.user.utils.UserManageUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +18,7 @@ import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api")
@@ -26,6 +29,8 @@ public class UserManageController {
 
 	@Resource(name = "userManageUtils")
 	private UserManageUtils userManageUtils;
+    @Autowired
+    private egovframework.example.poll.utils.pollManageUtils pollManageUtils;
 
 	/**
 	 * 회원정보 조회
@@ -82,7 +87,13 @@ public class UserManageController {
 			return ResponseEntity.ok(userManageUtils.makeMySelTeacherResultDTO(voList, gneList));
 		} else {
 			// 학생일 시
-			return ResponseEntity.ok(userManageService.selectStudentSelList(header));
+			List<StudentsDTO> dtoList = userManageService.selectStudentSelList(header);
+
+			return ResponseEntity.ok(
+					dtoList.stream()
+							.filter(dto -> pollManageUtils.isAllowedPoll(header.getAuthorization(), dto.getPollId()))
+							.collect(Collectors.toList())
+			);
 		}
 	}
 

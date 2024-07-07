@@ -13,4 +13,11 @@ public interface IdAdminIdttManageMapper {
      * @return
      */
     ArrayList<IdAdminIdttManageVO> selectReportsList(IdAdminIdttManageVO idAdminIdttManageVO);
+
+    /**
+     * idtt 관리 선생님 평가 총 수
+     * @param idAdminIdttManageVO
+     * @return
+     */
+    int selectReportsListCount(IdAdminIdttManageVO idAdminIdttManageVO);
 }
