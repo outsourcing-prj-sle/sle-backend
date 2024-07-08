@@ -244,10 +244,11 @@
     
     <select id="selectIpLogAll" parameterType="apiLog" resultType="apiLog">
     	SELECT
+    	LOG_ID as logId,
     	USER_ID as uniqId,
     	USER_SE_CODE as id,
     	USER_NAME as userName,
-    	IP_ADDRESS as ipAddr,
+    	IP_ADDRESS as ipAddress,
     	ACCESS_TIME as accessTime,
     	API_URL as apiUrl    	
     	FROM ADMIN_LOG
