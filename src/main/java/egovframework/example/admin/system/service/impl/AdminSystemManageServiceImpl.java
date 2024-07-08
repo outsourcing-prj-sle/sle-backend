@@ -261,13 +261,18 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
                 .build();
 	}
 
-	@Override
-	public void insertSubCommonCode(SubCommonCodesDTO subCommonCode) {
-		mapper.insertSubCommonCode(subCommonCode);
-	}
 	/**
 	 * 하위코드 관리
 	 */
+	@Override
+	public void insertSubCommonCode(SubCommonCodesDTO subCommonCode) {
+		SubCommonCodesDTO count = SubCommonCodesDTO.builder()
+								.codeId(subCommonCode.getCodeId())
+								.build();
+		subCommonCode.setOrderNm(mapper.selectSubCommonCodeCount(count)+1);
+		mapper.insertSubCommonCode(subCommonCode);
+	}
+
 	@Override
 	public SubCommonCodesDTO selectSubCommonCodeById(String subCodeId) {
 		return mapper.selectSubCommonCodeById(subCodeId);

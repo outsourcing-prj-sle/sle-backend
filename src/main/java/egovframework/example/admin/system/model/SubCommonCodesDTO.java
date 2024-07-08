@@ -21,4 +21,5 @@ public class SubCommonCodesDTO extends PaginationVO{
     private String createdAt;
     private String updatedAt;
     private String createdBy;
+    private int orderNm;
 }

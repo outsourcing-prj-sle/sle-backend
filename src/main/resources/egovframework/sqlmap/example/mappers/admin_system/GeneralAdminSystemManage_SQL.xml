@@ -164,7 +164,7 @@
     <!-- Sub Common Codes -->
     <insert id="insertSubCommonCode" parameterType="SubCommonCodesDTO">
         INSERT INTO ADMIN_SUB_COMMON_CODES (SUB_CODE_ID, CODE_ID, SUB_CODE_NAME, CODE_DESCRIPTION, CREATED_AT, UPDATED_AT, CREATED_BY)
-        VALUES (#{subCodeId}, #{codeId}, #{subCodeName}, #{codeDescription}, #{createdAt}, #{updatedAt}, #{createdBy})
+        VALUES (#{subCodeId}, #{codeId}, #{subCodeName}, #{codeDescription}, now(), now(), #{createdBy})
     </insert>
 
     <select id="selectSubCommonCodeById" parameterType="String" resultType="SubCommonCodesDTO">
@@ -199,8 +199,9 @@
         WHERE CODE_ID = #{codeId}
         <if test="subCodeId != null"> AND SUB_CODE_ID LIKE CONCAT('%',#{subCodeId},'%')</if>
         <if test="subCodeName != null"> AND SUB_CODE_NAME LIKE CONCAT('%',#{subCodeName},'%')</if>
-        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
+        <if test="orderNm != null"> AND ORDER_NM LIKE CONCAT('%',#{orderNm},'%')</if>
+        <if test="orderBy == 'desc'">ORDER BY ORDER_NM DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY ORDER_NM ASC</if>
         limit #{limit}
         offset #{firstIndex}
     </select>
