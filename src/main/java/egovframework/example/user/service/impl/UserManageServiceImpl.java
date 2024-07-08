@@ -198,25 +198,36 @@ public class UserManageServiceImpl implements UserManageService {
 	 * @return
 	 */
 	@Override
-	public IdttLTResultDTO<ClassPersonalityDTO> selectIdttLT(LoginVO loginVO, String id) {
+	public IdttLTResultDTO<ClassPersonalityDTO> selectIdttLT(LoginVO loginVO, String id, Boolean isDummy) {
 
 		LoginVO vo = mapper.selectUserInfo(loginVO);
 
 		String baseUrl = "https://smile-second-store.itt.link:4555/gne-api/folio/v3.1/analysis-result";
 
 		try {
-			URI uriUserPersonality = new URI(baseUrl +
-					"?apiKey=" + apiKey +
-					"&analysisId=folio-instructor-user-personality" +
-					"&schoolId=" + vo.getSchulCode() +
-//					"&grade=" + vo.getGradeNm() +
-					"&grade=" + 1 +
-					"&schoolYear=" + vo.getStYear() +
-//					"&classNo=" + vo.getClassCode() +
-					"&classNo=" + 1 +
-//					"&learnerId=" + id
-					"&learnerId=" + "tlqjach-stu101@gne.go.kr"
-			);
+			URI uriUserPersonality = new URI("");
+			if(isDummy) {
+				uriUserPersonality = new URI(baseUrl +
+						"?apiKey=" + apiKey +
+						"&analysisId=folio-instructor-user-personality" +
+						"&schoolId=" + vo.getSchulCode() +
+						"&grade=" + 1 +
+						"&schoolYear=" + vo.getStYear() +
+						"&classNo=" + 1 +
+						"&learnerId=" + "tlqjach-stu101@gne.go.kr"
+				);
+			} else {
+				uriUserPersonality = new URI(baseUrl +
+						"?apiKey=" + apiKey +
+						"&analysisId=folio-instructor-user-personality" +
+						"&schoolId=" + vo.getSchulCode() +
+						"&grade=" + vo.getGradeNm() +
+						"&schoolYear=" + vo.getStYear() +
+						"&classNo=" + vo.getClassCode() +
+						"&learnerId=" + id
+				);
+			}
+
 
 			URI uriClassPersonality = new URI(baseUrl +
 					"?apiKey=" + apiKey +

@@ -81,7 +81,7 @@ public interface UserManageService {
 	 * @param loginVO
 	 * @return
 	 */
-	IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id);
+	IdttLTResultDTO selectIdttLT(LoginVO loginVO, String id, Boolean isDummy);
 	
 	
 	/**

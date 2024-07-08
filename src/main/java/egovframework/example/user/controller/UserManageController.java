@@ -170,10 +170,14 @@ public class UserManageController {
 			throw new CustomException("id는 필수값입니다.");
 		}
 
-		IdttLTResultDTO dto = userManageService.selectIdttLT(header, id);
+		IdttLTResultDTO dto = userManageService.selectIdttLT(header, id, false);
 
 		if(dto.getUserPersonality() != null && dto.getUserPersonality().size() < 1) {
-			dto.setUserPersonality(makeDummies().getUserPersonality());
+			dto = userManageService.selectIdttLT(header, id, true);
+
+			if(dto.getUserPersonality() != null && dto.getUserPersonality().size() < 1) {
+				dto.setUserPersonality(makeDummies().getUserPersonality());
+			}
 		}
 
 		if(dto.getClassPersonality() != null && dto.getClassPersonality().size() < 1) {
