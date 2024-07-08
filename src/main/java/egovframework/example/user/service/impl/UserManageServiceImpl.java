@@ -209,10 +209,13 @@ public class UserManageServiceImpl implements UserManageService {
 					"?apiKey=" + apiKey +
 					"&analysisId=folio-instructor-user-personality" +
 					"&schoolId=" + vo.getSchulCode() +
-					"&grade=" + vo.getGradeNm() +
+//					"&grade=" + vo.getGradeNm() +
+					"&grade=" + 1 +
 					"&schoolYear=" + vo.getStYear() +
-					"&classNo=" + vo.getClassCode() +
-					"&learnerId=" + id
+//					"&classNo=" + vo.getClassCode() +
+					"&classNo=" + 1 +
+//					"&learnerId=" + id
+					"&learnerId=" + "tlqjach-stu101@gne.go.kr"
 			);
 
 			URI uriClassPersonality = new URI(baseUrl +

@@ -69,7 +69,7 @@
 	
     <!-- Terms Management -->
     <insert id="insertTerms" parameterType="TermsManageDTO">
-        INSERT INTO ADMIN_TERMS_MANAGEMENT (TERMS_ID, STUDENT_TERMS_CONTENT, STAFF_TERMS_CONTENT, CREATED_AT, UPDATED_AT, EFFECTIVE_DATE, CREATED_BY)
+        INSERT INTO ADMIN_TERMS_MANAGEMENT (TERMS_ID, STUDENT_TERMS, STAFF_TERMS, CREATED_AT, UPDATED_AT, EFFECTIVE_DATE, CREATED_BY)
         VALUES (#{termsId}, #{studentTerms}, #{staffTerms}, #{createdAt}, #{updatedAt}, #{effectiveDate}, #{createdBy})
     </insert>
 
@@ -79,8 +79,8 @@
 
     <update id="updateTerms" parameterType="TermsManageDTO">
         UPDATE ADMIN_TERMS_MANAGEMENT
-        SET STUDENT_TERMS_CONTENT = #{studentTerms},
-            STAFF_TERMS_CONTENT = #{staffTerms},
+        SET STUDENT_TERMS = #{studentTerms},
+            STAFF_TERMS = #{staffTerms},
             UPDATED_AT = CURRENT_TIMESTAMP,
             EFFECTIVE_DATE = #{effectiveDate},
             CREATED_BY = #{createdBy}
