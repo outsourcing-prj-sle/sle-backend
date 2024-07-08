@@ -1,10 +1,8 @@
 package egovframework.example.cmmn.service;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
-@Getter
-@Setter
+@Data
 public class AccountDTO {
 	
 	/**

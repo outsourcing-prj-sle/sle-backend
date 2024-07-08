@@ -30,12 +30,12 @@ public class AdminSystemManageController {
 	
 	@PostMapping("/site/register")
 	ResponseEntity<?> insertEntity(SiteManageDTO data,
-            @RequestParam(name = "tpLogoImage", required = false) MultipartFile topLogoImage,
-            @RequestParam(name = "btmLogoImage", required = false) MultipartFile bottomLogoImage,
-            @RequestParam(name = "mainLogoImage", required = false) MultipartFile mainImage) {
+            @RequestParam(name = "topImage", required = false) MultipartFile topLogoImage,
+            @RequestParam(name = "bottomImage", required = false) MultipartFile bottomLogoImage,
+            @RequestParam(name = "mainImage", required = false) MultipartFile mainLogoImage) {
 		try {
 			log.info("여기까지");
-			adminSystemService.saveSiteManage(data, topLogoImage, bottomLogoImage, mainImage);
+			adminSystemService.saveSiteManage(data, topLogoImage, bottomLogoImage, mainLogoImage);
 	        return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success"));
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));
@@ -43,12 +43,13 @@ public class AdminSystemManageController {
     }
 	
 	@PutMapping("/site/update")
-	ResponseEntity<?> updateEntity(SiteManageDTO data) {
+	ResponseEntity<?> updateEntity(SiteManageDTO data,
+			@RequestParam(name = "topImage", required = false) MultipartFile topLogoImage,
+            @RequestParam(name = "bottomImage", required = false) MultipartFile bottomLogoImage,
+            @RequestParam(name = "mainImage", required = false) MultipartFile mainLogoImage) {
 		try {
-			if(adminSystemService.updateSite(data)) {
-				return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success"));
-			}
-			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Site Not Found"));
+			adminSystemService.updateSiteManage(data, topLogoImage, bottomLogoImage, mainLogoImage);
+			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"success"));
 		}catch(Exception e){
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"failed"));
 		}

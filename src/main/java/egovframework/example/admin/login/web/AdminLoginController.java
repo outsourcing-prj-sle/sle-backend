@@ -3,6 +3,7 @@ package egovframework.example.admin.login.web;
 import java.util.HashMap;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +31,9 @@ public class AdminLoginController {
 	 * @param AccountDTO
 	 */
 	@PostMapping("/login")
-	public ResponseEntity<?> selLogin(@RequestBody AccountDTO account){
+	public ResponseEntity<?> selLogin(HttpServletRequest request){
 		AdminLoginVO user = new AdminLoginVO();
+		AccountDTO account = (AccountDTO)request.getAttribute("requestBody");
 		log.info("로그인 시도- ID : {} , PW : {} ",account.getId(),account.getPassword());
 		try {
 			user = adminLoginService.selectUserById(account);

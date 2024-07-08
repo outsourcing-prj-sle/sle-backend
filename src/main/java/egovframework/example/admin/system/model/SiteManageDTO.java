@@ -1,7 +1,5 @@
 package egovframework.example.admin.system.model;
 
-import org.springframework.web.multipart.MultipartFile;
-
 import egovframework.example.cmmn.service.PaginationVO;
 
 import lombok.AllArgsConstructor;
@@ -23,7 +21,7 @@ public class SiteManageDTO extends PaginationVO{
     private String updatedAt;
     private String topLogoImage;
     private String bottomLogoImage;
-    private String mainImage;
+    private String mainLogoImage;
     private String siteDescription;
     private boolean mouseSecurity;
     private boolean keyboardSecurity;

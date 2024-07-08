@@ -97,4 +97,6 @@ public interface UserManageMapper {
 	 * 유저 전체/검색 조회
 	 */
 	List<LoginVO> selectUserByConditions(AdminUserVO loginVO);
+	
+	int selectUserCount(AdminUserVO loginVO);
 }

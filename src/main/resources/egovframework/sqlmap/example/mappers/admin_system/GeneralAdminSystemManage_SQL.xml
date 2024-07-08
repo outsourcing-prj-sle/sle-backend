@@ -17,7 +17,7 @@
         INSERT INTO ADMIN_SITE_MANAGEMENT 
         (SITE_ID, SITE_NAME, SITE_DOMAIN, CREATED_AT, UPDATED_AT, TOP_LOGO_IMAGE, BOTTOM_LOGO_IMAGE, MAIN_IMAGE, SITE_DESCRIPTION, MOUSE_SECURITY, KEYBOARD_SECURITY, CREATED_BY)
         VALUES 
-        (#{siteId}, #{siteName}, #{siteDomain}, #{createdAt}, #{updatedAt}, #{topLogoImage}, #{bottomLogoImage}, #{mainImage}, #{siteDescription}, #{mouseSecurity}, #{keyboardSecurity}, #{createdBy})
+        (#{siteId}, #{siteName}, #{siteDomain}, #{createdAt}, #{updatedAt}, #{topLogoImage}, #{bottomLogoImage}, #{mainLogoImage}, #{siteDescription}, #{mouseSecurity}, #{keyboardSecurity}, #{createdBy})
     </insert>
 
     <select id="selectSiteById" parameterType="String" resultType="SiteManageDTO">
@@ -43,7 +43,7 @@
             UPDATED_AT = CURRENT_TIMESTAMP,
             TOP_LOGO_IMAGE = #{topLogoImage},
             BOTTOM_LOGO_IMAGE = #{bottomLogoImage},
-            MAIN_IMAGE = #{mainImage},
+            MAIN_IMAGE = #{mainLogoImage},
             SITE_DESCRIPTION = #{siteDescription},
             MOUSE_SECURITY = #{mouseSecurity},
             KEYBOARD_SECURITY = #{keyboardSecurity},
@@ -69,8 +69,8 @@
 	
     <!-- Terms Management -->
     <insert id="insertTerms" parameterType="TermsManageDTO">
-        INSERT INTO ADMIN_TERMS_MANAGEMENT (TERMS_ID, STUDENT_TERMS, STAFF_TERMS, CREATED_AT, UPDATED_AT, EFFECTIVE_DATE, CREATED_BY)
-        VALUES (#{termsId}, #{studentTerms}, #{staffTerms}, #{createdAt}, #{updatedAt}, #{effectiveDate}, #{createdBy})
+        INSERT INTO ADMIN_TERMS_MANAGEMENT (TERMS_ID, STUDENT_TERMS_CONTENT, STAFF_TERMS_CONTENT, CREATED_AT, UPDATED_AT, EFFECTIVE_DATE, CREATED_BY)
+        VALUES (#{termsId}, #{studentTerms}, #{staffTerms}, now(), now(), #{effectiveDate}, #{createdBy})
     </insert>
 
     <select id="selectTermsById" parameterType="String" resultType="TermsManageDTO">
@@ -93,7 +93,7 @@
 
     <select id="selectTermsAll" parameterType="TermsManageDTO" resultType="TermsManageDTO">
         SELECT * FROM ADMIN_TERMS_MANAGEMENT
-        ORDER BY CREATED_BY ASC
+        ORDER BY EFFECTIVE_DATE ASC
         limit 10
     </select>
 
@@ -133,7 +133,17 @@
     </delete>
 
     <select id="selectCommonCodesByConditions" parameterType="CommonCodesDTO" resultType="CommonCodesDTO">
-        SELECT * FROM ADMIN_COMMON_CODES
+        SELECT 
+        CODE_ID,
+        CODE_NAME,
+        CATEGORY_CODE,
+        IS_ACTIVE,
+        CODE_DESCRIPTION,
+        CREATED_AT,
+        UPDATED_AT,
+        CREATED_BY,
+        (SELECT count(*) FROM ADMIN_SUB_COMMON_CODES WHERE ADMIN_SUB_COMMON_CODES.CODE_ID = ADMIN_COMMON_CODES.CODE_ID) as subCount
+        FROM ADMIN_COMMON_CODES
         <where>
             <if test="codeId != null"> AND CODE_ID LIKE CONCAT('%',#{codeId},'%')</if>
             <if test="codeName != null"> AND CODE_NAME LIKE CONCAT('%',#{codeName},'%')</if>
@@ -187,43 +197,44 @@
     <select id="selectSubCommonCodesByConditions" parameterType="SubCommonCodesDTO" resultType="SubCommonCodesDTO">
         SELECT * FROM ADMIN_SUB_COMMON_CODES
         WHERE CODE_ID = #{codeId}
-        <where>
-            <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
-            <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
-        </where>
+        <if test="subCodeId != null"> AND SUB_CODE_ID LIKE CONCAT('%',#{subCodeId},'%')</if>
+        <if test="subCodeName != null"> AND SUB_CODE_NAME LIKE CONCAT('%',#{subCodeName},'%')</if>
         <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
         <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
         limit #{limit}
         offset #{firstIndex}
     </select>
     
-    <select id="selectSubCommonCodesCount" parameterType="SubCommonCodesDTO" resultType="int">
+    <select id="selectSubCommonCodeCount" parameterType="SubCommonCodesDTO" resultType="int">
         SELECT count(*) FROM ADMIN_SUB_COMMON_CODES
         WHERE CODE_ID = #{codeId}
-        <where>
-            <if test="subCodeId != null"> AND SUB_CODE_ID = #{subCodeId}</if>
-            <if test="subCodeName != null"> AND SUB_CODE_NAME = #{subCodeName}</if>
-        </where>
+        <if test="subCodeId != null"> AND SUB_CODE_ID LIKE CONCAT('%',#{subCodeId},'%')</if>
+        <if test="subCodeName != null"> AND SUB_CODE_NAME LIKE CONCAT('%',#{subCodeName},'%')</if>
     </select>
 	
     <!-- IP Table -->
     <insert id="insertIp" parameterType="IpTableDTO">
         INSERT INTO ADMIN_IP_TABLE (ALLOWED_IP, ADMIN_ID, IS_ACTIVE, CREATED_AT, UPDATED_AT, CREATED_BY)
-        VALUES (#{allowedIp}, #{adminId}, #{isActive}, now(), now(), #{createdBy)
+        VALUES (#{allowedIp}, #{adminId}, #{isActive}, now(), now(), #{createdBy})
     </insert>
 
     <select id="selectIpById" parameterType="String" resultType="IpTableDTO">
         SELECT * FROM ADMIN_IP_TABLE WHERE IP_ID = #{id}
+    </select>
+    
+    <select id="selectIpByUserId" parameterType="String" resultType="String">
+        SELECT ALLOWED_IP FROM ADMIN_IP_TABLE 
+        WHERE ADMIN_ID = #{id} 
+        AND IS_ACTIVE = 1
     </select>
 
     <update id="updateIp" parameterType="IpTableDTO">
         UPDATE ADMIN_IP_TABLE
         SET ALLOWED_IP = #{allowedIp},
         	ADMIN_ID = #{adminId},
-            IS_ACTIVE = #{active},
-            UPDATED_AT = CURRENT_TIMESTAMP,
-            CREATED_BY = #{createdBy}
-        WHERE IP_ID = #{id}
+            IS_ACTIVE = #{isActive},
+            UPDATED_AT = CURRENT_TIMESTAMP
+        WHERE IP_ID = #{ipId}
     </update>
 
     <delete id="deleteIp" parameterType="int">
@@ -252,8 +263,8 @@
     	ACCESS_TIME as accessTime,
     	API_URL as apiUrl    	
     	FROM ADMIN_LOG
-        <if test="orderBy == 'desc'">ORDER BY CREATED_AT DESC</if>
-        <if test="orderBy == 'asc'">ORDER BY CREATED_AT ASC</if>
+        <if test="orderBy == 'desc'">ORDER BY ACCESS_TIME DESC</if>
+        <if test="orderBy == 'asc'">ORDER BY ACCESS_TIME ASC</if>
         <where>
         	<if test="id != null">AND USER_SE_CODE LIKE CONCAT('%',#{id},'%')</if>
         	<if test="apiUrl != null">AND API_URL LIKE CONCAT('%',#{apiUrl},'%')</if>
