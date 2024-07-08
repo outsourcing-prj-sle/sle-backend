@@ -200,7 +200,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
                 .codeInfoList(mapper.selectCommonCodesByConditions(data))
                 .pageNo(data.getPageNo())
                 .limit(data.getLimit())
-                .totalCount(mapper.selectCommonCodeCount(data))
+                .totalCount(mapper.selectCommonCodesCount(data))
                 .build();
 	}
 
