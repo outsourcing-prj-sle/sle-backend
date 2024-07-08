@@ -51,7 +51,7 @@ public interface AdminSystemMapper {
     void deleteCommonCode(String codeId);
     List<CommonCodesDTO> selectCommonCodesByConditions(CommonCodesDTO data);
     boolean checkCommonCodeById(String codeId);
-    int selectCommonCodeCount(CommonCodesDTO data);
+    int selectCommonCodesCount(CommonCodesDTO data);
 
 	/*
 	 * 하위 공통 코드 관리

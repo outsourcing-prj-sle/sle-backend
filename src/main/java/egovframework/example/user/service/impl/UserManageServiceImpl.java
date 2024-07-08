@@ -221,8 +221,7 @@ public class UserManageServiceImpl implements UserManageService {
 					"&schoolId=" + vo.getSchulCode() +
 					"&grade=" + vo.getGradeNm() +
 					"&schoolYear=" + vo.getStYear() +
-					"&classNo=" + vo.getClassCode() +
-					"&learnerId=" + vo.getAuthorization()
+					"&classNo=" + vo.getClassCode()
 			);
 
 			RestTemplate restTemplate = new RestTemplate();
