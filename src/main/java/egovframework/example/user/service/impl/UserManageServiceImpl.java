@@ -300,7 +300,7 @@ public class UserManageServiceImpl implements UserManageService {
 				.userInfoList(mapper.selectUserByConditions(adminUserVO))
 				.pageNo(adminUserVO.getPageNo())
 				.limit(adminUserVO.getLimit())
-				.totalCount(adminUserVO.getTotalCount())
+				.totalCount(mapper.selectUserCount(adminUserVO))
 				.build();
 	}
 }

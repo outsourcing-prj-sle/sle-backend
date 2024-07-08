@@ -84,6 +84,7 @@ public class AdminSubCommonCodeManageController {
 		if(adminSystemService.selectCommonCodeById(codeId) == null) {
 			return ResponseEntity.ok(ResultVO.res(HttpStatus.OK,"Code Id Not exists"));
 		}
+		adminSystemService.deleteSubCommonCode(subCodeId);
     	return ResponseEntity.ok().build();
     }
 	

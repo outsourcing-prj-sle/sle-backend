@@ -315,8 +315,8 @@
         offset #{firstIndex}
 	</select>
 	
-	<select id="selectUserCount" parameterType="hashmap" resultType="loginVO">
-		select * from COMTNMBER
+	<select id="selectUserCount" parameterType="hashmap" resultType="int">
+		select count(*) from COMTNMBER
 		where TEACHER_SE_CODE = #{userRole}
 		<if test="id != null"> AND USER_ID LIKE CONCAT('%', #{id}, '%') </if>
         <if test="userSpaceOrgInfo != null"> AND SCHUL_NM LIKE CONCAT('%', #{userSpaceOrgInfo}, '%') </if>

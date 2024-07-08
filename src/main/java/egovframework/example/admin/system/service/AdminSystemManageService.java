@@ -28,12 +28,13 @@ public interface AdminSystemManageService {
 	 */
     String insertSite(SiteManageDTO site);
     SiteManageDTO selectSiteById(String siteId);
-    boolean updateSite(SiteManageDTO site);
+    String updateSite(SiteManageDTO site);
     void deleteSite(String siteId);
     SiteListDTO selectSitesAll(SiteManageDTO data);
     boolean checkSiteByUrl(String url);
     
     void saveSiteManage(SiteManageDTO siteManage, MultipartFile topLogoImage, MultipartFile bottomLogoImage, MultipartFile mainImage) throws IOException;
+    void updateSiteManage(SiteManageDTO siteManage, MultipartFile topLogoImage, MultipartFile bottomLogoImage, MultipartFile mainImage) throws IOException;
 
 	/*
 	 * 약관 관리
@@ -72,6 +73,10 @@ public interface AdminSystemManageService {
     void updateIp(IpTableDTO ipTable);
     void deleteIp(int id);
     IpTableListDTO selectIpsAll(IpTableDTO data);
+    List<String> selectIpByUserId(String id);
     
+    /*
+     * 로그 관리
+     */
     IpLogListDTO selectIpLogAll(ApiLog log);
 }

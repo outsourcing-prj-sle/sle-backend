@@ -26,6 +26,7 @@ import org.springframework.web.servlet.view.JstlView;
 import org.springframework.web.servlet.view.UrlBasedViewResolver;
 
 import egovframework.example.admin.service.impl.AdminLogInterceptor;
+import egovframework.example.admin.service.impl.LoginIpCheckInterceptor;
 import egovframework.example.cmmn.web.EgovBindingInitializer;
 import egovframework.example.cmmn.web.EgovImgPaginationRenderer;
 
@@ -96,11 +97,15 @@ public class EgovWebMvcConfiguration extends WebMvcConfigurationSupport {
 	
     @Autowired
     private AdminLogInterceptor adminLogInterceptor;
+    
+    @Autowired
+    private LoginIpCheckInterceptor loginIpCheckInterceptor;
 
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
     	registry.addInterceptor(adminLogInterceptor).addPathPatterns("/api/admin/**").excludePathPatterns("/api/admin/login","/api/top/*.jpg","/api/bottom/*","/api/main/*.jpg");
         registry.addInterceptor(localeChangeInterceptor());
+        registry.addInterceptor(loginIpCheckInterceptor).addPathPatterns("/api/admin/login");
     }
 
     @Override

@@ -28,7 +28,9 @@ import egovframework.example.admin.system.service.AdminSystemManageService;
 import egovframework.example.cmmn.service.ApiLog;
 import egovframework.example.cmmn.service.PaginationVO;
 import egovframework.example.idaminuser.dto.IdAdminUserListDTO;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @Service("adminSystemManageService")
 public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	
@@ -67,12 +69,14 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	}
 
 	@Override
-	public boolean updateSite(SiteManageDTO site) {
-		if(mapper.selectSiteById(site.getSiteId()) != null || site.getSiteId() != null) {
+	public String updateSite(SiteManageDTO site) {
+		try {
 			mapper.updateSite(site);
-			return true;
+			return "success";
+		}catch(Exception e) {
+			return "Site Not Found";
 		}
-		return false;
+
 	}
 
 	@Override
@@ -94,8 +98,52 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	public boolean checkSiteByUrl(String url) {
 		return mapper.checkSiteByUrl(url);
 	}
-
 	
+	/**
+	 * 파일 업데이트
+	 * @param siteManageDTO
+	 * @param topLogoImage
+	 * @param bottomLogoImage
+	 * @param mainImage
+	 * @throws IOException
+	 */
+	@Override
+	public void updateSiteManage(SiteManageDTO siteManageDTO, MultipartFile topLogoImage, MultipartFile bottomLogoImage, MultipartFile mainImage) throws IOException {
+		SiteManageDTO existingImg = mapper.selectSiteById(siteManageDTO.getSiteId());
+		if(existingImg == null) {
+			throw new IOException();
+		}
+		
+        if (topLogoImage != null) {
+            deleteFile(existingImg.getTopLogoImage());
+            String topLogoImagePath = saveFile(topLogoImage, "top");
+            siteManageDTO.setTopLogoImage(topLogoImagePath);
+            log.info(siteManageDTO.getTopLogoImage());
+        }else {
+        	deleteFile(existingImg.getTopLogoImage());
+        	siteManageDTO.setTopLogoImage(null);
+        }
+
+        if (bottomLogoImage != null) {
+            deleteFile(existingImg.getBottomLogoImage());
+            String bottomLogoImagePath = saveFile(bottomLogoImage, "bottom");
+            siteManageDTO.setBottomLogoImage(bottomLogoImagePath);
+        } else {
+        	deleteFile(existingImg.getBottomLogoImage());
+        	siteManageDTO.setBottomLogoImage(null);
+        }
+
+        if (mainImage != null) {
+            deleteFile(existingImg.getMainLogoImage());
+            String mainImagePath = saveFile(mainImage, "main");
+            siteManageDTO.setMainLogoImage(mainImagePath);
+        } else {
+        	deleteFile(existingImg.getMainLogoImage());
+        	siteManageDTO.setMainLogoImage(null);
+        }
+
+        updateSite(siteManageDTO);
+	}
 	/**
 	 * 파일 저장
 	 * @param siteManageDTO
@@ -116,7 +164,7 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         }
         if (mainImage != null && !mainImage.isEmpty()) {
             String mainImagePath = saveFile(mainImage, "main");
-            siteManageDTO.setMainImage(mainImagePath);
+            siteManageDTO.setMainLogoImage(mainImagePath);
         }
         insertSite(siteManageDTO);
     }
@@ -131,6 +179,15 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
         Path filePath = uploadPath.resolve(fileName);
         file.transferTo(filePath);
         return "api/" + folder + "/" + fileName;
+    }
+    
+    private void deleteFile(String filePath) throws IOException {
+    	log.info(filePath);
+        if (filePath != null) {
+        	log.info(filePath);
+            Path path = Paths.get("src/main/webapp/" + filePath);
+            Files.deleteIfExists(path);
+        }
     }
 	/**
 	 * 약관 관리
@@ -249,6 +306,12 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 	public IpTableDTO selectIpById(String allowedIp) {
 		return mapper.selectIpById(allowedIp);
 	}
+	
+	@Override
+	public List<String> selectIpByUserId(String id) {
+		// TODO Auto-generated method stub
+		return mapper.selectIpByUserId(id);
+	}
 
 	@Override
 	public void updateIp(IpTableDTO ipTable) {
@@ -290,4 +353,5 @@ public class AdminSystemManageServiceImpl implements AdminSystemManageService{
 				.totalCount(mapper.selectIpLogCount(log))
 				.build();
 	}
+
 }

@@ -5,6 +5,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
 
 import egovframework.example.admin.service.AdminLogService;
 import egovframework.example.admin.service.AdminManageService;
+import egovframework.example.admin.system.service.AdminSystemManageService;
 import egovframework.example.cmmn.service.ApiLog;
 import egovframework.example.cmmn.service.AdminLoginVO;
 
@@ -21,6 +22,7 @@ public class AdminLogInterceptor implements HandlerInterceptor {
     @Resource(name = "adminManageService")
     private AdminManageService adminManageService;
 
+    
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         AdminLoginVO adminLoginVO = AdminLoginVO.builder()
@@ -34,7 +36,7 @@ public class AdminLogInterceptor implements HandlerInterceptor {
         	return false;
         }
         adminLoginVO = adminManageService.selectUser(adminLoginVO);
-        String ipAddress = request.getRemoteAddr();
+        String ipAddress = request.getHeader("X-Forwarded-For");
         String apiUrl = request.getRequestURI();
         
         ApiLog log = ApiLog.builder()

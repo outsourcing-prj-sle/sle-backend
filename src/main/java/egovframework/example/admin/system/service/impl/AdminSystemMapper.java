@@ -25,9 +25,9 @@ public interface AdminSystemMapper {
 	/*
 	 * 사이트 관리
 	 */
-	String insertSite(SiteManageDTO site);
+	void insertSite(SiteManageDTO site);
     SiteManageDTO selectSiteById(String siteId);
-    boolean updateSite(SiteManageDTO site);
+    void updateSite(SiteManageDTO site);
     void deleteSite(String siteId);
     List<SiteManageDTO> selectSitesAll(SiteManageDTO data);
     boolean checkSiteByUrl(String url);
@@ -36,9 +36,9 @@ public interface AdminSystemMapper {
 	/*
 	 * 약관 관리
 	 */
-    String insertTerms(TermsManageDTO terms);
+    void insertTerms(TermsManageDTO terms);
     TermsManageDTO selectTermsById(String termsId);
-    String updateTerms(TermsManageDTO terms);
+    void updateTerms(TermsManageDTO terms);
     void deleteTerms(String termsId);
     List<TermsManageDTO> selectTermsAll(TermsManageDTO data);
 
@@ -73,6 +73,7 @@ public interface AdminSystemMapper {
     void deleteIp(int id);
     List<IpTableDTO> selectIpsAll(IpTableDTO data);
     int selectIpCount();
+    List<String> selectIpByUserId(String id);
 
     int selectIpLogCount(ApiLog log);
 	List<ApiLog> selectIpLogAll(ApiLog log);
