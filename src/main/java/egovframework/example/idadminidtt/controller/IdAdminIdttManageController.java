@@ -32,4 +32,15 @@ public class IdAdminIdttManageController {
 
         return ResponseEntity.ok(idttManageService.selectReportsList(vo));
     }
+
+    @GetMapping("/idtt/schulList")
+    public ResponseEntity selectSchulList(@RequestHeader HashMap<String, String> req) {
+        IdAdminUserManageVO header = IdAdminUserManageVO.builder().uniqId(req.get("authorization")).build();
+
+        if(!userManageService.isAuthorizedUser(header)) {
+            throw new CustomException("회원정보가 없습니다.");
+        }
+
+        return ResponseEntity.ok(idttManageService.selectSchulList());
+    }
 }

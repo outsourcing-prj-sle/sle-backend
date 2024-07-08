@@ -4,6 +4,8 @@ import egovframework.example.idadminidtt.service.IdAdminIdttManageVO;
 import org.egovframe.rte.psl.dataaccess.mapper.Mapper;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 @Mapper("idAdminIdttManageMapper")
 public interface IdAdminIdttManageMapper {
@@ -20,4 +22,10 @@ public interface IdAdminIdttManageMapper {
      * @return
      */
     int selectReportsListCount(IdAdminIdttManageVO idAdminIdttManageVO);
+
+    /**
+     * DB 내 학교 목록 조회
+     * @return
+     */
+    List<HashMap<String, String>> selectSchulList();
 }

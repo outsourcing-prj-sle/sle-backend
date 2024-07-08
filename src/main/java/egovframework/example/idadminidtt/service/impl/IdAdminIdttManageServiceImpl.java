@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @Service("idAdminIdttManageService")
 public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
@@ -45,4 +46,11 @@ public class IdAdminIdttManageServiceImpl implements IdAdminIdttManageService {
                 .totalCount(mapper.selectReportsListCount(idAdminIdttManageVO))
                 .build();
     }
+
+    @Override
+    public List<HashMap<String, String>> selectSchulList() {
+        return mapper.selectSchulList();
+    }
+
+
 }

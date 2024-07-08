@@ -170,8 +170,17 @@ public class UserManageController {
 			throw new CustomException("id는 필수값입니다.");
 		}
 
-//		return ResponseEntity.ok(userManageService.selectIdttLT(header, id));
-		return ResponseEntity.ok(makeDummies());
+		IdttLTResultDTO dto = userManageService.selectIdttLT(header, id);
+
+		if(dto.getUserPersonality() != null && dto.getUserPersonality().size() < 1) {
+			dto.setUserPersonality(makeDummies().getUserPersonality());
+		}
+
+		if(dto.getClassPersonality() != null && dto.getClassPersonality().size() < 1) {
+			dto.setClassPersonality(makeDummies().getClassPersonality());
+		}
+
+		return ResponseEntity.ok(dto);
 	}
 
 	IdttLTResultDTO<ClassPersonalityDTO> makeDummies() {

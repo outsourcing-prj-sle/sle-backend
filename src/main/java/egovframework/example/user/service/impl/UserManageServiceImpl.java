@@ -209,10 +209,13 @@ public class UserManageServiceImpl implements UserManageService {
 					"?apiKey=" + apiKey +
 					"&analysisId=folio-instructor-user-personality" +
 					"&schoolId=" + vo.getSchulCode() +
-					"&grade=" + vo.getGradeNm() +
+//					"&grade=" + vo.getGradeNm() +
+					"&grade=" + 1 +
 					"&schoolYear=" + vo.getStYear() +
-					"&classNo=" + vo.getClassCode() +
-					"&learnerId=" + id
+//					"&classNo=" + vo.getClassCode() +
+					"&classNo=" + 1 +
+//					"&learnerId=" + id
+					"&learnerId=" + "tlqjach-stu101@gne.go.kr"
 			);
 
 			URI uriClassPersonality = new URI(baseUrl +
@@ -221,8 +224,7 @@ public class UserManageServiceImpl implements UserManageService {
 					"&schoolId=" + vo.getSchulCode() +
 					"&grade=" + vo.getGradeNm() +
 					"&schoolYear=" + vo.getStYear() +
-					"&classNo=" + vo.getClassCode() +
-					"&learnerId=" + vo.getAuthorization()
+					"&classNo=" + vo.getClassCode()
 			);
 
 			RestTemplate restTemplate = new RestTemplate();

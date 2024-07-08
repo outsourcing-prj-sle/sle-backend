@@ -1,5 +1,6 @@
 package egovframework.example.admin.system.web;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -50,8 +51,9 @@ public class AdminTermsManageController {
 	
 	
 	@PostMapping("/terms/register")
-	ResponseEntity<?> insertEntity(TermsManageDTO data) {
+	ResponseEntity<?> insertEntity(@RequestHeader HashMap<String, String> header, TermsManageDTO data) {
 		try {
+			data.setCreatedBy(header.get("authorization"));
 			String res = adminSystemService.insertTerms(data);
 	        return ResponseEntity.ok(res);
 		}catch(Exception e){

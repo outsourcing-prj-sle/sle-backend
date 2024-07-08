@@ -243,7 +243,8 @@
 	<update id="updateResearchResult" parameterType="surveyVO">
 		update HISTSURVEYEVALUATION
 		set
-			SURVEY_EVALUATION_ANSWER_LIST = #{qesAnswer}
+			SURVEY_EVALUATION_ANSWER_LIST = #{qesAnswer},
+			LAST_UPDUSR_PNTTM = now()
 		where TEACHER_ID = #{teacherId}
 		and STUDENT_ID = #{id}
 		and SURVEY_EVALUATION_SE_CODE = #{qesType}
@@ -254,13 +255,15 @@
 			TEACHER_ID, 
 			STUDENT_ID, 
 			SURVEY_EVALUATION_SE_CODE, 
-			SURVEY_EVALUATION_ANSWER_LIST
+			SURVEY_EVALUATION_ANSWER_LIST,
+			LAST_UPDUSR_PNTTM
 		)
 		values (
 			#{teacherId},
 			#{id},
 			#{qesType},
-			#{qesAnswer}
+			#{qesAnswer},
+		    now()
 		)
 	</insert>
 
