@@ -88,7 +88,7 @@ public class NaverController {
             HttpHeaders httpHeaders = new HttpHeaders();
             httpHeaders.setLocation(redirectUri);
         } catch (URISyntaxException e) {
-            throw new RuntimeException(e);
+            throw new CustomException("callUri 생성에 실패했습니다.");
         }
 
         return ResponseEntity.ok(userManageService.insertUserInfo(loginVO));

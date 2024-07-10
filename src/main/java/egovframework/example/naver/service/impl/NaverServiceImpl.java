@@ -111,7 +111,7 @@ public class NaverServiceImpl implements NaverService {
                     }
                 });
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new CustomException("no_naver_token");
             }
             return naverTokenDto;
         }
@@ -162,7 +162,7 @@ public class NaverServiceImpl implements NaverService {
                     }
                 });
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new CustomException("no_naver_user");
             }
             return naverUserDto;
         }
@@ -213,7 +213,7 @@ public class NaverServiceImpl implements NaverService {
                     }
                 });
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new CustomException("no_userdata");
             }
             return gneDto;
         }
@@ -266,7 +266,7 @@ public class NaverServiceImpl implements NaverService {
                     }
                 });
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new CustomException("no_userlist");
             }
             return gneDto;
         }
@@ -314,7 +314,7 @@ public class NaverServiceImpl implements NaverService {
                     }
                 });
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new CustomException("경남교육청 API 통신에 실패했습니다.");
             }
 
             List<GneSchulDTO> list = gneDto.getData().stream()
@@ -376,7 +376,7 @@ public class NaverServiceImpl implements NaverService {
                     }
                 });
             } catch (JsonProcessingException e) {
-                throw new RuntimeException(e);
+                throw new CustomException("no_userlist");
             }
             return gneDto;
         }

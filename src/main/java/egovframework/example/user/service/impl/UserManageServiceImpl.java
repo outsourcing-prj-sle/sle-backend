@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import egovframework.example.admin.service.AdminUserListDTO;
 import egovframework.example.admin.service.AdminUserVO;
+import egovframework.example.cmmn.CustomException;
 import egovframework.example.cmmn.service.LoginVO;
 import egovframework.example.cmmn.service.SurveyVO;
 import egovframework.example.naver.dto.GneInfoDto;
@@ -171,7 +172,7 @@ public class UserManageServiceImpl implements UserManageService {
 		GneInfoDto<GneUserDto> gneUserDto = naverService.procGneUserInfo(naverUserDto);
 
 		if(!gneUserDto.isSuccess()) {
-			throw new RuntimeException("경남교육청 사용자 정보 조회에 실패하였습니다.");
+			throw new CustomException("경남교육청 사용자 정보 조회에 실패하였습니다.");
 		}
 
 		LoginVO vo = LoginVO.builder()
@@ -268,11 +269,11 @@ public class UserManageServiceImpl implements UserManageService {
 					dto.setUserPersonality(userPersonalityList);
 				} catch (JsonProcessingException e) {
 					LOGGER.error("학습성향 학생별 점수 수집에 실패하였습니다.", e.getMessage(), e);
-					throw new RuntimeException("학습성향 학생별 점수 수집에 실패하였습니다.", e);
+					throw new CustomException("학습성향 학생별 점수 수집에 실패하였습니다.", e);
 				}
 			} else {
 				LOGGER.error("학습성향 학생별 점수 API 접속에 실패하였습니다.", responseEntityUser.getBody());
-				throw new RuntimeException("학습성향 학생별 점수 API 접속에 실패하였습니다.");
+				throw new CustomException("학습성향 학생별 점수 API 접속에 실패하였습니다.");
 			}
 
 			ResponseEntity<String> responseEntityClass = restTemplate.exchange(uriClassPersonality, HttpMethod.GET, entity, String.class);
@@ -290,17 +291,17 @@ public class UserManageServiceImpl implements UserManageService {
 					dto.setClassPersonality(classPersonalityList);
 				} catch (JsonProcessingException e) {
 					LOGGER.error("학습성향 학급별 점수 수집에 실패하였습니다.", e.getMessage(), e);
-					throw new RuntimeException("학습성향 학급별 점수 수집에 실패하였습니다.", e);
+					throw new CustomException("학습성향 학급별 점수 수집에 실패하였습니다.", e);
 				}
 			} else {
 				LOGGER.error("학습성향 학급별 점수 API 접속에 실패하였습니다.", responseEntityClass.getBody());
-				throw new RuntimeException("학습성향 학급별 점수 API 접속에 실패하였습니다.");
+				throw new CustomException("학습성향 학급별 점수 API 접속에 실패하였습니다.");
 			}
 
 			return dto;
 		} catch (URISyntaxException e) {
 			LOGGER.error(e.getMessage());
-			throw new RuntimeException("URI 생성에 실패하셨습니다.", e);
+			throw new CustomException("URI 생성에 실패하셨습니다.", e);
 		}
 	}
 	
