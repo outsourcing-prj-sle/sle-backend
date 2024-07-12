@@ -12,10 +12,22 @@ spring:
     multipart:
       file-size-threshold: 1MB
       max-file-size: 100MB
-      max-request-size: 100MB   
-# 운영환경
+      max-request-size: 100MB
+# dev1
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    jdbc-url: jdbc:mariadb://1.213.164.252:63306/SURVEY
+#    username: exdev
+#    password: exdevpwd!!
+#dev2
   datasource:
     driver-class-name: org.mariadb.jdbc.Driver
-    jdbc-url: jdbc:mariadb://1.213.164.252:63306/SURVEY
-    username: exdev
-    password: exdevpwd!!
+    jdbc-url: jdbc:mariadb://a8c03f60-ca16-4917-9715-dff1917504eb.internal.kr1.mariadb.rds.gov-nhncloudservice.com:13306/sel_db
+    username: sel_user
+    password: sel_pass1!
+#live
+#  datasource:
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    jdbc-url: jdbc:mariadb://1.213.164.252:63306/SURVEY
+#    username: exdev
+#    password: exdevpwd!!
