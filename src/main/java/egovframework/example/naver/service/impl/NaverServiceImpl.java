@@ -24,6 +24,8 @@ import egovframework.example.cmmn.CustomException;
 import egovframework.example.naver.dto.*;
 import egovframework.example.naver.service.NaverService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.http.*;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
@@ -55,10 +57,15 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class NaverServiceImpl implements NaverService {
-
     private final String NAVER_CLIENT_ID = "iymVHli6FerqTAKqTnNV";
     private final String CHANGE_GOOGLE_CLIENT_SECRET = "HoUGkLMMj6";
     private final String API_KEY = "iURgyQpvBeuPwgyh8zEsxd79rVtc93dy0QeXkyMieMuiH3Ro7Bp9qUOdDt4T5M9A";
+    private final String PREFIX_URL;
+
+    @Autowired
+    public NaverServiceImpl(Environment env) {
+        this.PREFIX_URL = env.getProperty("whale.url");
+    }
 
     /**
      * 웨일스페이스 억세스토큰 발행
@@ -192,7 +199,7 @@ public class NaverServiceImpl implements NaverService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", API_KEY);
 
-        String url = "https://devnewtab.itt.link".concat("/api/user/userInfo.do").concat("?userId=").concat(primaryEmail).concat("&stdrYear=");
+        String url = PREFIX_URL.concat("/api/user/userInfo.do").concat("?userId=").concat(primaryEmail).concat("&stdrYear=");
         HttpEntity request = new HttpEntity(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -245,7 +252,7 @@ public class NaverServiceImpl implements NaverService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", API_KEY);
 
-        String url = "https://devnewtab.itt.link".concat("/api/user/schulUserList.do").concat("?schulCode=").concat(schulCode).concat("&userSeCode=").concat("04").concat("&stGrade=").concat(stGrade).concat("&stClass=").concat(stClass);
+        String url = PREFIX_URL.concat("/api/user/schulUserList.do").concat("?schulCode=").concat(schulCode).concat("&userSeCode=").concat("04").concat("&stGrade=").concat(stGrade).concat("&stClass=").concat(stClass);
         HttpEntity request = new HttpEntity(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -293,7 +300,7 @@ public class NaverServiceImpl implements NaverService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", API_KEY);
 
-        String url = "https://devnewtab.itt.link".concat("/api/sch/schulList.do");
+        String url = PREFIX_URL.concat("/api/sch/schulList.do");
         HttpEntity request = new HttpEntity(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.GET, request, String.class);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {
@@ -355,7 +362,7 @@ public class NaverServiceImpl implements NaverService {
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.set("api-key", API_KEY);
 
-        String url = "https://devnewtab.itt.link".concat("/api/user/schulUserList.do").concat("?schulCode=").concat(schulCode).concat("&userSeCode=").concat("08").concat("&stGrade=").concat(stGrade);
+        String url = PREFIX_URL.concat("/api/user/schulUserList.do").concat("?schulCode=").concat(schulCode).concat("&userSeCode=").concat("08").concat("&stGrade=").concat(stGrade);
         HttpEntity request = new HttpEntity(null, headers);
         ResponseEntity<String> responseEntity = restTemplate.exchange(url, HttpMethod.POST, request, String.class);
         if (responseEntity.getStatusCode() == HttpStatus.OK) {

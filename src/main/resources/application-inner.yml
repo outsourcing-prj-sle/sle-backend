@@ -1,0 +1,9 @@
+spring:
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    jdbc-url: jdbc:mariadb://a8c03f60-ca16-4917-9715-dff1917504eb.internal.kr1.mariadb.rds.gov-nhncloudservice.com:13306/sel_db
+    username: sel_user
+    password: sel_pass1!
+
+whale:
+  url: https://snewtab.itt.link
